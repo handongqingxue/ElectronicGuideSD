@@ -24,8 +24,8 @@ public class BackgroundController {
 	@Autowired
 	private UserService userService;
 	public static final String MODULE_NAME="/background";
-	//public static final String SERVER_PATH_CQ="http://192.168.2.166:8080/ElectronicGuideCQ";
-	public static final String SERVER_PATH_CQ="http://localhost:8080/ElectronicGuideCQ";
+	public static final String SERVER_PATH_CQ="http://www.qrcodesy.com:8080/ElectronicGuideCQ";
+	//public static final String SERVER_PATH_CQ="http://localhost:8080/ElectronicGuideCQ";
 	public static final String SERVER_PATH_SD="http://localhost:8080/ElectronicGuideSD";
 	
 	/**
@@ -38,7 +38,7 @@ public class BackgroundController {
 	}
 
 	@RequestMapping(value="/loginFromCQ")
-	public String loginFromCQ(String userName,String password,HttpServletRequest request) {
+	public String loginFromCQ(String serverPath,String userName,String password,HttpServletRequest request) {
 
 		UsernamePasswordToken token = new UsernamePasswordToken(userName,password);  
 		Subject currentUser = SecurityUtils.getSubject();  
@@ -53,6 +53,7 @@ public class BackgroundController {
 			
 			userService.edit(user);
 		}
-		return "redirect:"+SERVER_PATH_SD+MODULE_NAME+"/user/info/info";
+		//return "redirect:"+SERVER_PATH_SD+MODULE_NAME+"/user/info/info";
+		return "redirect:"+serverPath+MODULE_NAME+"/user/info/info";
 	}
 }
