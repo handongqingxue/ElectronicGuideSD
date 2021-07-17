@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.util.*;
+import com.electronicGuideSD.service.*;
 import com.electronicGuideSD.controller.BackgroundController;
 
 @Controller
 @RequestMapping(BackgroundController.MODULE_NAME)
 public class BackgroundController {
 
+	@Autowired
+	private UserService userService;
 	public static final String MODULE_NAME="/background";
 	//public static final String SERVER_PATH_CQ="http://192.168.2.166:8080/ElectronicGuideCQ";
 	public static final String SERVER_PATH_CQ="http://localhost:8080/ElectronicGuideCQ";
@@ -46,6 +50,8 @@ public class BackgroundController {
 			HttpSession session=request.getSession();
 			User user=(User)SecurityUtils.getSubject().getPrincipal();
 			session.setAttribute("user", user);
+			
+			userService.edit(user);
 		}
 		return "redirect:"+SERVER_PATH_SD+MODULE_NAME+"/user/info/info";
 	}

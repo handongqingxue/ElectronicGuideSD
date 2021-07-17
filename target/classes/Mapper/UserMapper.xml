@@ -14,4 +14,71 @@
 			and password=#{password}
 		</if>
 	</select>
+	<select id="getCountById" resultType="java.lang.Integer">
+		select count(*) from user where id=#{id}
+	</select>
+	<insert id="add">
+ 		insert into user
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="id!=null">
+ 				id,
+ 			</if>
+ 			<if test="userName!=null">
+ 				userName,
+ 			</if>
+ 			<if test="password!=null">
+ 				password,
+ 			</if>
+ 			<if test="nickName!=null">
+ 				nickName,
+ 			</if>
+ 			<if test="headImgUrl!=null">
+ 				headImgUrl,
+ 			</if>
+ 				createTime,
+ 			<if test="check!=null">
+ 				`check`,
+ 			</if>
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="id!=null">
+ 				#{id},
+ 			</if>
+ 			<if test="userName!=null">
+ 				#{userName},
+ 			</if>
+ 			<if test="password!=null">
+ 				#{password},
+ 			</if>
+ 			<if test="nickName!=null">
+ 				#{nickName},
+ 			</if>
+ 			<if test="headImgUrl!=null">
+ 				#{headImgUrl},
+ 			</if>
+ 				now(),
+ 			<if test="check!=null">
+ 				#{check},
+ 			</if>
+ 		</trim>
+ 	</insert>
+	<update id="edit">
+		update user set
+		<trim suffixOverrides=",">
+			<if test="password!=null">
+				password=#{password},
+			</if>
+			<if test="nickName!=null">
+				nickName=#{nickName},
+			</if>
+			<if test="headImgUrl!=null">
+				headImgUrl=#{headImgUrl},
+			</if>
+			<if test="check!=null">
+				`check`=#{check},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
 </mapper>
