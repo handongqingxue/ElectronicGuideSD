@@ -24,6 +24,7 @@
 		<property name="loginUrl" value="/background/login" />
 		<property name="filterChainDefinitions">
 			<value>
+				/background/*=anon
 				/JSSDK/*=anon
 				/resource/**=anon
 				/**=authc
