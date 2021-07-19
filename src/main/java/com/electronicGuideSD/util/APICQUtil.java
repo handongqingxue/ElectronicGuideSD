@@ -22,11 +22,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 
+/**
+ * 这个类负责跨域调用辰麒总服的接口
+ * */
 public class APICQUtil {
 	
 	//public static final String SERVER_PATH="http://192.168.2.166:8080/ElectronicGuideCQ";
 	public static final String SERVER_PATH="http://localhost:8080/ElectronicGuideCQ";
 
+	/**
+	 * 根据用户名、密码获取用户信息
+	 * @param userName
+	 * @param password
+	 * @return
+	 */
 	public static Map<String, Object> getUser(String userName, String password) {
 		
 		Map<String, Object> resultMap = null;

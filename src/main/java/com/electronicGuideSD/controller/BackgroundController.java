@@ -37,6 +37,14 @@ public class BackgroundController {
 		return "redirect:"+SERVER_PATH_CQ+MODULE_NAME+"/login";
 	}
 
+	/**
+	 * 从辰麒后台登录后跳转到景区后台
+	 * @param serverPath
+	 * @param userName
+	 * @param password
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value="/loginFromCQ")
 	public String loginFromCQ(String serverPath,String userName,String password,HttpServletRequest request) {
 
@@ -48,12 +56,12 @@ public class BackgroundController {
 			currentUser.login(token);//验证角色和权限  
 			
 			HttpSession session=request.getSession();
-			User user=(User)SecurityUtils.getSubject().getPrincipal();
+			User user=(User)SecurityUtils.getSubject().getPrincipal();//将跨域获取到的用户信息存下来
 			session.setAttribute("user", user);
 			
-			userService.edit(user);
+			userService.edit(user);//同步景区数据库用户表里的信息
 		}
 		//return "redirect:"+SERVER_PATH_SD+MODULE_NAME+"/user/info/info";
-		return "redirect:"+serverPath+MODULE_NAME+"/user/info/info";
+		return "redirect:"+serverPath+MODULE_NAME+"/user/info/info";//跳转到景区服务器用户信息页
 	}
 }
