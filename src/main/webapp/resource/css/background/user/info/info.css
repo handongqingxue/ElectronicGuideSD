@@ -1,0 +1,31 @@
+
+.yhxx_div{
+	height:570px;
+	margin:20px 0 40px 238px;
+	padding-top:40px;
+	padding-left:40px;
+	background-color:#FAFDFE;
+}
+.yhxx_div .title_div{
+	font-size: 20px;color: #373737;font-weight:700;
+}
+.yhxx_div .attr_div{
+	margin-top:40px;
+}
+.yhxx_div .attr_div .key_span{
+	font-size: 15px;color: #373737;font-weight: 700;
+}
+.yhxx_div .attr_div .value_span{
+	font-size: 15px;
+}
+.yhxx_div .xgmm_span{
+	font-size: 15px;color: #357bb3;margin-left: 15px;cursor: pointer;
+}
+.yhxx_div .attr_div img{
+	width: 150px;height:150px;
+}
+.yhxx_div .attr_div .eu_but_span{
+	font-size: 15px;
+	color: #357bb3;
+	cursor: pointer;
+}

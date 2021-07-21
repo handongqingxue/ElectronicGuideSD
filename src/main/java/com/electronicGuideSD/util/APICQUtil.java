@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,8 +26,24 @@ import com.alibaba.fastjson.JSON;
  * */
 public class APICQUtil {
 	
-	//public static final String SERVER_PATH="http://192.168.2.166:8080/ElectronicGuideCQ";
+	//public static final String SERVER_PATH="http://www.qrcodesy.com:8080/ElectronicGuideCQ";
 	public static final String SERVER_PATH="http://localhost:8080/ElectronicGuideCQ";
+	
+	public static Map<String, Object> checkUserLogin(String userName, String password) {
+		
+		Map<String, Object> resultMap = null;
+		String url=SERVER_PATH+"/background/checkUserLogin";
+		List<NameValuePair> params=new ArrayList<NameValuePair>();
+		try {
+			resultMap=JSON.parseObject(getRespJson(url, params).get("result").toString(), Map.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			return resultMap;
+		}
+	}
 
 	/**
 	 * 根据用户名、密码获取用户信息
@@ -39,7 +54,7 @@ public class APICQUtil {
 	public static Map<String, Object> getUser(String userName, String password) {
 		
 		Map<String, Object> resultMap = null;
-		String url=SERVER_PATH+"/background/getUser";
+		String url=SERVER_PATH+"/background/sdApiRequest/getUser";
 		List<NameValuePair> params=new ArrayList<NameValuePair>();
 		params.add(0, new BasicNameValuePair("userName", userName));
 		params.add(1, new BasicNameValuePair("password", password));
