@@ -1,3 +1,39 @@
+.editPwdBg_div{
+	width: 100%;height:100%;
+	background: rgba(0,0,0,0.65);
+	position: fixed;
+	display: none;
+	z-index: 1001;
+}
+.editPwd_div{
+	width:400px;height:420px;margin:100px auto;background: #f8f8f8;border-radius: 6px;
+}
+.editPwd_div .close_span{
+	float: right;margin-top: 20px;margin-right: 20px;font-size: 25px;cursor: pointer;
+}
+.editPwd_div .title{
+	font-size: 22px;color: #4CAF50;text-align: center;padding-top: 50px;
+}
+.editPwd_div .ymm_div{
+	width:240px;margin: auto;padding-top: 20px;
+}
+.editPwd_div .xmm_div,.editPwd_div .qrmm_div{
+	width:240px;margin: auto;
+}
+.editPwd_div input{
+	width: 216px;
+    height: 46px;
+    padding: 0 15px;
+    font-size: 12px;
+	border: 1px solid #DDE0E2;
+    border-radius: 4px;
+}
+.editPwd_div .confirm_div{
+	width:240px;height:40px;line-height:40px;margin: 30px auto;text-align:center;font-size:17px;color:#fff;background-color:#4caf50;border-radius:3px;cursor: pointer;
+}
+.editPwd_div .warn_div{
+	width: 100%;margin-top: 20px;border-radius: 0 0 4px 4px;font-size: 12px;text-align: center;color: #9b9b9b;
+}
 
 .yhxx_div{
 	height:570px;

@@ -1,5 +1,8 @@
 package com.electronicGuideSD.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -24,8 +27,8 @@ public class BackgroundController {
 	@Autowired
 	private UserService userService;
 	public static final String MODULE_NAME="/background";
-	public static final String SERVER_PATH_CQ="http://www.qrcodesy.com:8080/ElectronicGuideCQ";
-	//public static final String SERVER_PATH_CQ="http://localhost:8080/ElectronicGuideCQ";
+	//public static final String SERVER_PATH_CQ="http://www.qrcodesy.com:8080/ElectronicGuideCQ";
+	public static final String SERVER_PATH_CQ="http://localhost:8080/ElectronicGuideCQ";
 	public static final String SERVER_PATH_SD="http://localhost:8080/ElectronicGuideSD";
 	
 	/**
