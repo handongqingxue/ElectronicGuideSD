@@ -131,6 +131,20 @@
 						</a>
 					</li>
 				</div>
+				<div class="first-level-div">
+					<li class="layui-nav-item first-level">
+						<a>
+							景点管理
+						</a>
+					</li>
+					<div class="line_div"></div>
+					<li class="layui-nav-item">
+						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
+						<a href="<%=basePath%>background/scenicPlace/scenicPlace/list">
+							&nbsp;&nbsp;&nbsp;景点查询
+						</a>
+					</li>
+				</div>
 			</ul>
 		</div>
 	</div>

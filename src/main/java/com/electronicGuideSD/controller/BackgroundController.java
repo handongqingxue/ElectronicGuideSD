@@ -27,17 +27,17 @@ public class BackgroundController {
 	@Autowired
 	private UserService userService;
 	public static final String MODULE_NAME="/background";
-	//public static final String SERVER_PATH_CQ="http://www.qrcodesy.com:8080/ElectronicGuideCQ";
-	public static final String SERVER_PATH_CQ="http://localhost:8080/ElectronicGuideCQ";
-	public static final String SERVER_PATH_SD="http://localhost:8080/ElectronicGuideSD";
+	//public static final String SERVER_PATH_CQ="https://www.qrcodesy.com/ElectronicGuideCQ";
+	public static final String SERVER_PATH_CQ="https://localhost/ElectronicGuideCQ";
+	public static final String SERVER_PATH_SD="https://localhost/ElectronicGuideSD";
 	
 	/**
 	 * 跳转至登录页面
 	 * @return
 	 */
-	@RequestMapping(value="/login",method=RequestMethod.GET)
-	public String login() {
-		return "redirect:"+SERVER_PATH_CQ+MODULE_NAME+"/login";
+	@RequestMapping(value="/goLogin",method=RequestMethod.GET)
+	public String goLogin() {
+		return "redirect:"+SERVER_PATH_CQ+MODULE_NAME+"/goLogin";
 	}
 
 	/**
@@ -66,5 +66,14 @@ public class BackgroundController {
 		}
 		//return "redirect:"+SERVER_PATH_SD+MODULE_NAME+"/user/info/info";
 		return "redirect:"+serverPath+MODULE_NAME+"/user/info/info";//跳转到景区服务器用户信息页
+	}
+	
+	@RequestMapping(value="/exit")
+	public String exit(HttpServletRequest request) {
+		System.out.println("退出接口");
+		Subject currentUser = SecurityUtils.getSubject();       
+	    currentUser.logout();    
+
+		return goLogin();
 	}
 }

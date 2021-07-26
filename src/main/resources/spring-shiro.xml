@@ -21,7 +21,7 @@
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
-		<property name="loginUrl" value="/background/login" />
+		<property name="loginUrl" value="/background/goLogin" />
 		<property name="filterChainDefinitions">
 			<value>
 				/background/*=anon
