@@ -33,6 +33,15 @@ public class ScenicPlaceController {
 
 		return MODULE_NAME+"/scenicPlace/add";
 	}
+
+	@RequestMapping(value="/scenicPlace/edit")
+	public String goScenicPlaceEdit(HttpServletRequest request) {
+		
+		ScenicPlace sp = scenicPlaceService.selectById(request.getParameter("id"));
+		request.setAttribute("scenicPlace", sp);
+		
+		return MODULE_NAME+"/scenicPlace/edit";
+	}
 	
 	@RequestMapping(value="/scenicPlace/list")
 	public String goScenicPlaceList(HttpServletRequest request) {
@@ -109,6 +118,70 @@ public class ScenicPlaceController {
 			else {
 				plan.setStatus(1);
 				plan.setMsg("添加景点成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+
+	@RequestMapping(value="/editScenicPlace",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String editScenicPlace(ScenicPlace scenicPlace,
+			@RequestParam(value="picUrl_file",required=false) MultipartFile picUrl_file,
+			@RequestParam(value="simpleIntroVoiceUrl_file",required=false) MultipartFile simpleIntroVoiceUrl_file,
+			@RequestParam(value="detailIntroVoiceUrl_file",required=false) MultipartFile detailIntroVoiceUrl_file,
+			HttpServletRequest request) {
+
+		String json=null;;
+		try {
+			PlanResult plan=new PlanResult();
+			MultipartFile[] fileArr=new MultipartFile[3];
+			fileArr[0]=picUrl_file;
+			fileArr[1]=simpleIntroVoiceUrl_file;
+			fileArr[2]=detailIntroVoiceUrl_file;
+			for (int i = 0; i < fileArr.length; i++) {
+				String jsonStr = null;
+				if(fileArr[i].getSize()>0) {
+					String folder=null;
+					switch (i) {
+					case 0:
+						folder="ScenicPlacePic";
+						break;
+					case 1:
+					case 2:
+						folder="ScenicPlaceVoice";
+						break;
+					}
+					jsonStr = FileUploadUtils.appUploadContentImg(request,fileArr[i],folder);
+					JSONObject fileJson = JSONObject.fromObject(jsonStr);
+					if("成功".equals(fileJson.get("msg"))) {
+						JSONObject dataJO = (JSONObject)fileJson.get("data");
+						switch (i) {
+						case 0:
+							scenicPlace.setPicUrl(dataJO.get("src").toString());
+							break;
+						case 1:
+							scenicPlace.setSimpleIntroVoiceUrl(dataJO.get("src").toString());
+							break;
+						case 2:
+							scenicPlace.setDetailIntroVoiceUrl(dataJO.get("src").toString());
+							break;
+						}
+					}
+				}
+			}
+			int count=scenicPlaceService.edit(scenicPlace);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("编辑景点失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("编辑景点成功！");
 				json=JsonUtil.getJsonFromObject(plan);
 			}
 		} catch (Exception e) {

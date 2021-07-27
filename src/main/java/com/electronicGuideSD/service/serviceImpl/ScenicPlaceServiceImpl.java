@@ -32,4 +32,16 @@ public class ScenicPlaceServiceImpl implements ScenicPlaceService {
 		// TODO Auto-generated method stub
 		return scenicPlaceDao.add(scenicPlace);
 	}
+
+	@Override
+	public ScenicPlace selectById(String id) {
+		// TODO Auto-generated method stub
+		return scenicPlaceDao.selectById(id);
+	}
+
+	@Override
+	public int edit(ScenicPlace scenicPlace) {
+		// TODO Auto-generated method stub
+		return scenicPlaceDao.edit(scenicPlace);
+	}
 }

@@ -14,4 +14,8 @@ public interface ScenicPlaceMapper {
 
 	int add(ScenicPlace scenicPlace);
 
+	ScenicPlace selectById(@Param("id")String id);
+
+	int edit(ScenicPlace scenicPlace);
+
 }

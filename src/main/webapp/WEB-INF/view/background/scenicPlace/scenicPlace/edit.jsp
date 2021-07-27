@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>添加景点</title>
+<title>编辑景点</title>
 <%@include file="../../js.jsp"%>
 <style type="text/css">
 .center_con_div{
@@ -60,48 +60,48 @@ var scenicPlacePath='<%=basePath%>'+"background/scenicPlace/";
 var shopId='${sessionScope.merchant.id }';
 var dialogTop=10;
 var dialogLeft=20;
-var ndNum=0;
+var edNum=0;
 $(function(){
-	initNewDialog();
+	initEditDialog();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 });
 
 function initDialogPosition(){
 	//基本属性组
-	var ndpw=$("body").find(".panel.window").eq(ndNum);
-	var ndws=$("body").find(".window-shadow").eq(ndNum);
+	var edpw=$("body").find(".panel.window").eq(edNum);
+	var edws=$("body").find(".window-shadow").eq(edNum);
 
 	var ccDiv=$("#center_con_div");
-	ccDiv.append(ndpw);
-	ccDiv.append(ndws);
+	ccDiv.append(edpw);
+	ccDiv.append(edws);
 	ccDiv.css("width",setFitWidthInParent("body","center_con_div")+"px");
 }
 
-function initNewDialog(){
+function initEditDialog(){
 	dialogTop+=20;
-	$("#new_div").dialog({
+	$("#edit_div").dialog({
 		title:"景点信息",
-		width:setFitWidthInParent("body","new_div"),
+		width:setFitWidthInParent("body","edit_div"),
 		height:730,
 		top:dialogTop,
 		left:dialogLeft,
 		buttons:[
            {text:"保存",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   checkAdd();
+        	   checkEdit();
            }}
         ]
 	});
 
-	$("#new_div table").css("width",(setFitWidthInParent("body","new_div_table"))+"px");
-	$("#new_div table").css("magin","-100px");
-	$("#new_div table td").css("padding-left","30px");
-	$("#new_div table td").css("padding-right","20px");
-	$("#new_div table td").css("font-size","15px");
-	$("#new_div table .td1").css("width","10%");
-	$("#new_div table .td2").css("width","35%");
-	$("#new_div table tr").css("border-bottom","#CAD9EA solid 1px");
-	$("#new_div table tr").each(function(i){
+	$("#edit_div table").css("width",(setFitWidthInParent("body","edit_div_table"))+"px");
+	$("#edit_div table").css("magin","-100px");
+	$("#edit_div table td").css("padding-left","30px");
+	$("#edit_div table td").css("padding-right","20px");
+	$("#edit_div table td").css("font-size","15px");
+	$("#edit_div table .td1").css("width","10%");
+	$("#edit_div table .td2").css("width","35%");
+	$("#edit_div table tr").css("border-bottom","#CAD9EA solid 1px");
+	$("#edit_div table tr").each(function(i){
 		if(i==1)
 			$(this).css("height","250px");
 		else if(i==3)
@@ -112,32 +112,32 @@ function initNewDialog(){
 			$(this).css("height","45px");
 	});
 
-	$(".panel.window").eq(ndNum).css("margin-top","20px");
-	$(".panel.window .panel-title").eq(ndNum).css("color","#000");
-	$(".panel.window .panel-title").eq(ndNum).css("font-size","15px");
-	$(".panel.window .panel-title").eq(ndNum).css("padding-left","10px");
+	$(".panel.window").eq(edNum).css("margin-top","20px");
+	$(".panel.window .panel-title").eq(edNum).css("color","#000");
+	$(".panel.window .panel-title").eq(edNum).css("font-size","15px");
+	$(".panel.window .panel-title").eq(edNum).css("padding-left","10px");
 	
 	$(".panel-header, .panel-body").css("border-color","#ddd");
 	
 	//以下的是表格下面的面板
-	$(".window-shadow").eq(ndNum).css("margin-top","20px");
-	$(".window,.window .window-body").eq(ndNum).css("border-color","#ddd");
+	$(".window-shadow").eq(edNum).css("margin-top","20px");
+	$(".window,.window .window-body").eq(edNum).css("border-color","#ddd");
 
-	$("#new_div #ok_but").css("left","45%");
-	$("#new_div #ok_but").css("position","absolute");
+	$("#edit_div #ok_but").css("left","45%");
+	$("#edit_div #ok_but").css("position","absolute");
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 }
 
-function checkAdd(){
+function checkEdit(){
 	if(checkName()){
 		if(checkSort()){
 			if(checkX()){
 				if(checkY()){
 					if(checkSimpleIntro()){
 						if(checkDetailIntro()){
-							addScenicPlace();
+							editScenicPlace();
 						}
 					}
 				}
@@ -146,11 +146,11 @@ function checkAdd(){
 	}
 }
 
-function addScenicPlace(){
+function editScenicPlace(){
 	var formData = new FormData($("#form1")[0]);
 	$.ajax({
 		type:"post",
-		url:scenicPlacePath+"addScenicPlace",
+		url:scenicPlacePath+"editScenicPlace",
 		dataType: "json",
 		data:formData,
 		cache: false,
@@ -345,10 +345,10 @@ function setFitWidthInParent(parent,self){
 	case "center_con_div":
 		space=205;
 		break;
-	case "new_div":
+	case "edit_div":
 		space=340;
 		break;
-	case "new_div_table":
+	case "edit_div_table":
 	case "panel_window":
 		space=355;
 		break;
@@ -364,21 +364,22 @@ function setFitWidthInParent(parent,self){
 <div class="center_con_div" id="center_con_div">
 	<div class="page_location_div">添加景点</div>
 	
-	<div id="new_div">
+	<div id="edit_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
+		<input type="hidden" name="id" id="id" value="${requestScope.scenicPlace.id }" />
 		<table>
 		  <tr>
 			<td class="td1" align="right">
 				名称
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入景区名称" onfocus="focusName()" onblur="checkName()"/>
+				<input type="text" class="name_inp" id="name" name="name" value="${requestScope.scenicPlace.name }" placeholder="请输入景区名称" onfocus="focusName()" onblur="checkName()"/>
 			</td>
 			<td class="td1" align="right">
 				排序
 			</td>
 			<td class="td2">
-				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
+				<input type="number" class="sort_inp" id="sort" name="sort" value="${requestScope.scenicPlace.sort }" placeholder="请输入排序"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -388,7 +389,7 @@ function setFitWidthInParent(parent,self){
 			<td class="td2">
 				<div class="upBut_div upPicBut_div" onclick="uploadPicUrl()">选择图片</div>
 				<input type="file" id="picUrl_file" name="picUrl_file" style="display: none;" onchange="showPicUrl(this)"/>
-				<img class="picUrl_img" id="picUrl_img" alt=""/>
+				<img class="picUrl_img" id="picUrl_img" alt="" src="${requestScope.scenicPlace.picUrl }"/>
 			</td>
 			<td class="td1" align="right">
 			</td>
@@ -400,13 +401,13 @@ function setFitWidthInParent(parent,self){
 				x轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="x_inp" id="x" name="x" placeholder="请输入x轴坐标"/>
+				<input type="number" class="x_inp" id="x" name="x" value="${requestScope.scenicPlace.x }" placeholder="请输入x轴坐标"/>
 			</td>
 			<td class="td1" align="right">
 				y轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="y_inp" id="y" name="y" placeholder="请输入y轴坐标"/>
+				<input type="number" class="y_inp" id="y" name="y" value="${requestScope.scenicPlace.y }" placeholder="请输入y轴坐标"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -414,13 +415,13 @@ function setFitWidthInParent(parent,self){
 				简单介绍
 			</td>
 			<td class="td2">
-				<textarea rows="8" cols="50" id="simpleIntro" name="simpleIntro" placeholder="请输入简单介绍" onfocus="focusSimpleIntro()" onblur="checkSimpleIntro()"></textarea>
+				<textarea rows="8" cols="50" id="simpleIntro" name="simpleIntro" placeholder="请输入简单介绍" onfocus="focusSimpleIntro()" onblur="checkSimpleIntro()">${requestScope.scenicPlace.simpleIntro }</textarea>
 			</td>
 			<td class="td1" align="right">
 				详细介绍
 			</td>
 			<td class="td2">
-				<textarea rows="8" cols="50" id="detailIntro" name="detailIntro" placeholder="请输入详细介绍" onfocus="focusDetailIntro()" onblur="checkDetailIntro()"></textarea>
+				<textarea rows="8" cols="50" id="detailIntro" name="detailIntro" placeholder="请输入详细介绍" onfocus="focusDetailIntro()" onblur="checkDetailIntro()">${requestScope.scenicPlace.detailIntro }</textarea>
 			</td>
 		  </tr>
 		  <tr>
@@ -430,7 +431,7 @@ function setFitWidthInParent(parent,self){
 			<td class="td2">
 				<div class="upBut_div upSimpleIntroVoiceBut_div" onclick="uploadSimpleIntroVoiceUrl()">选择语音包</div>
 				<input type="file" id="simpleIntroVoiceUrl_file" name="simpleIntroVoiceUrl_file" style="display: none;" onchange="showSimpleIntroVoiceUrl(this)"/>
-				<embed class="simpleIntroVoiceUrl_embed" id="simpleIntroVoiceUrl_embed" alt="" src="">
+				<embed class="simpleIntroVoiceUrl_embed" id="simpleIntroVoiceUrl_embed" alt="" src="${requestScope.scenicPlace.simpleIntroVoiceUrl }">
 			</td>
 			<td class="td1" align="right">
 				详细介绍语音包
@@ -438,7 +439,7 @@ function setFitWidthInParent(parent,self){
 			<td class="td2">
 				<div class="upBut_div upDetailIntroVoiceBut_div" onclick="uploadDetailIntroVoiceUrl()">选择语音包</div>
 				<input type="file" id="detailIntroVoiceUrl_file" name="detailIntroVoiceUrl_file" style="display: none;" onchange="showDetailIntroVoiceUrl(this)"/>
-				<img class="detailIntroVoiceUrl_embed" id="detailIntroVoiceUrl_embed" alt=""/>
+				<img class="detailIntroVoiceUrl_embed" id="detailIntroVoiceUrl_embed" alt="" src="${requestScope.scenicPlace.detailIntroVoiceUrl }"/>
 			</td>
 		  </tr>
 		</table>

@@ -12,4 +12,8 @@ public interface ScenicPlaceService {
 
 	int add(ScenicPlace scenicPlace);
 
+	ScenicPlace selectById(String id);
+
+	int edit(ScenicPlace scenicPlace);
+
 }
