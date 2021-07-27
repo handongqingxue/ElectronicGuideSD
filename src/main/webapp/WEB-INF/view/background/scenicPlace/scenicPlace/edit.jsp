@@ -57,7 +57,6 @@
 <script type="text/javascript">
 var path='<%=basePath %>';
 var scenicPlacePath='<%=basePath%>'+"background/scenicPlace/";
-var shopId='${sessionScope.merchant.id }';
 var dialogTop=10;
 var dialogLeft=20;
 var edNum=0;

@@ -48,6 +48,15 @@ public class ScenicPlaceController {
 
 		return MODULE_NAME+"/scenicPlace/list";
 	}
+
+	@RequestMapping(value="/scenicPlace/detail")
+	public String goScenicPlaceDetail(HttpServletRequest request) {
+		
+		ScenicPlace sp = scenicPlaceService.selectById(request.getParameter("id"));
+		request.setAttribute("scenicPlace", sp);
+		
+		return MODULE_NAME+"/scenicPlace/detail";
+	}
 	
 	@RequestMapping(value="/selectList")
 	@ResponseBody
