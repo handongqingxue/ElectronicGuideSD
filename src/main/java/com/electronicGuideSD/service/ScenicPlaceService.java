@@ -16,4 +16,6 @@ public interface ScenicPlaceService {
 
 	int edit(ScenicPlace scenicPlace);
 
+	List<ScenicPlace> selectList();
+
 }

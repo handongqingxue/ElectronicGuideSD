@@ -25,6 +25,7 @@
 		<property name="filterChainDefinitions">
 			<value>
 				/background/*=anon
+				/wechatApplet/*=anon
 				/JSSDK/*=anon
 				/resource/**=anon
 				/**=authc

@@ -18,4 +18,6 @@ public interface ScenicPlaceMapper {
 
 	int edit(ScenicPlace scenicPlace);
 
+	List<ScenicPlace> selectWAList();
+
 }
