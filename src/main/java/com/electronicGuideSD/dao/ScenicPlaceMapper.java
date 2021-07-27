@@ -12,4 +12,6 @@ public interface ScenicPlaceMapper {
 
 	List<ScenicPlace> selectList(@Param("name")String name, @Param("start")int start, @Param("rows")int rows, String sort, String order);
 
+	int add(ScenicPlace scenicPlace);
+
 }

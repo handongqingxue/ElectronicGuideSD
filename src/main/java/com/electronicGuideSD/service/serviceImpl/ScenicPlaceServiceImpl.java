@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.electronicGuideSD.dao.*;
-import com.electronicGuideSD.entity.ScenicPlace;
+import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
 
 @Service
@@ -25,5 +25,11 @@ public class ScenicPlaceServiceImpl implements ScenicPlaceService {
 	public List<ScenicPlace> selectList(String name, int page, int rows, String sort, String order) {
 		// TODO Auto-generated method stub
 		return scenicPlaceDao.selectList(name, (page-1)*rows, rows, sort, order);
+	}
+
+	@Override
+	public int add(ScenicPlace scenicPlace) {
+		// TODO Auto-generated method stub
+		return scenicPlaceDao.add(scenicPlace);
 	}
 }

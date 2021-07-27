@@ -15,5 +15,68 @@
 			and name like'%${name}%'
 		</if>
  		 order by sort limit #{start},#{rows}
- 	</select>
+ 	</select><insert id="add" parameterType="com.electronicGuideSD.entity.ScenicPlace">
+ 		insert into scenic_place
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				name,
+ 			</if>
+ 			<if test="x!=null">
+ 				x,
+ 			</if>
+ 			<if test="y!=null">
+ 				y,
+ 			</if>
+ 			<if test="picUrl!=null">
+ 				picUrl,
+ 			</if>
+ 			<if test="simpleIntro!=null">
+ 				simpleIntro,
+ 			</if>
+ 			<if test="detailIntro!=null">
+ 				detailIntro,
+ 			</if>
+ 			<if test="simpleIntroVoiceUrl!=null">
+ 				simpleIntroVoiceUrl,
+ 			</if>
+ 			<if test="detailIntroVoiceUrl!=null">
+ 				detailIntroVoiceUrl,
+ 			</if>
+ 				createTime,
+ 			<if test="sort!=null">
+ 				sort,
+ 			</if>
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				#{name},
+ 			</if>
+ 			<if test="x!=null">
+ 				#{x},
+ 			</if>
+ 			<if test="y!=null">
+ 				#{y},
+ 			</if>
+ 			<if test="picUrl!=null">
+ 				#{picUrl},
+ 			</if>
+ 			<if test="simpleIntro!=null">
+ 				#{simpleIntro},
+ 			</if>
+ 			<if test="detailIntro!=null">
+ 				#{detailIntro},
+ 			</if>
+ 			<if test="simpleIntroVoiceUrl!=null">
+ 				#{simpleIntroVoiceUrl},
+ 			</if>
+ 			<if test="detailIntroVoiceUrl!=null">
+ 				#{detailIntroVoiceUrl},
+ 			</if>
+ 				now(),
+ 			<if test="sort!=null">
+ 				#{sort},
+ 			</if>
+ 		</trim>
+ 	</insert>
  </mapper>

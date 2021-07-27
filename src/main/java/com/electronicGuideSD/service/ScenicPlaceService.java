@@ -10,4 +10,6 @@ public interface ScenicPlaceService {
 
 	List<ScenicPlace> selectList(String name, int page, int rows, String sort, String order);
 
+	int add(ScenicPlace scenicPlace);
+
 }
