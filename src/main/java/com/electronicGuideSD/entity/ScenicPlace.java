@@ -33,6 +33,18 @@ public class ScenicPlace {
 	public void setPicUrl(String picUrl) {
 		this.picUrl = picUrl;
 	}
+	public Integer getPicWidth() {
+		return picWidth;
+	}
+	public void setPicWidth(Integer picWidth) {
+		this.picWidth = picWidth;
+	}
+	public Integer getPicHeight() {
+		return picHeight;
+	}
+	public void setPicHeight(Integer picHeight) {
+		this.picHeight = picHeight;
+	}
 	public String getSimpleIntro() {
 		return simpleIntro;
 	}
@@ -79,6 +91,8 @@ public class ScenicPlace {
 	private Float x;
 	private Float y;
 	private String picUrl;
+	private Integer picWidth;
+	private Integer picHeight;
 	private String simpleIntro;
 	private String detailIntro;
 	private String simpleIntroVoiceUrl;

@@ -22,7 +22,7 @@
 	width: 150px;
 	height:30px;
 }
-.x_inp,.y_inp{
+.picWidth_inp,.picHeight_inp,.x_inp,.y_inp{
 	width: 130px;
 	height:30px;
 }
@@ -103,9 +103,9 @@ function initEditDialog(){
 	$("#edit_div table tr").each(function(i){
 		if(i==1)
 			$(this).css("height","250px");
-		else if(i==3)
-			$(this).css("height","200px");
 		else if(i==4)
+			$(this).css("height","200px");
+		else if(i==5)
 			$(this).css("height","100px");
 		else
 			$(this).css("height","45px");
@@ -134,9 +134,13 @@ function checkEdit(){
 		if(checkSort()){
 			if(checkX()){
 				if(checkY()){
-					if(checkSimpleIntro()){
-						if(checkDetailIntro()){
-							editScenicPlace();
+					if(checkPicWidth()){
+						if(checkPicHeight()){
+							if(checkSimpleIntro()){
+								if(checkDetailIntro()){
+									editScenicPlace();
+								}
+							}
 						}
 					}
 				}
@@ -214,6 +218,28 @@ function checkY(){
 	var y = $("#y").val();
 	if(y==null||y==""){
 	  	alert("请输入y轴坐标");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证图片宽度
+function checkPicWidth(){
+	var picWidth = $("#picWidth").val();
+	if(picWidth==null||picWidth==""){
+	  	alert("请输入图片宽度");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证图片高度
+function checkPicHeight(){
+	var picHeight = $("#picHeight").val();
+	if(picHeight==null||picHeight==""){
+	  	alert("请输入图片高度");
 	  	return false;
 	}
 	else
@@ -361,7 +387,7 @@ function setFitWidthInParent(parent,self){
 <div class="layui-layout layui-layout-admin">	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">添加景点</div>
+	<div class="page_location_div">编辑景点</div>
 	
 	<div id="edit_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
@@ -393,6 +419,20 @@ function setFitWidthInParent(parent,self){
 			<td class="td1" align="right">
 			</td>
 			<td class="td2">
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				图片宽度(px)
+			</td>
+			<td class="td2">
+				<input type="number" class="picWidth_inp" id="picWidth" name="picWidth" value="${requestScope.scenicPlace.picWidth }" placeholder="请输入图片宽度"/>
+			</td>
+			<td class="td1" align="right">
+				图片高度(px)
+			</td>
+			<td class="td2">
+				<input type="number" class="picHeight_inp" id="picHeight" name="picHeight" value="${requestScope.scenicPlace.picHeight }" placeholder="请输入图片高度"/>
 			</td>
 		  </tr>
 		  <tr>

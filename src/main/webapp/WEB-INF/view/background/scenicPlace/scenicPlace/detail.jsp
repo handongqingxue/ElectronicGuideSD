@@ -72,9 +72,9 @@ function initDetailDialog(){
 	$("#detail_div table tr").each(function(i){
 		if(i==1)
 			$(this).css("height","250px");
-		else if(i==3)
-			$(this).css("height","200px");
 		else if(i==4)
+			$(this).css("height","200px");
+		else if(i==5)
 			$(this).css("height","100px");
 		else
 			$(this).css("height","45px");
@@ -150,6 +150,20 @@ function setFitWidthInParent(parent,self){
 			<td class="td1" align="right">
 			</td>
 			<td class="td2">
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				图片宽度(px)
+			</td>
+			<td class="td2">
+				<span>${requestScope.scenicPlace.picWidth }</span>
+			</td>
+			<td class="td1" align="right">
+				图片高度(px)
+			</td>
+			<td class="td2">
+				<span>${requestScope.scenicPlace.picHeight }</span>
 			</td>
 		  </tr>
 		  <tr>

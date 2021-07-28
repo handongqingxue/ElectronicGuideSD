@@ -61,6 +61,8 @@ function initTab1(){
 		pageSize:10,
 		columns:[[
 			{field:"name",title:"名称",width:150},
+			{field:"picWidth",title:"图片宽度(px)",width:100},
+			{field:"picHeight",title:"图片高度(px)",width:100},
 			{field:"x",title:"x轴坐标",width:100},
 			{field:"y",title:"y轴坐标",width:100},
 			{field:"simpleIntro",title:"简单介绍",width:250},
@@ -75,7 +77,7 @@ function initTab1(){
         onLoadSuccess:function(data){
 			if(data.total==0){
 				$(this).datagrid("appendRow",{name:"<div style=\"text-align:center;\">暂无信息<div>"});
-				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:7});
+				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:9});
 				data.total=0;
 			}
 			

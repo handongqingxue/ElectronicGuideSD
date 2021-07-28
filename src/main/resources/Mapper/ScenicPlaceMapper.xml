@@ -37,6 +37,12 @@
  			<if test="picUrl!=null">
  				picUrl,
  			</if>
+ 			<if test="picWidth!=null">
+ 				picWidth,
+ 			</if>
+ 			<if test="picHeight!=null">
+ 				picHeight,
+ 			</if>
  			<if test="simpleIntro!=null">
  				simpleIntro,
  			</if>
@@ -67,6 +73,12 @@
  			</if>
  			<if test="picUrl!=null">
  				#{picUrl},
+ 			</if>
+ 			<if test="picWidth!=null">
+ 				#{picWidth},
+ 			</if>
+ 			<if test="picHeight!=null">
+ 				#{picHeight},
  			</if>
  			<if test="simpleIntro!=null">
  				#{simpleIntro},
@@ -100,6 +112,12 @@
 			</if>
 			<if test="picUrl!=null">
 				picUrl=#{picUrl},
+			</if>
+			<if test="picWidth!=null">
+				picWidth=#{picWidth},
+			</if>
+			<if test="picHeight!=null">
+				picHeight=#{picHeight},
 			</if>
 			<if test="simpleIntro!=null">
 				simpleIntro=#{simpleIntro},
