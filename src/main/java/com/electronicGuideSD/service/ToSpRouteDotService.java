@@ -10,4 +10,6 @@ public interface ToSpRouteDotService {
 
 	List<ToSpRouteDot> selectList(String name, int page, int rows, String sort, String order);
 
+	int add(ToSpRouteDot toSpRouteDot);
+
 }

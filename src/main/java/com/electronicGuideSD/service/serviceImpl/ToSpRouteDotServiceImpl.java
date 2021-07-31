@@ -27,4 +27,10 @@ public class ToSpRouteDotServiceImpl implements ToSpRouteDotService {
 		return toSpRouteDotDao.selectList(name, (page-1)*rows, rows, sort, order);
 	}
 
+	@Override
+	public int add(ToSpRouteDot toSpRouteDot) {
+		// TODO Auto-generated method stub
+		return toSpRouteDotDao.add(toSpRouteDot);
+	}
+
 }

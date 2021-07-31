@@ -54,7 +54,7 @@ function initAddLB(){
 function initTab1(){
 	tab1=$("#tab1").datagrid({
 		title:"去景点路线点查询",
-		url:routeDotPath+"selectList",
+		url:routeDotPath+"selectToSpList",
 		toolbar:"#toolbar",
 		width:setFitWidthInParent("body"),
 		pagination:true,

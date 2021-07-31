@@ -16,4 +16,38 @@
 		</if>
  		 order by rd.sort limit #{start},#{rows}
  	</select>
+ 	<insert id="add" parameterType="com.electronicGuideSD.entity.ToSpRouteDot">
+ 		insert into to_sp_route_dot
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="x!=null">
+ 				x,
+ 			</if>
+ 			<if test="y!=null">
+ 				y,
+ 			</if>
+ 				createTime,
+ 			<if test="sort!=null">
+ 				sort,
+ 			</if>
+ 			<if test="scePlaId!=null">
+ 				scePlaId,
+ 			</if>
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="x!=null">
+ 				#{x},
+ 			</if>
+ 			<if test="y!=null">
+ 				#{y},
+ 			</if>
+ 				now(),
+ 			<if test="sort!=null">
+ 				#{sort},
+ 			</if>
+ 			<if test="scePlaId!=null">
+ 				#{scePlaId},
+ 			</if>
+ 		</trim>
+ 	</insert>
  </mapper>
