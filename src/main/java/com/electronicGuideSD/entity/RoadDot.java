@@ -1,6 +1,6 @@
 package com.electronicGuideSD.entity;
 
-public class ToSpRouteDot {
+public class RoadDot {
 
 	private Integer id;
 	public Integer getId() {
@@ -21,6 +21,18 @@ public class ToSpRouteDot {
 	public void setY(Float y) {
 		this.y = y;
 	}
+	public Boolean getIsCrossDot() {
+		return isCrossDot;
+	}
+	public void setIsCrossDot(Boolean isCrossDot) {
+		this.isCrossDot = isCrossDot;
+	}
+	public Integer getCrossRoadId() {
+		return crossRoadId;
+	}
+	public void setCrossRoadId(Integer crossRoadId) {
+		this.crossRoadId = crossRoadId;
+	}
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -39,23 +51,18 @@ public class ToSpRouteDot {
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
-	public Integer getScePlaId() {
-		return scePlaId;
+	public Integer getRoadId() {
+		return roadId;
 	}
-	public void setScePlaId(Integer scePlaId) {
-		this.scePlaId = scePlaId;
-	}
-	public String getSpName() {
-		return spName;
-	}
-	public void setSpName(String spName) {
-		this.spName = spName;
+	public void setRoadId(Integer roadId) {
+		this.roadId = roadId;
 	}
 	private Float x;
 	private Float y;
+	private Boolean isCrossDot;
+	private Integer crossRoadId;
 	private String createTime;
 	private String modifyTime;
 	private Integer sort;
-	private Integer scePlaId;
-	private String spName;
+	private Integer roadId;
 }

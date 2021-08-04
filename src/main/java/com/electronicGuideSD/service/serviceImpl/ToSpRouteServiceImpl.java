@@ -10,27 +10,27 @@ import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
 
 @Service
-public class ToSpRouteDotServiceImpl implements ToSpRouteDotService {
+public class ToSpRouteServiceImpl implements ToSpRouteService {
 	
 	@Autowired
-	private ToSpRouteDotMapper toSpRouteDotDao;
+	private ToSpRouteMapper toSpRouteDao;
 
 	@Override
 	public int selectForInt(String name) {
 		// TODO Auto-generated method stub
-		return toSpRouteDotDao.selectForInt(name);
+		return toSpRouteDao.selectForInt(name);
 	}
 
 	@Override
-	public List<ToSpRouteDot> selectList(String name, int page, int rows, String sort, String order) {
+	public List<ToSpRoute> selectList(String name, int page, int rows, String sort, String order) {
 		// TODO Auto-generated method stub
-		return toSpRouteDotDao.selectList(name, (page-1)*rows, rows, sort, order);
+		return toSpRouteDao.selectList(name, (page-1)*rows, rows, sort, order);
 	}
 
 	@Override
-	public int add(ToSpRouteDot toSpRouteDot) {
+	public int add(ToSpRoute toSpRouteDot) {
 		// TODO Auto-generated method stub
-		return toSpRouteDotDao.add(toSpRouteDot);
+		return toSpRouteDao.add(toSpRouteDot);
 	}
 
 }

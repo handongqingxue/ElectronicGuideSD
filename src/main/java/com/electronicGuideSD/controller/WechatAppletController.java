@@ -18,6 +18,8 @@ public class WechatAppletController {
 
 	@Autowired
 	private ScenicPlaceService scenicPlaceService;
+	@Autowired
+	private RoadDotService roadDotService;
 	public static final String MODULE_NAME="/wechatApplet";
 
 	@RequestMapping(value="/selectScenicPlaceList")
@@ -35,6 +37,17 @@ public class WechatAppletController {
 			jsonMap.put("status", "ok");
 			jsonMap.put("scenicPlaceList", scenicPlaceList);
 		}
+		return jsonMap;
+	}
+
+	@RequestMapping(value="/navToDestination")
+	@ResponseBody
+	public Map<String, Object> navToDestination() {
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<RoadDot> roadDotList = roadDotService.select();
+		
+		jsonMap.put("roadDotList", roadDotList);
 		return jsonMap;
 	}
 }

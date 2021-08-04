@@ -25,7 +25,7 @@
 <title>去景点路线点查询</title>
 <%@include file="../../js.jsp"%>
 <script type="text/javascript">
-var routeDotPath='<%=basePath%>'+"background/routeDot/";
+var routePath='<%=basePath%>'+"background/route/";
 $(function(){
 	initSearchLB();
 	initAddLB();
@@ -46,23 +46,22 @@ function initAddLB(){
 	$("#add_but").linkbutton({
 		iconCls:"icon-add",
 		onClick:function(){
-			location.href=routeDotPath+"toSp/add";
+			location.href=routePath+"toSp/add";
 		}
 	});
 }
 
 function initTab1(){
 	tab1=$("#tab1").datagrid({
-		title:"去景点路线点查询",
-		url:routeDotPath+"selectToSpList",
+		title:"去景点路线查询",
+		url:routePath+"selectToSpList",
 		toolbar:"#toolbar",
 		width:setFitWidthInParent("body"),
 		pagination:true,
 		pageSize:10,
 		columns:[[
-			{field:"spName",title:"景区名称",width:150},
-			{field:"x",title:"x轴坐标",width:100},
-			{field:"y",title:"y轴坐标",width:100},
+			{field:"spName",title:"景点名称",width:150},
+			{field:"roadIds",title:"所含道路",width:100},
             {field:"createTime",title:"创建时间",width:150},
             {field:"sort",title:"排序",width:80},
             {field:"id",title:"操作",width:110,formatter:function(value,row){
@@ -74,7 +73,7 @@ function initTab1(){
         onLoadSuccess:function(data){
 			if(data.total==0){
 				$(this).datagrid("appendRow",{spName:"<div style=\"text-align:center;\">暂无信息<div>"});
-				$(this).datagrid("mergeCells",{index:0,field:"spName",colspan:6});
+				$(this).datagrid("mergeCells",{index:0,field:"spName",colspan:5});
 				data.total=0;
 			}
 			

@@ -22,12 +22,12 @@ import com.electronicGuideSD.util.PlanResult;
 import net.sf.json.JSONObject;
 
 @Controller
-@RequestMapping(RouteDotController.MODULE_NAME)
-public class RouteDotController {
+@RequestMapping(RouteController.MODULE_NAME)
+public class RouteController {
 
 	@Autowired
-	private ToSpRouteDotService toSpRouteDotService;
-	public static final String MODULE_NAME="/background/routeDot";
+	private ToSpRouteService toSpRouteDotService;
+	public static final String MODULE_NAME="/background/route";
 	
 	@RequestMapping(value="/toSp/add")
 	public String goToSpAdd(HttpServletRequest request) {
@@ -47,7 +47,7 @@ public class RouteDotController {
 		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		int count=toSpRouteDotService.selectForInt(name);
-		List<ToSpRouteDot> sdList=toSpRouteDotService.selectList(name, page, rows, sort, order);
+		List<ToSpRoute> sdList=toSpRouteDotService.selectList(name, page, rows, sort, order);
 
 		jsonMap.put("total", count);
 		jsonMap.put("rows", sdList);
@@ -57,7 +57,7 @@ public class RouteDotController {
 	
 	@RequestMapping(value="/addTSPRD",produces="plain/text; charset=UTF-8")
 	@ResponseBody
-	public String addTSPRD(ToSpRouteDot toSpRouteDot,
+	public String addTSPRD(ToSpRoute toSpRouteDot,
 			HttpServletRequest request) {
 
 		String json=null;;
