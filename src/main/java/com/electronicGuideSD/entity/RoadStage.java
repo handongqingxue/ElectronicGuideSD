@@ -2,6 +2,8 @@ package com.electronicGuideSD.entity;
 
 public class RoadStage {
 
+	public static final String BACK_FLAG="back";
+	public static final String FRONT_FLAG="front";
 	private Integer id;
 	public Integer getId() {
 		return id;

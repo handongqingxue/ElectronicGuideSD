@@ -39,13 +39,14 @@ public class RoadStageServiceImpl implements RoadStageService {
 
 		List<RoadStage> roadStageList = roadStageDao.select();
 		Map<String, Object> roadStageMap = initAllRoadMap(roadStageList);
-		if("back".equals(meToRoadMap.get("bfFlag").toString())) {
+		initAllNavRoadLine(roadStageMap,meToRoadMap);
+		if(RoadStage.BACK_FLAG.equals(meToRoadMap.get("bfFlag").toString())) {
 			Float frontX = Float.valueOf(meToRoadMap.get("frontX").toString());
 			Float frontY = Float.valueOf(meToRoadMap.get("frontY").toString());
 			Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
 			System.out.println("11111111111"+frontX+","+frontY+","+roadId);
 		}
-		else if("front".equals(meToRoadMap.get("bfFlag").toString())) {
+		else if(RoadStage.FRONT_FLAG.equals(meToRoadMap.get("bfFlag").toString())) {
 			List<RoadStage> rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
 			RoadStage rs = rsList.get(0);
 			Float frontX = Float.valueOf(rs.getBackX());
@@ -54,6 +55,10 @@ public class RoadStageServiceImpl implements RoadStageService {
 			System.out.println("2222222222="+frontX+","+frontY+","+roadId);
 		}
 		return roadStageList;
+	}
+	
+	public void initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap) {
+		Integer startRoadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
 	}
 
 	@Override
