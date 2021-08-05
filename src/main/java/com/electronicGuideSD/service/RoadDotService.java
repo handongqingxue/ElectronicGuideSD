@@ -6,6 +6,6 @@ import com.electronicGuideSD.entity.*;
 
 public interface RoadDotService {
 
-	List<RoadDot> select();
+	List<RoadDot> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY);
 
 }

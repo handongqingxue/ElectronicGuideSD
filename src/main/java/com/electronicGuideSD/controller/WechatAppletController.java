@@ -1,5 +1,6 @@
 package com.electronicGuideSD.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +43,23 @@ public class WechatAppletController {
 
 	@RequestMapping(value="/navToDestination")
 	@ResponseBody
-	public Map<String, Object> navToDestination() {
+	public Map<String, Object> navToDestination(Float meX,Float meY,Float scenicPlaceX,Float scenicPlaceY) {
 
+		System.out.println("meX="+meX);
+		System.out.println("meY="+meY);
+		System.out.println("scenicPlaceX="+scenicPlaceX);
+		System.out.println("scenicPlaceY="+scenicPlaceY);
+		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		List<RoadDot> roadDotList = roadDotService.select();
+		List<RoadDot> destRoadDotList = new ArrayList<>();
+		List<RoadDot> roadDotList = roadDotService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY);
+		for (RoadDot roadDot : roadDotList) {
+			Float x = roadDot.getX();
+			Float y = roadDot.getY();
+			if(meX==x&&meY==y) {
+				System.out.println("我的位置x="+x+",我的位置y="+y);
+			}
+		}
 		
 		jsonMap.put("roadDotList", roadDotList);
 		return jsonMap;
