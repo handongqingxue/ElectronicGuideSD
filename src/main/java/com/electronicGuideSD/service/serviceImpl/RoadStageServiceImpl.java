@@ -11,20 +11,20 @@ import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
 
 @Service
-public class RoadDotServiceImpl implements RoadDotService {
+public class RoadStageServiceImpl implements RoadStageService {
 
 	@Autowired
-	private RoadDotMapper roadDotDao;
+	private RoadStageMapper roadDotDao;
 
 	@Override
-	public List<RoadDot> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
+	public List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
 		// TODO Auto-generated method stub
-		Map<String,Object> meToRoadMap = roadDotDao.selectMinDistanceDot(meX,meY);
+		Map<String,Object> meToRoadMap = roadDotDao.selectMinDistanceStage(meX,meY);
 		System.out.println("meRoadId="+Integer.valueOf(meToRoadMap.get("roadId").toString()));
 		System.out.println("meFrontThrough="+Boolean.valueOf(meToRoadMap.get("frontThrough").toString()));
 		System.out.println("meBackThrough="+Boolean.valueOf(meToRoadMap.get("backThrough").toString()));
 		
-		Map<String,Object> spToRoadMap = roadDotDao.selectMinDistanceDot(scenicPlaceX,scenicPlaceY);
+		Map<String,Object> spToRoadMap = roadDotDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
 		System.out.println("spRoadId="+Integer.valueOf(spToRoadMap.get("roadId").toString()));
 		System.out.println("spFrontThrough="+Boolean.valueOf(spToRoadMap.get("frontThrough").toString()));
 		System.out.println("spBackThrough="+Boolean.valueOf(spToRoadMap.get("backThrough").toString()));

@@ -20,7 +20,7 @@ public class WechatAppletController {
 	@Autowired
 	private ScenicPlaceService scenicPlaceService;
 	@Autowired
-	private RoadDotService roadDotService;
+	private RoadStageService roadDotService;
 	public static final String MODULE_NAME="/wechatApplet";
 
 	@RequestMapping(value="/selectScenicPlaceList")
@@ -51,17 +51,13 @@ public class WechatAppletController {
 		System.out.println("scenicPlaceY="+scenicPlaceY);
 		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		List<RoadDot> destRoadDotList = new ArrayList<>();
-		List<RoadDot> roadDotList = roadDotService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY);
-		for (RoadDot roadDot : roadDotList) {
-			Float x = roadDot.getX();
-			Float y = roadDot.getY();
-			if(meX==x&&meY==y) {
-				System.out.println("我的位置x="+x+",我的位置y="+y);
-			}
+		List<RoadStage> destRoadStageList = new ArrayList<>();
+		List<RoadStage> roadStageList = roadDotService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY);
+		for (RoadStage roadStage : roadStageList) {
+			
 		}
 		
-		jsonMap.put("roadDotList", roadDotList);
+		jsonMap.put("roadStageList", roadStageList);
 		return jsonMap;
 	}
 }

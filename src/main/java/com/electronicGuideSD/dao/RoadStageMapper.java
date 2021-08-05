@@ -7,10 +7,10 @@ import org.apache.ibatis.annotations.Param;
 
 import com.electronicGuideSD.entity.*;
 
-public interface RoadDotMapper {
+public interface RoadStageMapper {
 
-	List<RoadDot> select();
+	List<RoadStage> select();
 
-	Map<String, Object> selectMinDistanceDot(@Param("x")Float x, @Param("y")Float y);
+	Map<String, Object> selectMinDistanceStage(@Param("x")Float x, @Param("y")Float y);
 
 }
