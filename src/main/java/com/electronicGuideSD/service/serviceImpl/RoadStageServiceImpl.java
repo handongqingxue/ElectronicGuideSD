@@ -39,26 +39,60 @@ public class RoadStageServiceImpl implements RoadStageService {
 
 		List<RoadStage> roadStageList = roadStageDao.select();
 		Map<String, Object> roadStageMap = initAllRoadMap(roadStageList);
-		initAllNavRoadLine(roadStageMap,meToRoadMap);
-		if(RoadStage.BACK_FLAG.equals(meToRoadMap.get("bfFlag").toString())) {
-			Float frontX = Float.valueOf(meToRoadMap.get("frontX").toString());
-			Float frontY = Float.valueOf(meToRoadMap.get("frontY").toString());
-			Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
-			System.out.println("11111111111"+frontX+","+frontY+","+roadId);
-		}
-		else if(RoadStage.FRONT_FLAG.equals(meToRoadMap.get("bfFlag").toString())) {
-			List<RoadStage> rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
-			RoadStage rs = rsList.get(0);
-			Float frontX = Float.valueOf(rs.getBackX());
-			Float frontY = Float.valueOf(rs.getBackY());
-			Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
-			System.out.println("2222222222="+frontX+","+frontY+","+roadId);
-		}
-		return roadStageList;
+		List<RoadStage> allNavList = initAllNavRoadLine(roadStageMap,meToRoadMap,meX,meY);
+		System.out.println("size==="+allNavList.size());
+		return allNavList;
 	}
 	
-	public void initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap) {
+	public List<RoadStage> initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap, Float meX, Float meY) {
+		List<RoadStage> allNavList=new ArrayList<>();
 		Integer startRoadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
+		RoadStage roadStage=new RoadStage();
+		roadStage.setBackX(meX);
+		roadStage.setBackY(meY);
+		if(RoadStage.BACK_FLAG.equals(meToRoadMap.get("bfFlag").toString())) {
+			Float frontX = Float.valueOf(meToRoadMap.get("backX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			Float frontY = Float.valueOf(meToRoadMap.get("backY").toString());
+			roadStage.setFrontX(frontX);
+			roadStage.setFrontY(frontY);
+			allNavList.add(roadStage);
+			
+			List<RoadStage> rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
+			System.out.println("===="+rsList.size());
+			RoadStage rs = rsList.get(0);
+			Float rsFrontX = Float.valueOf(rs.getFrontX());//这里虽然获得前面的点，但方向相反，相当于游客导航路线里后面的点
+			Float rsFrontY = Float.valueOf(rs.getFrontY());
+			Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
+			roadStage=new RoadStage();
+			roadStage.setBackX(frontX);
+			roadStage.setBackY(frontY);
+			roadStage.setFrontX(rsFrontX);
+			roadStage.setFrontY(rsFrontY);
+			allNavList.add(roadStage);
+			System.out.println("11111111111="+frontX+","+frontY+","+roadId);
+		}
+		else if(RoadStage.FRONT_FLAG.equals(meToRoadMap.get("bfFlag").toString())) {
+			Float frontX = Float.valueOf(meToRoadMap.get("frontX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			Float frontY = Float.valueOf(meToRoadMap.get("frontY").toString());
+			roadStage.setFrontX(frontX);
+			roadStage.setFrontY(frontY);
+			allNavList.add(roadStage);
+			
+			List<RoadStage> rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
+			System.out.println("===="+rsList.size());
+			RoadStage rs = rsList.get(0);
+			Float rsFrontX = Float.valueOf(rs.getBackX());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			Float rsFrontY = Float.valueOf(rs.getBackY());
+			Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
+			roadStage=new RoadStage();
+			roadStage.setBackX(frontX);
+			roadStage.setBackY(frontY);
+			roadStage.setFrontX(rsFrontX);
+			roadStage.setFrontY(rsFrontY);
+			allNavList.add(roadStage);
+			System.out.println("2222222222="+frontX+","+frontY+","+roadId);
+		}
+		return allNavList;
 	}
 
 	@Override

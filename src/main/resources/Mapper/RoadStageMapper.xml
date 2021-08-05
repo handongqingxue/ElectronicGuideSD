@@ -7,9 +7,9 @@
  		select * from road_stage order by roadId,sort
  	</select>
  	<select id="selectMinDistanceStage" resultType="java.util.Map">
- 		select ABS(#{x}-backX) toX,ABS(#{y}-backY) toY,round(SQRT(ABS(#{x}-backX)*ABS(#{x}-backX)+ABS(#{y}-backY)*ABS(#{y}-backY)),2) distance,backX,backY,roadId,frontThrough,backThrough,'back' bfFlag from road_stage 
+ 		select ABS(#{x}-backX) toX,ABS(#{y}-backY) toY,round(SQRT(ABS(#{x}-backX)*ABS(#{x}-backX)+ABS(#{y}-backY)*ABS(#{y}-backY)),2) distance,backX,backY,frontX,frontY,roadId,frontThrough,backThrough,'back' bfFlag from road_stage where frontThrough=0
  		UNION 
-		select ABS(#{x}-frontX) toX,ABS(#{y}-frontY) toY,round(SQRT(ABS(#{x}-frontX)*ABS(#{x}-frontX)+ABS(#{y}-frontY)*ABS(#{y}-frontY)),2) distance,backX,backY,roadId,frontThrough,backThrough,'front' bfFlag from road_stage
+		select ABS(#{x}-frontX) toX,ABS(#{y}-frontY) toY,round(SQRT(ABS(#{x}-frontX)*ABS(#{x}-frontX)+ABS(#{y}-frontY)*ABS(#{y}-frontY)),2) distance,backX,backY,frontX,frontY,roadId,frontThrough,backThrough,'front' bfFlag from road_stage where backThrough=0
 		order by distance 
 		limit 0,1
  	</select>
