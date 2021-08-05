@@ -53,9 +53,6 @@ public class WechatAppletController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		List<RoadStage> destRoadStageList = new ArrayList<>();
 		List<RoadStage> roadStageList = roadDotService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY);
-		for (RoadStage roadStage : roadStageList) {
-			
-		}
 		
 		jsonMap.put("roadStageList", roadStageList);
 		return jsonMap;
