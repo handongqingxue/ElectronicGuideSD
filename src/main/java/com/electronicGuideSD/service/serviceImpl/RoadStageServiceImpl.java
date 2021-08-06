@@ -112,6 +112,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 				System.out.println("by==="+rs.getBackY());
 				if(frontX.equals(rs.getBackX())&&frontY.equals(rs.getBackY())) {
 					System.out.println("与后方点相接");
+					//生成的导航线方向可能和地图上路线的方向相反
 					Float rsFrontX = Float.valueOf(rs.getFrontX());//这里虽然获得前面的点，但方向相反，相当于游客导航路线里后面的点
 					Float rsFrontY = Float.valueOf(rs.getFrontY());
 					roadStage=new RoadStage();
