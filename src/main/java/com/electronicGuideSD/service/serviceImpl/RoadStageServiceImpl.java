@@ -66,27 +66,10 @@ public class RoadStageServiceImpl implements RoadStageService {
 			for(int i=itemIndex;i<rsList.size();i++) {
 				System.out.println("i上==="+i);
 				RoadStage rs = rsList.get(i);
-				
-				System.out.println("front111==="+frontX+","+frontY);
-				System.out.println("bx==="+rs.getBackX());
-				System.out.println("by==="+rs.getBackY());
-				if(frontX.equals(rs.getBackX())&&frontY.equals(rs.getBackY())) {
-					System.out.println("与后方点相接");
-					Float rsFrontX = Float.valueOf(rs.getFrontX());//这里虽然获得前面的点，但方向相反，相当于游客导航路线里后面的点
-					Float rsFrontY = Float.valueOf(rs.getFrontY());
-					roadStage=new RoadStage();
-					roadStage.setBackX(frontX);
-					roadStage.setBackY(frontY);
-					roadStage.setFrontX(rsFrontX);
-					roadStage.setFrontY(rsFrontY);
-					allNavList.add(roadStage);
-					System.out.println("===="+rsList.size());
-					Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
-					System.out.println("11111111111="+frontX+","+frontY+","+rsFrontX+","+rsFrontY+","+roadId);
-				}
-				else if(frontX.equals(rs.getFrontX())&&frontY.equals(rs.getFrontY())) {
-					System.out.println("与前方点相接");
-				}
+				RoadStageUtil.addRSNavInList(frontX,frontY,rs,allNavList);
+				System.out.println("size==="+allNavList.size());
+				//Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
+				//System.out.println("11111111111="+frontX+","+frontY+","+rsFrontX+","+rsFrontY+","+roadId);
 			}
 			for(int i=itemIndex-1;i>=0;i--) {
 				System.out.println("i下==="+i);
