@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.electronicGuideSD.dao.*;
 import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
+import com.electronicGuideSD.util.RoadStageUtil;
 
 @Service
 public class RoadStageServiceImpl implements RoadStageService {
@@ -46,6 +47,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 	
 	public List<RoadStage> initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap, Float meX, Float meY) {
 		List<RoadStage> allNavList=new ArrayList<>();
+		List<RoadStage> rsList=null;
 		Integer startRoadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
 		RoadStage roadStage=new RoadStage();
 		roadStage.setBackX(meX);
@@ -56,20 +58,39 @@ public class RoadStageServiceImpl implements RoadStageService {
 			roadStage.setFrontX(frontX);
 			roadStage.setFrontY(frontY);
 			allNavList.add(roadStage);
+			System.out.println("oooooooo="+meX+","+meY+","+frontX+","+frontY+","+startRoadId);
+			Integer sort = Integer.valueOf(meToRoadMap.get("sort").toString());
 			
-			List<RoadStage> rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
-			System.out.println("===="+rsList.size());
-			RoadStage rs = rsList.get(0);
-			Float rsFrontX = Float.valueOf(rs.getFrontX());//这里虽然获得前面的点，但方向相反，相当于游客导航路线里后面的点
-			Float rsFrontY = Float.valueOf(rs.getFrontY());
-			Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
-			roadStage=new RoadStage();
-			roadStage.setBackX(frontX);
-			roadStage.setBackY(frontY);
-			roadStage.setFrontX(rsFrontX);
-			roadStage.setFrontY(rsFrontY);
-			allNavList.add(roadStage);
-			System.out.println("11111111111="+frontX+","+frontY+","+roadId);
+			rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
+			int itemIndex = RoadStageUtil.getListItemIndexBySort(rsList,sort);
+			for(int i=itemIndex;i<rsList.size();i++) {
+				System.out.println("i上==="+i);
+				RoadStage rs = rsList.get(i);
+				System.out.println("front111==="+frontX+","+frontY);
+				System.out.println("bx==="+rs.getBackX());
+				System.out.println("by==="+rs.getBackY());
+				if(frontX.equals(rs.getBackX())&&frontY.equals(rs.getBackY())) {
+					System.out.println("与后方点相接");
+					Float rsFrontX = Float.valueOf(rs.getFrontX());//这里虽然获得前面的点，但方向相反，相当于游客导航路线里后面的点
+					Float rsFrontY = Float.valueOf(rs.getFrontY());
+					roadStage=new RoadStage();
+					roadStage.setBackX(frontX);
+					roadStage.setBackY(frontY);
+					roadStage.setFrontX(rsFrontX);
+					roadStage.setFrontY(rsFrontY);
+					allNavList.add(roadStage);
+					System.out.println("===="+rsList.size());
+					Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
+					System.out.println("11111111111="+frontX+","+frontY+","+rsFrontX+","+rsFrontY+","+roadId);
+				}
+				else if(frontX.equals(rs.getFrontX())&&frontY.equals(rs.getFrontY())) {
+					System.out.println("与前方点相接");
+				}
+			}
+			for(int i=itemIndex-1;i>=0;i--) {
+				System.out.println("i下==="+i);
+			}
+			
 		}
 		else if(RoadStage.FRONT_FLAG.equals(meToRoadMap.get("bfFlag").toString())) {
 			Float frontX = Float.valueOf(meToRoadMap.get("frontX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
@@ -78,7 +99,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 			roadStage.setFrontY(frontY);
 			allNavList.add(roadStage);
 			
-			List<RoadStage> rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
+			rsList=(List<RoadStage>)roadStageMap.get("roadStage"+meToRoadMap.get("roadId").toString());
 			System.out.println("===="+rsList.size());
 			RoadStage rs = rsList.get(0);
 			Float rsFrontX = Float.valueOf(rs.getBackX());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
@@ -90,7 +111,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 			roadStage.setFrontX(rsFrontX);
 			roadStage.setFrontY(rsFrontY);
 			allNavList.add(roadStage);
-			System.out.println("2222222222="+frontX+","+frontY+","+roadId);
+			System.out.println("2222222222="+frontX+","+frontY+","+rsFrontX+","+rsFrontY+","+roadId);
 		}
 		return allNavList;
 	}
