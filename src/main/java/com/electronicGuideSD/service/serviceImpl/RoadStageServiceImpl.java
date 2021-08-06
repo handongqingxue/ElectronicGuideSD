@@ -66,6 +66,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 			for(int i=itemIndex;i<rsList.size();i++) {
 				System.out.println("iÉÏ==="+i);
 				RoadStage rs = rsList.get(i);
+				
 				System.out.println("front111==="+frontX+","+frontY);
 				System.out.println("bx==="+rs.getBackX());
 				System.out.println("by==="+rs.getBackY());

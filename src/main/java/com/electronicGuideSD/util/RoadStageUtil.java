@@ -19,4 +19,8 @@ public class RoadStageUtil {
 		}
 		return index;
 	}
+	
+	public static void addRSNavInList() {
+		
+	}
 }
