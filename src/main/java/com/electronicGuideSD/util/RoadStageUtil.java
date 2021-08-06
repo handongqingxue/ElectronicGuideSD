@@ -20,23 +20,52 @@ public class RoadStageUtil {
 		return index;
 	}
 	
-	public static void addRSNavInList(Float frontX,Float frontY,RoadStage rs,List<RoadStage> allNavList) {
-		System.out.println("front111==="+frontX+","+frontY);
+	public static void addRSNavInList(Float x,Float y,RoadStage rs,List<RoadStage> navList,String bfFlag) {
+		System.out.println("front111==="+x+","+y);
 		System.out.println("bx==="+rs.getBackX());
 		System.out.println("by==="+rs.getBackY());
-		if(frontX.equals(rs.getBackX())&&frontY.equals(rs.getBackY())) {
+		RoadStage roadStage=new RoadStage();
+		if(RoadStage.BACK_FLAG.equals(bfFlag)) {
 			System.out.println("与后方点相接");
-			Float rsFrontX = Float.valueOf(rs.getFrontX());//这里虽然获得前面的点，但方向相反，相当于游客导航路线里后面的点
-			Float rsFrontY = Float.valueOf(rs.getFrontY());
-			RoadStage roadStage=new RoadStage();
-			roadStage.setBackX(frontX);
-			roadStage.setBackY(frontY);
-			roadStage.setFrontX(rsFrontX);
-			roadStage.setFrontY(rsFrontY);
-			allNavList.add(roadStage);
+			//生成的导航线方向可能和地图上路线的方向相反
+			if(rs.getFrontThrough()) {//与后方点相接，就要判断前方点是否通
+				Float rsFrontX = Float.valueOf(rs.getFrontX());//这里虽然获得前面的点，但方向相反，相当于游客导航路线里后面的点
+				Float rsFrontY = Float.valueOf(rs.getFrontY());
+				System.out.println("x="+x+",y="+y+",rsFrontX="+rsFrontX+",rsFrontY="+rsFrontY);
+				roadStage.setBackX(x);
+				roadStage.setBackY(y);
+				roadStage.setFrontX(rsFrontX);
+				roadStage.setFrontY(rsFrontY);
+				rs.setBfFlag(bfFlag);
+				navList.add(roadStage);
+			}
 		}
-		else if(frontX.equals(rs.getFrontX())&&frontY.equals(rs.getFrontY())) {
+		else if(RoadStage.FRONT_FLAG.equals(bfFlag)) {
 			System.out.println("与前方点相接");
+			if(rs.getBackThrough()) {//与前方点相接，就要判断后方点是否通
+				Float rsFrontX = Float.valueOf(rs.getBackX());//若与前方点相接，这里导航线里前方的点就是路线里后方的点
+				Float rsFrontY = Float.valueOf(rs.getBackY());
+				System.out.println("x="+x+",y="+y+",rsFrontX="+rsFrontX+",rsFrontY="+rsFrontY);
+				roadStage.setBackX(x);
+				roadStage.setBackY(y);
+				roadStage.setFrontX(rsFrontX);
+				roadStage.setFrontY(rsFrontY);
+				rs.setBfFlag(bfFlag);
+				navList.add(roadStage);
+			}
 		}
+	}
+	
+	public static String checkConnectBackOrFront(Float x,Float y,RoadStage rs) {
+		String flag=null;
+		if(x.equals(rs.getBackX())&&y.equals(rs.getBackY())) {
+			System.out.println("与后方点相接");
+			flag=RoadStage.BACK_FLAG;
+		}
+		else if(x.equals(rs.getFrontX())&&y.equals(rs.getFrontY())) {
+			System.out.println("与前方点相接");
+			flag=RoadStage.FRONT_FLAG;
+		}
+		return flag;
 	}
 }

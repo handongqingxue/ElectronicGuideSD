@@ -95,6 +95,12 @@ public class RoadStage {
 	public void setRoadId(Integer roadId) {
 		this.roadId = roadId;
 	}
+	public String getBfFlag() {
+		return bfFlag;
+	}
+	public void setBfFlag(String bfFlag) {
+		this.bfFlag = bfFlag;
+	}
 	private Float frontX;
 	private Float frontY;
 	private Float backX;
@@ -109,4 +115,5 @@ public class RoadStage {
 	private String modifyTime;
 	private Integer sort;
 	private Integer roadId;
+	private String bfFlag;
 }
