@@ -66,7 +66,8 @@ public class RoadStageServiceImpl implements RoadStageService {
 			for(int i=itemIndex;i<rsList.size();i++) {
 				System.out.println("iÉÏ==="+i);
 				RoadStage rs = rsList.get(i);
-				RoadStageUtil.addRSNavInList(frontX,frontY,rs,allNavList);
+				if(rs.getFrontThrough())
+					RoadStageUtil.addRSNavInList(frontX,frontY,rs,allNavList);
 				System.out.println("size==="+allNavList.size());
 				//Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
 				//System.out.println("11111111111="+frontX+","+frontY+","+rsFrontX+","+rsFrontY+","+roadId);
