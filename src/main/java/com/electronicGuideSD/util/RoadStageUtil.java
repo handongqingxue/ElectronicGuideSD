@@ -27,116 +27,124 @@ public class RoadStageUtil {
 		return roadMap;
 	}
 	
-	public static List<RoadStage> initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap, Float meX, Float meY) {
+	public static List<RoadStage> initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap,Map<String,Object> spToRoadMap, 
+			Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
 		List<RoadStage>[] allNavListArr=new ArrayList[100];
 		List<RoadStage> rsList=null;
+		boolean getSPFlag=false;
 		Integer startRoadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
 		RoadStage roadStage=new RoadStage();
 		roadStage.setBackX(meX);
 		roadStage.setBackY(meY);
+		Float meFrontX = null;
+		Float meFrontY = null;
 		String mtrBfFlag = meToRoadMap.get("bfFlag").toString();
 		if(RoadStage.BACK_FLAG.equals(mtrBfFlag)) {//判断离你最近的点是前方点还是后方点
-			Float frontX = Float.valueOf(meToRoadMap.get("backX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
-			Float frontY = Float.valueOf(meToRoadMap.get("backY").toString());
-			roadStage.setFrontX(frontX);//将位置从你所在地引到离你最近的那个后方点处，这是就设置成路线的前方点了
-			roadStage.setFrontY(frontY);
-			System.out.println("游客到最近的导航点路线="+meX+","+meY+","+frontX+","+frontY+","+startRoadId);
-			Integer sort = Integer.valueOf(meToRoadMap.get("sort").toString());
-			
-			rsList=(List<RoadStage>)roadStageMap.get("roadStage"+startRoadId);
-			int itemIndex = RoadStageUtil.getListItemIndexBySort(rsList,sort);
-
-			List<RoadStage> upChildNavList=new ArrayList<>();
-			upChildNavList.add(roadStage);
-			for(int i=itemIndex;i<rsList.size();i++) {
-				System.out.println("i上==="+i);
-				RoadStage rs = rsList.get(i);
-				//RoadStageUtil.addRSNavInList(frontX,frontY,rs,upChildNavList);
-				//Integer roadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
-				//System.out.println("11111111111="+frontX+","+frontY+","+rsFrontX+","+rsFrontY+","+roadId);
-			}
-			List<RoadStage> downChildNavList=new ArrayList<>();
-			downChildNavList.add(roadStage);
-			for(int i=itemIndex-1;i>=0;i--) {
-				System.out.println("i下1==="+i);
-				RoadStage rs = rsList.get(i);
-				//RoadStageUtil.addRSNavInList(frontX,frontY,rs,downChildNavList);
-			}
-			allNavListArr[0]=upChildNavList;
-			allNavListArr[1]=downChildNavList;
+			meFrontX = Float.valueOf(meToRoadMap.get("backX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			meFrontY = Float.valueOf(meToRoadMap.get("backY").toString());
 		}
 		else if(RoadStage.FRONT_FLAG.equals(mtrBfFlag)) {
-			Float frontX = Float.valueOf(meToRoadMap.get("frontX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
-			Float frontY = Float.valueOf(meToRoadMap.get("frontY").toString());
-			roadStage.setFrontX(frontX);
-			roadStage.setFrontY(frontY);
-
-			Integer sort = Integer.valueOf(meToRoadMap.get("sort").toString());
-			System.out.println("sort==="+sort);
-			rsList=(List<RoadStage>)roadStageMap.get("roadStage"+startRoadId);
-			int itemIndex = RoadStageUtil.getListItemIndexBySort(rsList,sort);
-
-			List<RoadStage> childNavList=new ArrayList<>();
-			//RoadStage rs = rsList.get(itemIndex);
-			//String bfFlag = RoadStage.FRONT_FLAG;
-			childNavList.add(roadStage);
-			/*
-			if(RoadStage.BACK_FLAG.equals(bfFlag)) {
-				List<RoadStage> upChildNavList=new ArrayList<>();
-				upChildNavList.add(roadStage);
-				//RoadStageUtil.addRSNavInList(frontX,frontY,rs,upChildNavList,bfFlag);
-			}
-			else if(RoadStage.FRONT_FLAG.equals(bfFlag)) {
-			*/
-				//if(rs.getBackThrough()) {
-					List<RoadStage> upChildNavList=new ArrayList<>();
-					upChildNavList.addAll(childNavList);
-					List<RoadStage> downChildNavList=new ArrayList<>();
-					downChildNavList.addAll(childNavList);
-					RoadStage preRS = null;
-					RoadStage rs = rsList.get(itemIndex);
-					String bfFlag=mtrBfFlag;
-					
-					RoadStageUtil.addRSNavInList(roadStage.getFrontX(),roadStage.getFrontY(),rs,upChildNavList,bfFlag);
-					for(int i=itemIndex+1;i<rsList.size();i++) {
-						System.out.println("i上==="+i);
-						preRS = rsList.get(i-1);
-						rs = rsList.get(i);
-						System.out.println("xx=="+preRS.getBackX()+",yy=="+preRS.getBackY()+",xxx=="+preRS.getFrontX());
-						String preBfFlag = preRS.getBfFlag();
-						if(RoadStage.BACK_FLAG.equals(preBfFlag)) {
-							bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getFrontX(),preRS.getFrontY(),rs);
-							RoadStageUtil.addRSNavInList(preRS.getFrontX(),preRS.getFrontY(),rs,upChildNavList,bfFlag);
-						}
-						else if(RoadStage.FRONT_FLAG.equals(preBfFlag)) {
-							bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getBackX(),preRS.getBackY(),rs);
-							RoadStageUtil.addRSNavInList(preRS.getBackX(),preRS.getBackY(),rs,upChildNavList,bfFlag);
-						}
-						System.out.println("ucnlSize="+upChildNavList.size());
-					}
-
-					RoadStageUtil.addRSNavInList(roadStage.getFrontX(),roadStage.getFrontY(),rs,downChildNavList,bfFlag);
-					for(int i=itemIndex-1;i>=0;i--) {
-						System.out.println("i下2==="+i);
-						preRS = rsList.get(i+1);
-						rs = rsList.get(i);
-						System.out.println("xx=="+preRS.getBackX()+",yy=="+preRS.getBackY()+",xxx=="+preRS.getFrontX());
-						String preBfFlag = preRS.getBfFlag();
-						if(RoadStage.BACK_FLAG.equals(preBfFlag)) {
-							bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getFrontX(),preRS.getFrontY(),rs);
-							RoadStageUtil.addRSNavInList(preRS.getFrontX(),preRS.getFrontY(),rs,downChildNavList,bfFlag);
-						}
-						else if(RoadStage.FRONT_FLAG.equals(preBfFlag)) {
-							bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getBackX(),preRS.getBackY(),rs);
-							RoadStageUtil.addRSNavInList(preRS.getBackX(),preRS.getBackY(),rs,downChildNavList,bfFlag);
-						}
-						System.out.println("dcnlSize="+downChildNavList.size());
-					}
-					allNavListArr[0]=upChildNavList;
-					allNavListArr[1]=downChildNavList;
-				//}
-			//}
+			meFrontX = Float.valueOf(meToRoadMap.get("frontX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			meFrontY = Float.valueOf(meToRoadMap.get("frontY").toString());
 		}
+		
+		roadStage.setFrontX(meFrontX);//将位置从你所在地引到离你最近的那个后方点处，这是就设置成路线的前方点了
+		roadStage.setFrontY(meFrontY);
+		System.out.println("游客到最近的导航点路线="+meX+","+meY+","+meFrontX+","+meFrontY+","+startRoadId);
+		
+		Integer sort = Integer.valueOf(meToRoadMap.get("sort").toString());
+		System.out.println("sort==="+sort);
+		rsList=(List<RoadStage>)roadStageMap.get("roadStage"+startRoadId);
+		int itemIndex = RoadStageUtil.getListItemIndexBySort(rsList,sort);
+
+		Float sptrBackX = null;
+		Float sptrBackY = null;
+		String sptrBfFlag = spToRoadMap.get("bfFlag").toString();
+		if(RoadStage.BACK_FLAG.equals(sptrBfFlag)) {//判断离你最近的点是前方点还是后方点
+			sptrBackX = Float.valueOf(spToRoadMap.get("backX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			sptrBackY = Float.valueOf(spToRoadMap.get("backY").toString());
+		}
+		else if(RoadStage.FRONT_FLAG.equals(sptrBfFlag)) {
+			sptrBackX = Float.valueOf(spToRoadMap.get("frontX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			sptrBackY = Float.valueOf(spToRoadMap.get("frontY").toString());
+		}
+		RoadStage sptrRoadStage=new RoadStage();
+		System.out.println("sptrBackX==="+sptrBackX);
+		System.out.println("sptrBackY==="+sptrBackY);
+		sptrRoadStage.setBackX(sptrBackX);
+		sptrRoadStage.setBackY(sptrBackY);
+		sptrRoadStage.setFrontX(scenicPlaceX);
+		sptrRoadStage.setFrontY(scenicPlaceY);
+		
+		
+		List<RoadStage> childNavList=new ArrayList<>();
+		childNavList.add(roadStage);
+		//if(rs.getBackThrough()) {//上面的查询条件里已经规定后方有路，这里就没必要判断了
+		List<RoadStage> upChildNavList=new ArrayList<>();
+		upChildNavList.addAll(childNavList);
+		List<RoadStage> downChildNavList=new ArrayList<>();
+		downChildNavList.addAll(childNavList);
+		RoadStage preRS = null;
+		RoadStage rs = rsList.get(itemIndex);
+		String bfFlag=mtrBfFlag;
+
+		RoadStageUtil.addRSNavInList(roadStage.getFrontX(),roadStage.getFrontY(),rs,upChildNavList,bfFlag);
+		for(int i=itemIndex+1;i<rsList.size();i++) {
+			System.out.println("i上==="+i);
+			preRS = rsList.get(i-1);
+			rs = rsList.get(i);
+			System.out.println("xx=="+preRS.getBackX()+",yy=="+preRS.getBackY()+",xxx=="+preRS.getFrontX());
+			String preBfFlag = preRS.getBfFlag();
+			if(RoadStage.BACK_FLAG.equals(preBfFlag)) {
+				bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getFrontX(),preRS.getFrontY(),rs);
+				
+				
+				if(sptrBackX.equals(preRS.getFrontX())&&sptrBackY.equals(preRS.getFrontY())) {
+					getSPFlag=true;
+					break;
+				}
+				else
+					RoadStageUtil.addRSNavInList(preRS.getFrontX(),preRS.getFrontY(),rs,upChildNavList,bfFlag);
+			}
+			else if(RoadStage.FRONT_FLAG.equals(preBfFlag)) {
+				bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getBackX(),preRS.getBackY(),rs);
+				RoadStageUtil.addRSNavInList(preRS.getBackX(),preRS.getBackY(),rs,upChildNavList,bfFlag);
+			}
+			System.out.println("ucnlSize="+upChildNavList.size());
+		}
+
+		RoadStageUtil.addRSNavInList(roadStage.getFrontX(),roadStage.getFrontY(),rs,downChildNavList,bfFlag);
+		for(int i=itemIndex-1;i>=0;i--) {
+			System.out.println("i下2==="+i);
+			preRS = rsList.get(i+1);
+			rs = rsList.get(i);
+			System.out.println("xx=="+preRS.getBackX()+",yy=="+preRS.getBackY()+",xxx=="+preRS.getFrontX());
+			String preBfFlag = preRS.getBfFlag();
+			if(RoadStage.BACK_FLAG.equals(preBfFlag)) {
+				bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getFrontX(),preRS.getFrontY(),rs);
+				if(sptrBackX.equals(preRS.getFrontX())&&sptrBackY.equals(preRS.getFrontY())) {
+					getSPFlag=true;
+					break;
+				}
+				else
+					RoadStageUtil.addRSNavInList(preRS.getFrontX(),preRS.getFrontY(),rs,downChildNavList,bfFlag);
+			}
+			else if(RoadStage.FRONT_FLAG.equals(preBfFlag)) {
+				bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getBackX(),preRS.getBackY(),rs);
+				if(sptrBackX.equals(preRS.getBackX())&&sptrBackY.equals(preRS.getBackY())) {
+					getSPFlag=true;
+					downChildNavList.add(sptrRoadStage);
+					break;
+				}
+				else
+					RoadStageUtil.addRSNavInList(preRS.getBackX(),preRS.getBackY(),rs,downChildNavList,bfFlag);
+			}
+			System.out.println("dcnlSize="+downChildNavList.size());
+		}
+		allNavListArr[0]=upChildNavList;
+		allNavListArr[1]=downChildNavList;
+		//}
+		
 		System.out.println("size1==="+allNavListArr[1].size());
 		return allNavListArr[1];
 	}

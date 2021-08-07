@@ -40,7 +40,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 
 		List<RoadStage> roadStageList = roadStageDao.select();
 		Map<String, Object> roadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
-		List<RoadStage> allNavList = RoadStageUtil.initAllNavRoadLine(roadStageMap,meToRoadMap,meX,meY);
+		List<RoadStage> allNavList = RoadStageUtil.initAllNavRoadLine(roadStageMap,meToRoadMap,spToRoadMap,meX,meY,scenicPlaceX,scenicPlaceY);
 		return allNavList;
 	}
 }
