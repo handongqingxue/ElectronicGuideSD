@@ -50,8 +50,28 @@ public class RoadStageUtil {
 		
 		initNavLineFromItemIndex(roadStageMap,childNavList,roadStage,rsList,rtspRoadStage,mtrBfFlag,itemIndex,rtspBackX,rtspBackY,allNavList);
 		
-		System.out.println("size1==="+((List<RoadStage>)allNavList.get(3).get("navLine")).size());
-		return (List<RoadStage>)allNavList.get(3).get("navLine");
+		List<RoadStage> shortNavLine=initGetSPShortNavLine(allNavList);
+		//System.out.println("size1==="+((List<RoadStage>)allNavList.get(3).get("navLine")).size());
+		System.out.println("size1==="+shortNavLine.size());
+		return shortNavLine;
+	}
+	
+	public static List<RoadStage> initGetSPShortNavLine(List<Map<String,Object>> allNavList) {
+		Float shortDistance=(float) 9999999;
+		Map<String,Object> shortNavMap=null;
+		for (Map<String,Object> allNavMap : allNavList) {
+			Boolean getSPFlag = Boolean.valueOf(allNavMap.get("getSPFlag").toString());
+			System.out.println("getSPFlag="+getSPFlag);
+			if(getSPFlag) {
+				Float navLong = Float.valueOf(allNavMap.get("navLong").toString());
+				if(navLong<shortDistance) {
+					shortDistance=navLong;
+					shortNavMap=allNavMap;
+				}
+			}
+		}
+		System.out.println("shortNavMap="+shortNavMap.get("navLong"));
+		return (List<RoadStage>)shortNavMap.get("navLine");
 	}
 	
 	public static void initNavLineFromItemIndex(Map<String, Object> roadStageMap,List<RoadStage> childNavList,RoadStage roadStage,List<RoadStage> rsList,RoadStage rtspRoadStage,String bfFlag,int itemIndex,Float rtspBackX,Float rtspBackY,List<Map<String,Object>> allNavList) {
