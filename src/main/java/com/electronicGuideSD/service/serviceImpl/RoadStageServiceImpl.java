@@ -23,6 +23,8 @@ public class RoadStageServiceImpl implements RoadStageService {
 	@Override
 	public List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
 		// TODO Auto-generated method stub
+		System.out.println("scenicPlaceX==="+scenicPlaceX);
+		System.out.println("scenicPlaceY==="+scenicPlaceY);
 		Map<String,Object> meToRoadMap = roadStageDao.selectMinDistanceStage(meX,meY);
 		/*
 		System.out.println("meRoadId="+Integer.valueOf(meToRoadMap.get("roadId").toString()));
