@@ -48,30 +48,24 @@ public class RoadStageUtil {
 		Float rtspBackX = rtspRoadStage.getBackX();
 		Float rtspBackY = rtspRoadStage.getBackY();
 		
+		initNavLineFromItemIndex(roadStageMap,childNavList,roadStage,rsList,rtspRoadStage,mtrBfFlag,itemIndex,rtspBackX,rtspBackY,allNavList);
+		
+		System.out.println("size1==="+((List<RoadStage>)allNavList.get(3).get("navLine")).size());
+		return (List<RoadStage>)allNavList.get(3).get("navLine");
+	}
+	
+	public static void initNavLineFromItemIndex(Map<String, Object> roadStageMap,List<RoadStage> childNavList,RoadStage roadStage,List<RoadStage> rsList,RoadStage rtspRoadStage,String bfFlag,int itemIndex,Float rtspBackX,Float rtspBackY,List<Map<String,Object>> allNavList) {
 		//if(rs.getBackThrough()) {//上面的查询条件里已经规定后方有路，这里就没必要判断了
 		
 		RoadStage rs = rsList.get(itemIndex);//获取游客进入导航线的第一个路段
 		
-		String bfFlag=mtrBfFlag;
+		Map<String,Object> frontNavLineMap = initFrontNavLine(roadStageMap,childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY,allNavList);
 
-		List<RoadStage> frontChildNavList = initFrontNavLine(childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY);
-
-		List<RoadStage> backChildNavList = initBackNavLine(childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY);
+		Map<String,Object> backNavLineMap = initBackNavLine(roadStageMap,childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY,allNavList);
 		
-		
-		Map<String,Object> navLineMap=new HashMap<>();
-		navLineMap.put("navLine", frontChildNavList);
-		navLineMap.put("navLong", 1000);
-		allNavList.add(navLineMap);
-
-		navLineMap=new HashMap<>();
-		navLineMap.put("navLine", backChildNavList);
-		navLineMap.put("navLong", 800);
-		allNavList.add(navLineMap);
+		allNavList.add(frontNavLineMap);
+		allNavList.add(backNavLineMap);
 		//}
-		
-		System.out.println("size1==="+((List<RoadStage>)allNavList.get(1).get("navLine")).size());
-		return (List<RoadStage>)allNavList.get(1).get("navLine");
 	}
 	
 	public static RoadStage initMeToRoadNavLine(Float meX, Float meY, Map<String,Object> meToRoadMap) {
@@ -122,7 +116,7 @@ public class RoadStageUtil {
 		////
 	}
 	
-	public static List<RoadStage> initFrontNavLine(List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY) {
+	public static Map<String,Object> initFrontNavLine(Map<String, Object> roadStageMap, List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY,List<Map<String,Object>> allNavList) {
 		boolean getSPFlag=false;
 		List<RoadStage> frontChildNavList=new ArrayList<>();
 		frontChildNavList.addAll(childNavList);//将待遍历的集合添加到向前遍历的集合里
@@ -157,10 +151,15 @@ public class RoadStageUtil {
 			}
 			System.out.println("fcnlSize="+frontChildNavList.size());
 		}
-		return frontChildNavList;
+		
+		Map<String,Object> navLineMap=new HashMap<>();
+		navLineMap.put("navLine", frontChildNavList);
+		navLineMap.put("getSPFlag", getSPFlag);
+		navLineMap.put("navLong", 1000);
+		return navLineMap;
 	}
 	
-	public static List<RoadStage> initBackNavLine(List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY) {
+	public static Map<String,Object> initBackNavLine(Map<String, Object> roadStageMap, List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY, List<Map<String,Object>> allNavList) {
 		boolean getSPFlag=false;
 		List<RoadStage> backChildNavList=new ArrayList<>();
 		backChildNavList.addAll(childNavList);//将待遍历的集合添加到向后遍历的集合里
@@ -190,12 +189,30 @@ public class RoadStageUtil {
 					backChildNavList.add(rtspRoadStage);
 					break;
 				}
-				else
+				else {
+					if(rs.getBackIsCross()) {
+						String rsIds = rs.getBackCrossRSIds();
+						System.out.println("这里有交叉口="+rsIds);
+						String[] rsIdArr = rsIds.split(",");
+						for (String rsId : rsIdArr) {
+							List<RoadStage> fenZhiRsList = (List<RoadStage>)roadStageMap.get("roadStage"+rsId);
+							int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,rs.getBackX(),rs.getBackY(),RoadStage.BACK_FLAG);
+							System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
+							//fenZhiRsList.get(0)
+							initNavLineFromItemIndex(roadStageMap,backChildNavList,rs,fenZhiRsList,rtspRoadStage,rs.getBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList);
+						}
+					}
 					RoadStageUtil.addRSNavInList(preRS.getBackX(),preRS.getBackY(),rs,backChildNavList,bfFlag);
+				}
 			}
 			System.out.println("bcnlSize="+backChildNavList.size());
 		}
-		return backChildNavList;
+
+		Map<String,Object> navLineMap=new HashMap<>();
+		navLineMap.put("navLine", backChildNavList);
+		navLineMap.put("getSPFlag", getSPFlag);
+		navLineMap.put("navLong", 800);
+		return navLineMap;
 	}
 	
 	public static boolean checkRoadMapIdExist(int roadId, Map<String, Object> roadMap) {
@@ -225,6 +242,30 @@ public class RoadStageUtil {
 				System.out.println("i==="+i);
 				index=i;
 				break;
+			}
+		}
+		return index;
+	}
+	
+	public static int getListItemIndexByLocation(List<RoadStage> rsList, Float x, Float y, String bfFlag) {
+		int index=-1;
+		for(int i=0;i<rsList.size();i++) {
+			RoadStage rs = rsList.get(i);
+			if(RoadStage.BACK_FLAG.equals(bfFlag)) {
+				Float frontX = rs.getFrontX();
+				Float frontY = rs.getFrontY();
+				if(x.equals(frontX)&&y.equals(frontY)) {
+					index=i;
+					break;
+				}
+			}
+			else if(RoadStage.FRONT_FLAG.equals(bfFlag)) {
+				Float backX = rs.getBackX();
+				Float backY = rs.getBackY();
+				if(x.equals(backX)&&y.equals(backY)) {
+					index=i;
+					break;
+				}
 			}
 		}
 		return index;
