@@ -35,6 +35,12 @@ public class RoadStage {
 	public void setBackY(Float backY) {
 		this.backY = backY;
 	}
+	public Float getDistance() {
+		return distance;
+	}
+	public void setDistance(Float distance) {
+		this.distance = distance;
+	}
 	public Boolean getFrontThrough() {
 		return frontThrough;
 	}
@@ -105,6 +111,7 @@ public class RoadStage {
 	private Float frontY;
 	private Float backX;
 	private Float backY;
+	private Float distance;
 	private Boolean frontThrough;//前方是否通
 	private Boolean backThrough;//后方是否通
 	private Boolean frontIsCross;//前方是否是交叉点

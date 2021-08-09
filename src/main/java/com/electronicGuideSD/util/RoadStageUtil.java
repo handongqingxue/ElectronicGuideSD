@@ -27,11 +27,12 @@ public class RoadStageUtil {
 		return roadMap;
 	}
 	
-	public static List<RoadStage> initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap,Map<String,Object> spToRoadMap, 
+	public static List<Map<String,Object>> initAllNavRoadLine(Map<String, Object> roadStageMap,Map<String,Object> meToRoadMap,Map<String,Object> spToRoadMap, 
 			Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
 		List<Map<String,Object>> allNavList=new ArrayList<>();
 		List<RoadStage> childNavList=new ArrayList<>();
 		List<RoadStage> rsList=null;
+		float distance=0;
 		Integer startRoadId = Integer.valueOf(meToRoadMap.get("roadId").toString());
 		
 		RoadStage roadStage=initMeToRoadNavLine(meX, meY, meToRoadMap);
@@ -48,12 +49,9 @@ public class RoadStageUtil {
 		Float rtspBackX = rtspRoadStage.getBackX();
 		Float rtspBackY = rtspRoadStage.getBackY();
 		
-		initNavLineFromItemIndex(roadStageMap,childNavList,roadStage,rsList,rtspRoadStage,mtrBfFlag,itemIndex,rtspBackX,rtspBackY,allNavList);
+		initNavLineFromItemIndex(roadStageMap,childNavList,roadStage,rsList,rtspRoadStage,mtrBfFlag,itemIndex,rtspBackX,rtspBackY,allNavList,distance);
 		
-		List<RoadStage> shortNavLine=initGetSPShortNavLine(allNavList);
-		//System.out.println("size1==="+((List<RoadStage>)allNavList.get(3).get("navLine")).size());
-		System.out.println("size1==="+shortNavLine.size());
-		return shortNavLine;
+		return allNavList;
 	}
 	
 	public static List<RoadStage> initGetSPShortNavLine(List<Map<String,Object>> allNavList) {
@@ -74,14 +72,14 @@ public class RoadStageUtil {
 		return (List<RoadStage>)shortNavMap.get("navLine");
 	}
 	
-	public static void initNavLineFromItemIndex(Map<String, Object> roadStageMap,List<RoadStage> childNavList,RoadStage roadStage,List<RoadStage> rsList,RoadStage rtspRoadStage,String bfFlag,int itemIndex,Float rtspBackX,Float rtspBackY,List<Map<String,Object>> allNavList) {
+	public static void initNavLineFromItemIndex(Map<String, Object> roadStageMap,List<RoadStage> childNavList,RoadStage roadStage,List<RoadStage> rsList,RoadStage rtspRoadStage,String bfFlag,int itemIndex,Float rtspBackX,Float rtspBackY,List<Map<String,Object>> allNavList,float preDistance) {
 		//if(rs.getBackThrough()) {//上面的查询条件里已经规定后方有路，这里就没必要判断了
 		
 		RoadStage rs = rsList.get(itemIndex);//获取游客进入导航线的第一个路段
 		
-		Map<String,Object> frontNavLineMap = initFrontNavLine(roadStageMap,childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY,allNavList);
+		Map<String,Object> frontNavLineMap = initFrontNavLine(roadStageMap,childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY,allNavList,preDistance);
 
-		Map<String,Object> backNavLineMap = initBackNavLine(roadStageMap,childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY,allNavList);
+		Map<String,Object> backNavLineMap = initBackNavLine(roadStageMap,childNavList,roadStage,rsList,rs,rtspRoadStage,bfFlag,itemIndex,rtspBackX,rtspBackY,allNavList,preDistance);
 		
 		allNavList.add(frontNavLineMap);
 		allNavList.add(backNavLineMap);
@@ -107,6 +105,7 @@ public class RoadStageUtil {
 		
 		roadStage.setFrontX(meFrontX);//将位置从你所在地引到离你最近的那个后方点处，这是就设置成路线的前方点了
 		roadStage.setFrontY(meFrontY);
+		roadStage.setDistance(RoadStageUtil.jiSuanDistance(meX,meY,meFrontX,meFrontY));
 		roadStage.setBfFlag(mtrBfFlag);
 		System.out.println("游客到最近的导航点路线="+meX+","+meY+","+meFrontX+","+meFrontY);
 		return roadStage;
@@ -132,12 +131,14 @@ public class RoadStageUtil {
 		rtspRoadStage.setBackY(sptrBackY);
 		rtspRoadStage.setFrontX(scenicPlaceX);
 		rtspRoadStage.setFrontY(scenicPlaceY);
+		rtspRoadStage.setDistance(RoadStageUtil.jiSuanDistance(sptrBackX,sptrBackY,scenicPlaceX,scenicPlaceY));
 		return rtspRoadStage;
 		////
 	}
 	
-	public static Map<String,Object> initFrontNavLine(Map<String, Object> roadStageMap, List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY,List<Map<String,Object>> allNavList) {
+	public static Map<String,Object> initFrontNavLine(Map<String, Object> roadStageMap, List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY,List<Map<String,Object>> allNavList,float preDistance) {
 		boolean getSPFlag=false;
+		float distance=preDistance;
 		List<RoadStage> frontChildNavList=new ArrayList<>();
 		frontChildNavList.addAll(childNavList);//将待遍历的集合添加到向前遍历的集合里
 		
@@ -172,15 +173,17 @@ public class RoadStageUtil {
 			System.out.println("fcnlSize="+frontChildNavList.size());
 		}
 		
+		System.out.println("getSPFlag==="+getSPFlag);
 		Map<String,Object> navLineMap=new HashMap<>();
 		navLineMap.put("navLine", frontChildNavList);
 		navLineMap.put("getSPFlag", getSPFlag);
-		navLineMap.put("navLong", 1000);
+		navLineMap.put("navLong", jiSuanNavLineDistance(frontChildNavList));
 		return navLineMap;
 	}
 	
-	public static Map<String,Object> initBackNavLine(Map<String, Object> roadStageMap, List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY, List<Map<String,Object>> allNavList) {
+	public static Map<String,Object> initBackNavLine(Map<String, Object> roadStageMap, List<RoadStage> childNavList, RoadStage roadStage,List<RoadStage> rsList, RoadStage rs, RoadStage rtspRoadStage, String bfFlag, int itemIndex, Float rtspBackX, Float rtspBackY, List<Map<String,Object>> allNavList,float preDistance) {
 		boolean getSPFlag=false;
+		float distance=preDistance;
 		List<RoadStage> backChildNavList=new ArrayList<>();
 		backChildNavList.addAll(childNavList);//将待遍历的集合添加到向后遍历的集合里
 		
@@ -190,7 +193,6 @@ public class RoadStageUtil {
 			System.out.println("i下2==="+i);
 			RoadStage preRS = rsList.get(i+1);
 			rs = rsList.get(i);
-			System.out.println("xx=="+preRS.getBackX()+",yy=="+preRS.getBackY()+",xxx=="+preRS.getFrontX());
 			String preBfFlag = preRS.getBfFlag();
 			if(RoadStage.BACK_FLAG.equals(preBfFlag)) {
 				bfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getFrontX(),preRS.getFrontY(),rs);
@@ -219,7 +221,7 @@ public class RoadStageUtil {
 							int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,rs.getBackX(),rs.getBackY(),RoadStage.BACK_FLAG);
 							System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
 							//fenZhiRsList.get(0)
-							initNavLineFromItemIndex(roadStageMap,backChildNavList,rs,fenZhiRsList,rtspRoadStage,rs.getBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList);
+							initNavLineFromItemIndex(roadStageMap,backChildNavList,rs,fenZhiRsList,rtspRoadStage,rs.getBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList,distance);
 						}
 					}
 					RoadStageUtil.addRSNavInList(preRS.getBackX(),preRS.getBackY(),rs,backChildNavList,bfFlag);
@@ -231,9 +233,30 @@ public class RoadStageUtil {
 		Map<String,Object> navLineMap=new HashMap<>();
 		navLineMap.put("navLine", backChildNavList);
 		navLineMap.put("getSPFlag", getSPFlag);
-		navLineMap.put("navLong", 800);
+		navLineMap.put("navLong", jiSuanNavLineDistance(backChildNavList));
 		return navLineMap;
 	}
+	
+	public static float jiSuanDistance(Float backX, Float backY, Float frontX, Float frontY) {
+		float bfX = Math.abs(frontX-backX);
+		float bfY = Math.abs(frontY-backY);
+		return Float.valueOf(String.format("%.2f", Math.sqrt(bfX*bfX+bfY*bfY)));
+	}
+	
+	public static float jiSuanNavLineDistance(List<RoadStage> roadStageList) {
+		float distance=0;
+		for (RoadStage roadStage : roadStageList) {
+			distance+=roadStage.getDistance();
+		}
+		System.out.println("distance==="+distance);
+		return distance;
+	}
+	
+	/*
+	public static void main(String[] args) {
+		System.out.println("==="+RoadStageUtil.jiSuanDistance((float)600.00,(float)730.00,(float)300.00,(float)300.00));
+	}
+	*/
 	
 	public static boolean checkRoadMapIdExist(int roadId, Map<String, Object> roadMap) {
 		// TODO Auto-generated method stub
@@ -307,6 +330,7 @@ public class RoadStageUtil {
 				roadStage.setBackY(y);
 				roadStage.setFrontX(rsFrontX);
 				roadStage.setFrontY(rsFrontY);
+				roadStage.setDistance(RoadStageUtil.jiSuanDistance(x,y,rsFrontX,rsFrontY));
 				rs.setBfFlag(bfFlag);
 				navList.add(roadStage);
 			}
@@ -321,6 +345,7 @@ public class RoadStageUtil {
 				roadStage.setBackY(y);
 				roadStage.setFrontX(rsFrontX);
 				roadStage.setFrontY(rsFrontY);
+				roadStage.setDistance(RoadStageUtil.jiSuanDistance(x,y,rsFrontX,rsFrontY));
 				rs.setBfFlag(bfFlag);
 				navList.add(roadStage);
 			}
