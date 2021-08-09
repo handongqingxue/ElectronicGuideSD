@@ -63,9 +63,14 @@ public class User {
 	public String getSceDisAddress() {
 		return sceDisAddress;
 	}
-
 	public void setSceDisAddress(String sceDisAddress) {
 		this.sceDisAddress = sceDisAddress;
+	}
+	public ScenicDistrict getScenicDistrict() {
+		return scenicDistrict;
+	}
+	public void setScenicDistrict(ScenicDistrict scenicDistrict) {
+		this.scenicDistrict = scenicDistrict;
 	}
 	public Integer getCheck() {
 		return check;
@@ -81,5 +86,6 @@ public class User {
 	private Integer role;
 	private String sceDisName;
 	private String sceDisAddress;
+	private ScenicDistrict scenicDistrict;
 	private Integer check;
 }

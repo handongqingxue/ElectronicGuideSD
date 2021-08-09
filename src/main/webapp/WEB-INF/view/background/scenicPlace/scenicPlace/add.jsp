@@ -483,6 +483,10 @@ function setFitWidthInParent(parent,self){
 		</table>
 		</form>
 	</div>
+	
+	<div style="width: 1000px;height: 1000px;margin-top:800px; background-color: #0f0;">
+	</div>
+	
 	<%@include file="../../foot.jsp"%>
 	</div>
 </div>

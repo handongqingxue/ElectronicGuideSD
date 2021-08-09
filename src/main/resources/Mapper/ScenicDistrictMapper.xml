@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.electronicGuideSD.dao.ScenicDistrictMapper">
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from scenic_district
+	</select><insert id="add" parameterType="com.electronicGuideSD.entity.ScenicDistrict">
+ 		insert into scenic_district
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				name,
+ 			</if>
+ 			<if test="address!=null">
+ 				address,
+ 			</if>
+ 			<if test="qrcodeUrl!=null">
+ 				qrcodeUrl,
+ 			</if>
+ 			<if test="mapUrl!=null">
+ 				mapUrl,
+ 			</if>
+ 			<if test="mapWidth!=null">
+ 				mapWidth,
+ 			</if>
+ 			<if test="mapHeight!=null">
+ 				mapHeight,
+ 			</if>
+ 			<if test="picWidth!=null">
+ 				picWidth,
+ 			</if>
+ 			<if test="picHeight!=null">
+ 				picHeight,
+ 			</if>
+ 			<if test="longitudeStart!=null">
+ 				longitudeStart,
+ 			</if>
+ 			<if test="longitudeEnd!=null">
+ 				longitudeEnd,
+ 			</if>
+ 			<if test="latitudeStart!=null">
+ 				latitudeStart,
+ 			</if>
+ 			<if test="latitudeEnd!=null">
+ 				latitudeEnd,
+ 			</if>
+ 			<if test="introduce!=null">
+ 				introduce,
+ 			</if>
+ 			<if test="createTime!=null">
+ 				createTime,
+ 			</if>
+ 			<if test="serverName!=null">
+ 				serverName,
+ 			</if>
+ 			<if test="serverPort!=null">
+ 				serverPort,
+ 			</if>
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				#{name},
+ 			</if>
+ 			<if test="address!=null">
+ 				#{address},
+ 			</if>
+ 			<if test="qrcodeUrl!=null">
+ 				#{qrcodeUrl},
+ 			</if>
+ 			<if test="mapUrl!=null">
+ 				#{mapUrl},
+ 			</if>
+ 			<if test="mapWidth!=null">
+ 				#{mapWidth},
+ 			</if>
+ 			<if test="mapHeight!=null">
+ 				#{mapHeight},
+ 			</if>
+ 			<if test="picWidth!=null">
+ 				#{picWidth},
+ 			</if>
+ 			<if test="picHeight!=null">
+ 				#{picHeight},
+ 			</if>
+ 			<if test="longitudeStart!=null">
+ 				#{longitudeStart},
+ 			</if>
+ 			<if test="longitudeEnd!=null">
+ 				#{longitudeEnd},
+ 			</if>
+ 			<if test="latitudeStart!=null">
+ 				#{latitudeStart},
+ 			</if>
+ 			<if test="latitudeEnd!=null">
+ 				#{latitudeEnd},
+ 			</if>
+ 			<if test="introduce!=null">
+ 				#{introduce},
+ 			</if>
+ 			<if test="createTime!=null">
+ 				#{createTime},
+ 			</if>
+ 			<if test="serverName!=null">
+ 				#{serverName},
+ 			</if>
+ 			<if test="serverPort!=null">
+ 				#{serverPort},
+ 			</if>
+ 		</trim>
+ 	</insert>
+ 	<update id="edit">
+		update scenic_district set
+		<trim suffixOverrides=",">
+			<if test="name!=null">
+				name=#{name},
+			</if>
+			<if test="address!=null">
+				address=#{address},
+			</if>
+			<if test="qrcodeUrl!=null">
+				qrcodeUrl=#{qrcodeUrl},
+			</if>
+			<if test="mapUrl!=null">
+				mapUrl=#{mapUrl},
+			</if>
+			<if test="mapWidth!=null">
+				mapWidth=#{mapWidth},
+			</if>
+			<if test="mapHeight!=null">
+				mapHeight=#{mapHeight},
+			</if>
+			<if test="picWidth!=null">
+				picWidth=#{picWidth},
+			</if>
+			<if test="picHeight!=null">
+				picHeight=#{picHeight},
+			</if>
+			<if test="longitudeStart!=null">
+				longitudeStart=#{longitudeStart},
+			</if>
+			<if test="longitudeEnd!=null">
+				longitudeEnd=#{longitudeEnd},
+			</if>
+			<if test="latitudeStart!=null">
+				latitudeStart=#{latitudeStart},
+			</if>
+			<if test="latitudeEnd!=null">
+				latitudeEnd=#{latitudeEnd},
+			</if>
+			<if test="introduce!=null">
+				introduce=#{introduce},
+			</if>
+			<if test="modifyTime!=null">
+				modifyTime=#{modifyTime},
+			</if>
+			<if test="serverName!=null">
+				serverName=#{serverName},
+			</if>
+			<if test="serverPort!=null">
+				serverPort=#{serverPort},
+			</if>
+		</trim>
+	</update>
+ </mapper>
