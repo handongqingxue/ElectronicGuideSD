@@ -7,6 +7,48 @@
 <title>添加景点</title>
 <%@include file="../../js.jsp"%>
 <style type="text/css">
+.add_sp_canvas_bg_div{
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.45);
+	position: fixed;
+	z-index: 9016;
+	display:none;
+}
+.add_sp_canvas_div{
+	width: 1800px;
+	height: 850px;
+	margin: 50px auto 0;
+	background-color: #fff;
+	border-radius:5px;
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+.add_sp_canvas_div .tjst_div{
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	border-bottom: #eee solid 1px;
+}
+.add_sp_canvas_div .tjst_span{
+	margin-left: 30px;
+}
+.add_sp_canvas_div .close_span{
+	float: right;margin-right: 30px;cursor: pointer;
+}
+.add_sp_canvas_dialog_div{
+	width: 1775px;
+	height: 800px;
+	position: absolute;
+}
+.add_sp_canvas_div .title_div{
+	width: 100%;height: 50px;line-height: 50px;
+}
+.add_sp_canvas_div .title_span{
+	margin-left: 30px;
+}
+
 .center_con_div{
 	height: 90vh;
 	margin-left:205px;
@@ -49,6 +91,10 @@
 	height:180px;
 	margin-top: 10px;
 }
+.sceDis_img{
+	height:180px;
+	margin-top: 10px;
+}
 .simpleIntroVoiceUrl_embed,.detailIntroVoiceUrl_embed{
 	width: 300px;
 	height:50px;
@@ -60,8 +106,10 @@ var scenicPlacePath='<%=basePath%>'+"background/scenicPlace/";
 var dialogTop=10;
 var dialogLeft=20;
 var ndNum=0;
+var aspsdmdNum=1;
 $(function(){
 	initNewDialog();
+	initAddSpSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 	
@@ -96,11 +144,53 @@ function initDialogPosition(){
 	//基本属性组
 	var ndpw=$("body").find(".panel.window").eq(ndNum);
 	var ndws=$("body").find(".window-shadow").eq(ndNum);
+	
+	var aspsdmdpw=$("body").find(".panel.window").eq(aspsdmdNum);
+	var aspsdmdws=$("body").find(".window-shadow").eq(aspsdmdNum);
 
 	var ccDiv=$("#center_con_div");
 	ccDiv.append(ndpw);
 	ccDiv.append(ndws);
 	ccDiv.css("width",setFitWidthInParent("body","center_con_div")+"px");
+	
+	var aspsdmdDiv=$("#add_sp_canvas_dialog_div");
+	aspsdmdDiv.append(aspsdmdpw);
+	aspsdmdDiv.append(aspsdmdws);
+}
+
+function initAddSpSDMapDialogDiv(){
+	addSpSdMDialog=$("#add_sp_sd_map_dialog_div").dialog({
+		title:"景区地图",
+		width:setFitWidthInParent("body","add_sp_sd_map_dialog_div"),
+		height:730,
+		top:10,
+		left:20,
+		buttons:[
+           {text:"保存",id:"ok_but",iconCls:"icon-ok",handler:function(){
+        	   
+           }}
+        ]
+	});
+
+	$(".panel.window").eq(aspsdmdNum).css("margin-top","40px");
+	$(".panel.window .panel-title").eq(aspsdmdNum).css("color","#000");
+	$(".panel.window .panel-title").eq(aspsdmdNum).css("font-size","15px");
+	$(".panel.window .panel-title").eq(aspsdmdNum).css("padding-left","10px");
+	
+	$(".panel-header, .panel-body").eq(aspsdmdNum).css("border-color","#ddd");
+	
+	//以下的是表格下面的面板
+	$(".window-shadow").eq(aspsdmdNum).css("margin-top","40px");
+	$(".window,.window .window-body").eq(aspsdmdNum).css("border-color","#ddd");
+
+	$("#add_sp_sd_map_dialog_div #cancel_but").css("left","30%");
+	$("#add_sp_sd_map_dialog_div #cancel_but").css("position","absolute");
+
+	$("#add_sp_sd_map_dialog_div #ok_but").css("left","45%");
+	$("#add_sp_sd_map_dialog_div #ok_but").css("position","absolute");
+	$(".dialog-button").css("background-color","#fff");
+	$(".dialog-button .l-btn-text").css("font-size","20px");
+	openAddSpSdMDialog(0);
 }
 
 function initNewDialog(){
@@ -153,6 +243,25 @@ function initNewDialog(){
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
+}
+
+function openAddSpDialog(flag){
+	if(flag==1){
+		$("#add_sp_canvas_bg_div").css("display","block");
+	}
+	else{
+		$("#add_sp_canvas_bg_div").css("display","none");
+	}
+	openAddSpSdMDialog(flag);
+}
+
+function openAddSpSdMDialog(flag){
+	if(flag==1){
+		addSpSdMDialog.dialog("open");
+	}
+	else{
+		addSpSdMDialog.dialog("close");
+	}
 }
 
 function checkAdd(){
@@ -399,6 +508,9 @@ function setFitWidthInParent(parent,self){
 	case "new_div":
 		space=340;
 		break;
+	case "add_sp_sd_map_dialog_div":
+		space=170;
+		break;
 	case "new_div_table":
 	case "panel_window":
 		space=355;
@@ -411,6 +523,24 @@ function setFitWidthInParent(parent,self){
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">	
+	<div class="add_sp_canvas_bg_div" id="add_sp_canvas_bg_div">
+		<div class="add_sp_canvas_div" id="add_sp_canvas_div">
+			<div class="tjst_div">
+				<span class="tjst_span">添加实体</span>
+				<span class="close_span" onclick="openAddSpDialog(0)">X</span>
+			</div>
+			<div class="add_sp_canvas_dialog_div" id="add_sp_canvas_dialog_div">
+				<div class="title_div">
+					<span class="title_span">景点管理-景点查询-添加</span>
+				</div>
+				<input type="hidden" id="id"/>
+				<div id="add_sp_sd_map_dialog_div">
+					<div id="sceDisCanvas_div"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
 	<div class="page_location_div">添加景点</div>
@@ -442,8 +572,10 @@ function setFitWidthInParent(parent,self){
 				<img class="picUrl_img" id="picUrl_img" alt=""/>
 			</td>
 			<td class="td1" align="right">
+				景区地图
 			</td>
 			<td class="td2">
+				<img class="sceDis_img" id="sceDis_img" alt="" src="${sessionScope.user.scenicDistrict.mapUrl }"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -508,9 +640,6 @@ function setFitWidthInParent(parent,self){
 		  </tr>
 		</table>
 		</form>
-	</div>
-	
-	<div id="sceDisCanvas_div" style="margin-top:800px; background-color: #0f0;">
 	</div>
 	
 	<%@include file="../../foot.jsp"%>

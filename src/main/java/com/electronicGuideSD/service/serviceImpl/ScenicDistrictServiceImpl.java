@@ -17,6 +17,7 @@ public class ScenicDistrictServiceImpl implements ScenicDistrictService {
 	public int edit(ScenicDistrict scenicDistrict) {
 		// TODO Auto-generated method stub
 		int count=0;
+		scenicDistrict.setMapUrl("http://www.qrcodesy.com:8080"+scenicDistrict.getMapUrl());
 		if(scenicDistrictDao.getCount()==0)
 			count=scenicDistrictDao.add(scenicDistrict);
 		else

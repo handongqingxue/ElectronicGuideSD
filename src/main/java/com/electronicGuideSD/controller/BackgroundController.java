@@ -66,7 +66,7 @@ public class BackgroundController {
 			session.setAttribute("user", user);
 			
 			userService.edit(user);//同步景区数据库用户表里的信息
-			int i=scenicDistrictService.edit(user.getScenicDistrict());//同步景区数据库景区表里的信息
+			scenicDistrictService.edit(user.getScenicDistrict());//同步景区数据库景区表里的信息
 		}
 		//return "redirect:"+SERVER_PATH_SD+MODULE_NAME+"/user/info/info";
 		return "redirect:"+serverPath+MODULE_NAME+"/user/info/info";//跳转到景区服务器用户信息页
