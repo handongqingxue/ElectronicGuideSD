@@ -64,7 +64,33 @@ $(function(){
 	initNewDialog();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
+	
+	initSceDisCanvas();
 });
+
+function initSceDisCanvas(){
+	var sceDisCanvasImg = new Image();
+	sceDisCanvasImg.src="http://www.qrcodesy.com:8080/ElectronicGuide/upload/map/1626254021278.jpg";
+	sceDisCanvas = document.createElement("canvas");
+	sceDisCanvas.id="sceDisCanvas";
+	sceDisCanvas.style.width="1280px";//通过缩放来改变画布大小，画布大小改变后，上面的定位点位置也就跟着改变了
+	sceDisCanvas.style.height="818px";
+	sceDisCanvas.width=2560;
+	sceDisCanvas.height=1636;
+	sceDisCanvasContext = sceDisCanvas.getContext("2d");
+	sceDisCanvasImg.onload=function(){
+		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, 2560, 1636);
+		var sceDisCanvasDiv=document.getElementById("sceDisCanvas_div");
+		sceDisCanvasDiv.appendChild(sceDisCanvas);
+	}
+	sceDisCanvas.onclick=function(e){
+		if (e.offsetX || e.layerX) {
+	           var x = e.offsetX == undefined ? e.layerX : e.offsetX;
+	           var y = e.offsetY == undefined ? e.layerY : e.offsetY;
+	           alert(x+","+y);
+	    }
+	}
+}
 
 function initDialogPosition(){
 	//基本属性组
@@ -484,7 +510,7 @@ function setFitWidthInParent(parent,self){
 		</form>
 	</div>
 	
-	<div style="width: 1000px;height: 1000px;margin-top:800px; background-color: #0f0;">
+	<div id="sceDisCanvas_div" style="margin-top:800px; background-color: #0f0;">
 	</div>
 	
 	<%@include file="../../foot.jsp"%>
