@@ -210,9 +210,8 @@ function initSceDisCanvas(reSizeFlag){
 		if (e.offsetX || e.layerX) {
 	           var x = e.offsetX == undefined ? e.layerX : e.offsetX;
 	           var y = e.offsetY == undefined ? e.layerY : e.offsetY;
-	           x=x/widthScale;
-	           y=sceDisCanvasHeight-y/heightScale;
-	           alert(x+","+y);
+	           //alert(scenicPlace.x/widthScale+","+sceDisCanvasHeight-scenicPlace.y/heightScale);
+	           alert(x+","+(sceDisCanvasHeight-y)+","+widthScale);
 	       	   var picUrl=$("#picUrl_img").attr("src");
 		       var picWidth=$("#picWidth").val();
 		       var picHeight=$("#picHeight").val();
@@ -227,7 +226,7 @@ function setScenicPlaceLocation(){
 	var entityImg = new Image();
 	entityImg.src=scenicPlace.picUrl;
 	entityImg.onload=function(){
-		sceDisCanvasContext.drawImage(entityImg, scenicPlace.x-scenicPlace.picWidth/2, sceDisCanvasHeight-scenicPlace.y-scenicPlace.picHeight/2, scenicPlace.picWidth, scenicPlace.picHeight);
+		sceDisCanvasContext.drawImage(entityImg, scenicPlace.x/widthScale-scenicPlace.picWidth/2, scenicPlace.y/heightScale-scenicPlace.picHeight/2, scenicPlace.picWidth, scenicPlace.picHeight);
 	}
 }
 
