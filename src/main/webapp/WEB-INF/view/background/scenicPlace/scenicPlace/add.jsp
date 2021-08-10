@@ -119,6 +119,7 @@ var sceDisCanvasHeight;
 var widthScale;
 var heightScale;
 var reSizeTimeout;
+var scenicPlace;
 $(function(){
 	initNewDialog();
 	initAddSpSDMapDialogDiv();
@@ -194,6 +195,9 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
 		
+		if(scenicPlace!=undefined)
+			setScenicPlaceLocation();
+		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
 		var sceDisCanvasDiv=document.getElementById("sceDisCanvas_div");
@@ -206,8 +210,24 @@ function initSceDisCanvas(reSizeFlag){
 		if (e.offsetX || e.layerX) {
 	           var x = e.offsetX == undefined ? e.layerX : e.offsetX;
 	           var y = e.offsetY == undefined ? e.layerY : e.offsetY;
+	           x=x/widthScale;
+	           y=sceDisCanvasHeight-y/heightScale;
 	           alert(x+","+y);
+	       	   var picUrl=$("#picUrl_img").attr("src");
+		       var picWidth=$("#picWidth").val();
+		       var picHeight=$("#picHeight").val();
+	           scenicPlace={x:x,y:y,picUrl:picUrl,picWidth:picWidth,picHeight:picHeight};
+	           initSceDisCanvas(0);
+	           //setScenicPlaceLocation();
 	    }
+	}
+}
+
+function setScenicPlaceLocation(){
+	var entityImg = new Image();
+	entityImg.src=scenicPlace.picUrl;
+	entityImg.onload=function(){
+		sceDisCanvasContext.drawImage(entityImg, scenicPlace.x-scenicPlace.picWidth/2, sceDisCanvasHeight-scenicPlace.y-scenicPlace.picHeight/2, scenicPlace.picWidth, scenicPlace.picHeight);
 	}
 }
 
@@ -397,6 +417,26 @@ function addScenicPlace(){
 			}
 		}
 	});
+}
+
+function checkScenicPlaceInfo(){
+	if(checkPicUrl()){
+		if(checkPicWidth()){
+			if(checkPicHeight()){
+				openAddSpDialog(1);
+			}
+		}
+	}
+}
+
+function checkPicUrl(){
+	var picUrl=$("#picUrl_img").attr("src");
+	if(picUrl==null||picUrl==""){
+	  	alert("请选择景区图片");
+	  	return false;
+	}
+	else
+		return true;
 }
 
 function focusName(){
@@ -681,13 +721,13 @@ function setFitWidthInParent(parent,self){
 			<td class="td2">
 				<div class="upBut_div upPicBut_div" onclick="uploadPicUrl()">选择图片</div>
 				<input type="file" id="picUrl_file" name="picUrl_file" style="display: none;" onchange="showPicUrl(this)"/>
-				<img class="picUrl_img" id="picUrl_img" alt=""/>
+				<img class="picUrl_img" id="picUrl_img" alt="" src=""/>
 			</td>
 			<td class="td1" align="right">
 				景区地图
 			</td>
 			<td class="td2">
-				<div class="upBut_div showMapBut_div" onclick="openAddSpDialog(1)">显示地图</div>
+				<div class="upBut_div showMapBut_div" onclick="checkScenicPlaceInfo();">显示地图</div>
 				<img class="sceDis_img" id="sceDis_img" alt="" src="${sessionScope.user.scenicDistrict.mapUrl }"/>
 			</td>
 		  </tr>
