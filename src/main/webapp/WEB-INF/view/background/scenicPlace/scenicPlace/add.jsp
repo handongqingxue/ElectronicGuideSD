@@ -64,7 +64,7 @@
 	width: 150px;
 	height:30px;
 }
-.picWidth_inp,.picHeight_inp,.x_inp,.y_inp{
+.picWidth_inp,.picHeight_inp{
 	width: 130px;
 	height:30px;
 }
@@ -80,7 +80,7 @@
 	background-color: #1777FF;
 	border-radius:5px;
 }
-.upPicBut_div{
+.upPicBut_div,.showMapBut_div{
 	width: 90px;
 }
 .upSimpleIntroVoiceBut_div,.upDetailIntroVoiceBut_div{
@@ -107,29 +107,100 @@ var dialogTop=10;
 var dialogLeft=20;
 var ndNum=0;
 var aspsdmdNum=1;
+var sceDisCanvas;
+var sceDisCanvasMinWidth;
+var sceDisCanvasMinHeight;
+var sceDisCanvasMaxWidth;
+var sceDisCanvasMaxHeight;
+var sceDisCanvasStyleWidth;//sceDisCanvasMinWidth
+var sceDisCanvasStyleHeight;//sceDisCanvasMinHeight
+var sceDisCanvasWidth;
+var sceDisCanvasHeight;
+var widthScale;
+var heightScale;
+var reSizeTimeout;
 $(function(){
 	initNewDialog();
 	initAddSpSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 	
+	jiSuanScale();
 	initSceDisCanvas();
 });
 
-function initSceDisCanvas(){
+function jiSuanScale(){
+	sceDisCanvasMinWidth=parseFloat('${sessionScope.user.scenicDistrict.mapWidth}');
+	sceDisCanvasMinHeight=parseFloat('${sessionScope.user.scenicDistrict.mapHeight}');
+	sceDisCanvasStyleWidth=sceDisCanvasMinWidth;
+	sceDisCanvasStyleHeight=sceDisCanvasMinHeight;
+	
+	sceDisCanvasMaxWidth=parseFloat('${sessionScope.user.scenicDistrict.picWidth}');
+	sceDisCanvasMaxHeight=parseFloat('${sessionScope.user.scenicDistrict.picHeight}');
+	sceDisCanvasWidth=sceDisCanvasMaxWidth;
+	sceDisCanvasHeight=sceDisCanvasMaxHeight;
+
+	widthScale=sceDisCanvasStyleWidth/sceDisCanvasWidth;
+	heightScale=sceDisCanvasStyleHeight/sceDisCanvasHeight;
+}
+
+function changeCanvasSize(bigFlag,resetFlag){
+	loadSceDisCanvas(true);
+    var mcw=sceDisCanvasStyleWidth;
+	var mch=sceDisCanvasStyleHeight;
+	if(resetFlag){
+		sceDisCanvasStyleWidth=sceDisCanvasMinWidth;
+	}
+	else{
+		if(bigFlag==1)
+			sceDisCanvasStyleWidth+=sceDisCanvasMinWidth*0.2;
+		else
+			sceDisCanvasStyleWidth-=sceDisCanvasMinWidth*0.2;
+	}
+	
+	if(sceDisCanvasStyleWidth<sceDisCanvasMinWidth){
+		sceDisCanvasStyleWidth=sceDisCanvasMinWidth;
+	}
+	else if(sceDisCanvasStyleWidth>sceDisCanvasMaxWidth){
+		sceDisCanvasStyleWidth=sceDisCanvasMaxWidth;
+	}
+
+	if(sceDisCanvasStyleHeight<sceDisCanvasMinHeight){
+		sceDisCanvasStyleHeight=sceDisCanvasMinHeight;
+	}
+	else if(sceDisCanvasStyleHeight>sceDisCanvasMaxHeight){
+		sceDisCanvasStyleHeight=sceDisCanvasMaxHeight;
+	}
+	sceDisCanvasStyleHeight=sceDisCanvasStyleWidth*sceDisCanvasHeight/sceDisCanvasWidth;
+	
+	//缩放地图改变尺寸时，不改变点的坐标（坐标自动跟着变），改变的只有上面矩形框大小、文字大小
+	var cswSFB=mcw/sceDisCanvasStyleWidth;
+	var cshSFB=mch/sceDisCanvasStyleHeight;
+	
+	initSceDisCanvas(1);
+}
+
+function initSceDisCanvas(reSizeFlag){
 	var sceDisCanvasImg = new Image();
-	sceDisCanvasImg.src="http://www.qrcodesy.com:8080/ElectronicGuide/upload/map/1626254021278.jpg";
+	sceDisCanvasImg.src='${sessionScope.user.scenicDistrict.mapUrl}';
 	sceDisCanvas = document.createElement("canvas");
 	sceDisCanvas.id="sceDisCanvas";
-	sceDisCanvas.style.width="1280px";//通过缩放来改变画布大小，画布大小改变后，上面的定位点位置也就跟着改变了
-	sceDisCanvas.style.height="818px";
-	sceDisCanvas.width=2560;
-	sceDisCanvas.height=1636;
+	console.log(sceDisCanvasStyleWidth);
+	sceDisCanvas.style.width=sceDisCanvasStyleWidth+"px";//通过缩放来改变画布大小，画布大小改变后，上面的定位点位置也就跟着改变了
+	sceDisCanvas.style.height=sceDisCanvasStyleHeight+"px";
+	sceDisCanvas.width=sceDisCanvasWidth;
+	sceDisCanvas.height=sceDisCanvasHeight;
 	sceDisCanvasContext = sceDisCanvas.getContext("2d");
 	sceDisCanvasImg.onload=function(){
-		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, 2560, 1636);
+		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
+		
+		var preSceDisCanvas=document.getElementById("sceDisCanvas");
+		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
 		var sceDisCanvasDiv=document.getElementById("sceDisCanvas_div");
 		sceDisCanvasDiv.appendChild(sceDisCanvas);
+		
+		if(reSizeFlag==1)
+			loadSceDisCanvas(0);
 	}
 	sceDisCanvas.onclick=function(e){
 		if (e.offsetX || e.layerX) {
@@ -166,8 +237,20 @@ function initAddSpSDMapDialogDiv(){
 		top:10,
 		left:20,
 		buttons:[
-           {text:"保存",id:"ok_but",iconCls:"icon-ok",handler:function(){
+           {text:"取消",id:"cancel_but",iconCls:"icon-cancel",handler:function(){
         	   
+           }},
+           {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
+        	   
+           }},
+           {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
+        	   changeCanvasSize(null,true);
+           }},
+           {text:"放大",id:"big_but",iconCls:"icon-add",handler:function(){
+        	   changeCanvasSize(true,false);
+           }},
+           {text:"缩小",id:"small_but",iconCls:"icon-remove",handler:function(){
+        	   changeCanvasSize(false,false);
            }}
         ]
 	});
@@ -183,11 +266,21 @@ function initAddSpSDMapDialogDiv(){
 	$(".window-shadow").eq(aspsdmdNum).css("margin-top","40px");
 	$(".window,.window .window-body").eq(aspsdmdNum).css("border-color","#ddd");
 
-	$("#add_sp_sd_map_dialog_div #cancel_but").css("left","30%");
+	$("#add_sp_sd_map_dialog_div #cancel_but").css("left","20%");
 	$("#add_sp_sd_map_dialog_div #cancel_but").css("position","absolute");
 
-	$("#add_sp_sd_map_dialog_div #ok_but").css("left","45%");
+	$("#add_sp_sd_map_dialog_div #ok_but").css("left","35%");
 	$("#add_sp_sd_map_dialog_div #ok_but").css("position","absolute");
+
+	$("#add_sp_sd_map_dialog_div #reset_but").css("left","50%");
+	$("#add_sp_sd_map_dialog_div #reset_but").css("position","absolute");
+
+	$("#add_sp_sd_map_dialog_div #big_but").css("left","65%");
+	$("#add_sp_sd_map_dialog_div #big_but").css("position","absolute");
+
+	$("#add_sp_sd_map_dialog_div #small_but").css("left","80%");
+	$("#add_sp_sd_map_dialog_div #small_but").css("position","absolute");
+	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 	openAddSpSdMDialog(0);
@@ -499,6 +592,22 @@ function showDetailIntroVoiceUrl(obj){
     }
 }
 
+function loadSceDisCanvas(flag){
+	var bigButDiv=$("#add_sp_sd_map_dialog_div #big_but");
+	var smallButDiv=$("#add_sp_sd_map_dialog_div #small_but");
+	if(flag){
+		bigButDiv.css("display","none");
+		smallButDiv.css("display","none");
+	}
+	else{
+		reSizeTimeout=setTimeout(function(){
+			bigButDiv.css("display","block");
+			smallButDiv.css("display","block");
+			clearTimeout(reSizeTimeout);
+		},"1000");
+	}
+}
+
 function setFitWidthInParent(parent,self){
 	var space=0;
 	switch (self) {
@@ -535,7 +644,10 @@ function setFitWidthInParent(parent,self){
 				</div>
 				<input type="hidden" id="id"/>
 				<div id="add_sp_sd_map_dialog_div">
-					<div id="sceDisCanvas_div"></div>
+					<div id="sceDisCanvas_div">
+						<canvas id="sceDisCanvas">
+						</canvas>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -575,6 +687,7 @@ function setFitWidthInParent(parent,self){
 				景区地图
 			</td>
 			<td class="td2">
+				<div class="upBut_div showMapBut_div" onclick="openAddSpDialog(1)">显示地图</div>
 				<img class="sceDis_img" id="sceDis_img" alt="" src="${sessionScope.user.scenicDistrict.mapUrl }"/>
 			</td>
 		  </tr>
@@ -597,13 +710,15 @@ function setFitWidthInParent(parent,self){
 				x轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="x_inp" id="x" name="x" placeholder="请输入x轴坐标"/>
+				<span id="x_span"></span>
+				<input type="hidden" id="x_inp" name="x"/>
 			</td>
 			<td class="td1" align="right">
 				y轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="y_inp" id="y" name="y" placeholder="请输入y轴坐标"/>
+				<span id="y_span"></span>
+				<input type="hidden" id="y_inp" name="y"/>
 			</td>
 		  </tr>
 		  <tr>
