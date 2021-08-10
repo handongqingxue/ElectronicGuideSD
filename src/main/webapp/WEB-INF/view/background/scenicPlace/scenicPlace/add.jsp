@@ -120,6 +120,8 @@ var widthScale;
 var heightScale;
 var reSizeTimeout;
 var scenicPlace;
+var scenicPlaceX;
+var scenicPlaceY;
 $(function(){
 	initNewDialog();
 	initAddSpSDMapDialogDiv();
@@ -210,17 +212,17 @@ function initSceDisCanvas(reSizeFlag){
 		if (e.offsetX || e.layerX) {
 	           var x = e.offsetX == undefined ? e.layerX : e.offsetX;
 	           var y = e.offsetY == undefined ? e.layerY : e.offsetY;
-	           //alert(scenicPlace.x/widthScale+","+sceDisCanvasHeight-scenicPlace.y/heightScale);
-	           //x=x*(sceDisCanvasStyleWidth/sceDisCanvasWidth);
-	           x=x*(sceDisCanvasMinWidth/sceDisCanvasStyleWidth);
+	           x=x*(sceDisCanvasMinWidth/sceDisCanvasStyleWidth);//用最初的画布宽度比上当前画布宽度，得出缩放比例，从而将点击获得的坐标还原为画布上的坐标
 	           y=y*(sceDisCanvasMinHeight/sceDisCanvasStyleHeight);
-	           alert(x+","+(sceDisCanvasMinHeight-y));
+	           
+	           scenicPlaceX=x;
+	           scenicPlaceY=sceDisCanvasMinHeight-y;//将y轴坐标从最初的左上角计算转换为从左下角计算
+	           
 	       	   var picUrl=$("#picUrl_img").attr("src");
 		       var picWidth=$("#picWidth").val();
 		       var picHeight=$("#picHeight").val();
 	           scenicPlace={x:x,y:y,picUrl:picUrl,picWidth:picWidth,picHeight:picHeight};
 	           initSceDisCanvas(0);
-	           //setScenicPlaceLocation();
 	    }
 	}
 }
