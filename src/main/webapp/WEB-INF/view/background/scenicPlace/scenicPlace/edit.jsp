@@ -38,7 +38,7 @@
 	background-color: #1777FF;
 	border-radius:5px;
 }
-.upPicBut_div{
+.upPicBut_div,.showMapBut_div{
 	width: 90px;
 }
 .upSimpleIntroVoiceBut_div,.upDetailIntroVoiceBut_div{
@@ -46,6 +46,10 @@
 }
 .picUrl_img{
 	width: 180px;
+	height:180px;
+	margin-top: 10px;
+}
+.sceDis_img{
 	height:180px;
 	margin-top: 10px;
 }
@@ -169,6 +173,16 @@ function editScenicPlace(){
 			}
 		}
 	});
+}
+
+function checkScenicPlaceInfo(){
+	if(checkPicUrl()){
+		if(checkPicWidth()){
+			if(checkPicHeight()){
+				openAddSpDialog(1);
+			}
+		}
+	}
 }
 
 function focusName(){
@@ -417,8 +431,11 @@ function setFitWidthInParent(parent,self){
 				<img class="picUrl_img" id="picUrl_img" alt="" src="${requestScope.scenicPlace.picUrl }"/>
 			</td>
 			<td class="td1" align="right">
+				景区地图
 			</td>
 			<td class="td2">
+				<div class="upBut_div showMapBut_div" onclick="checkScenicPlaceInfo();">显示地图</div>
+				<img class="sceDis_img" id="sceDis_img" alt="" src="${sessionScope.user.scenicDistrict.mapUrl }"/>
 			</td>
 		  </tr>
 		  <tr>
