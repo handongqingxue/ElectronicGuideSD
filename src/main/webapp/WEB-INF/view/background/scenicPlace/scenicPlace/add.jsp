@@ -263,10 +263,14 @@ function initAddSpSDMapDialogDiv(){
 		left:20,
 		buttons:[
            {text:"取消",id:"cancel_but",iconCls:"icon-cancel",handler:function(){
-        	   
+        	   openAddSpDialog(0);
            }},
            {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   
+        	   $("#x_span").text(scenicPlaceX);
+        	   $("#y_span").text(scenicPlaceY);
+        	   $("#x_inp").val(scenicPlaceX);
+        	   $("#y_inp").val(scenicPlaceY);
+        	   openAddSpDialog(0);
            }},
            {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
         	   changeCanvasSize(null,true);
@@ -477,9 +481,9 @@ function checkSort(){
 
 //验证x轴坐标
 function checkX(){
-	var x = $("#x").val();
+	var x = $("#x_inp").val();
 	if(x==null||x==""){
-	  	alert("请输入x轴坐标");
+	  	alert("请选择x轴坐标");
 	  	return false;
 	}
 	else
@@ -488,9 +492,9 @@ function checkX(){
 
 //验证y轴坐标
 function checkY(){
-	var y = $("#y").val();
+	var y = $("#y_inp").val();
 	if(y==null||y==""){
-	  	alert("请输入y轴坐标");
+	  	alert("请选择y轴坐标");
 	  	return false;
 	}
 	else
