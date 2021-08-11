@@ -13,24 +13,24 @@ import com.electronicGuideSD.service.*;
 public class RoadServiceImpl implements RoadService {
 	
 	@Autowired
-	private RoadMapper toSpRouteDao;
+	private RoadMapper roadDao;
 
 	@Override
 	public int selectForInt(String name) {
 		// TODO Auto-generated method stub
-		return toSpRouteDao.selectForInt(name);
+		return roadDao.selectForInt(name);
 	}
 
 	@Override
-	public List<ToSpRoute> selectList(String name, int page, int rows, String sort, String order) {
+	public List<Road> selectList(String name, int page, int rows, String sort, String order) {
 		// TODO Auto-generated method stub
-		return toSpRouteDao.selectList(name, (page-1)*rows, rows, sort, order);
+		return roadDao.selectList(name, (page-1)*rows, rows, sort, order);
 	}
 
 	@Override
-	public int add(ToSpRoute toSpRouteDot) {
+	public int add(Road road) {
 		// TODO Auto-generated method stub
-		return toSpRouteDao.add(toSpRouteDot);
+		return roadDao.add(road);
 	}
 
 }

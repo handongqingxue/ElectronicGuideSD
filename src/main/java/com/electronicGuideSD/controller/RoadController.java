@@ -47,7 +47,7 @@ public class RoadController {
 		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		int count=roadService.selectForInt(name);
-		List<ToSpRoute> sdList=roadService.selectList(name, page, rows, sort, order);
+		List<Road> sdList=roadService.selectList(name, page, rows, sort, order);
 
 		jsonMap.put("total", count);
 		jsonMap.put("rows", sdList);
@@ -55,23 +55,23 @@ public class RoadController {
 		return jsonMap;
 	}
 	
-	@RequestMapping(value="/addTSPRD",produces="plain/text; charset=UTF-8")
+	@RequestMapping(value="/addRoad",produces="plain/text; charset=UTF-8")
 	@ResponseBody
-	public String addTSPRD(ToSpRoute toSpRouteDot,
+	public String addRoad(Road road,
 			HttpServletRequest request) {
 
 		String json=null;;
 		try {
 			PlanResult plan=new PlanResult();
-			int count=roadService.add(toSpRouteDot);
+			int count=roadService.add(road);
 			if(count==0) {
 				plan.setStatus(0);
-				plan.setMsg("添加路线点失败！");
+				plan.setMsg("添加路名失败！");
 				json=JsonUtil.getJsonFromObject(plan);
 			}
 			else {
 				plan.setStatus(1);
-				plan.setMsg("添加路线点成功！");
+				plan.setMsg("添加路名成功！");
 				json=JsonUtil.getJsonFromObject(plan);
 			}
 		} catch (Exception e) {

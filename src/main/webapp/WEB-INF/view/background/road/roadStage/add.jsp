@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>添加路名</title>
+<title>添加路线点</title>
 <%@include file="../../js.jsp"%>
 <style type="text/css">
 .center_con_div{
@@ -18,8 +18,8 @@
 	margin-left: 20px;
 	font-size: 18px;
 }
-.name_inp{
-	width: 150px;
+.x_inp,.y_inp{
+	width: 130px;
 	height:30px;
 }
 .sort_inp{
@@ -29,45 +29,41 @@
 </style>
 <script type="text/javascript">
 var path='<%=basePath %>';
-var roadPath='<%=basePath%>'+"background/road/";
+var routeDotPath='<%=basePath%>'+"background/routeDot/";
 var wechatAppletPath='<%=basePath%>'+"wechatApplet/";
 var dialogTop=10;
 var dialogLeft=20;
 var ndNum=0;
 $(function(){
-	initBackThroughCBB();
-	initFrontThroughCBB();
+	initScenicPlaceCBB();
 	initNewDialog();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 });
 
-function initBackThroughCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
-	backThroughCBB=$("#backThrough_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#backThrough").val(backThroughCBB.combobox("getValue"));
+function initScenicPlaceCBB(){
+	$.post(wechatAppletPath+"selectScenicPlaceList",
+		function(result){
+			var data=[];
+			data.push({id:"",name:"请选择"});
+			if(result.status=="ok"){
+				var spList=result.scenicPlaceList;
+				for(var i=0;i<spList.length;i++){
+					var sp=spList[i];
+					data.push({id:sp.id,name:sp.name});
+				}
+			}
+			scenicPlaceCBB=$("#scenicPlace_cbb").combobox({
+				width:150,
+				data:data,
+				valueField:"id",
+				textField:"name",
+				onSelect:function(){
+					$("#scePlaId").val(scenicPlaceCBB.combobox("getValue"));
+				}
+			});
 		}
-	});
-}
-
-function initFrontThroughCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
-	frontThroughCBB=$("#frontThrough_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#frontThrough").val(frontThroughCBB.combobox("getValue"));
-		}
-	});
+	,"json");
 }
 
 function initDialogPosition(){
@@ -84,7 +80,7 @@ function initDialogPosition(){
 function initNewDialog(){
 	dialogTop+=20;
 	$("#new_div").dialog({
-		title:"路名信息",
+		title:"路线点信息",
 		width:setFitWidthInParent("body","new_div"),
 		height:730,
 		top:dialogTop,
@@ -125,22 +121,22 @@ function initNewDialog(){
 }
 
 function checkAdd(){
-	if(checkName()){
+	if(checkScenicPlaceId()){
 		if(checkSort()){
-			if(checkBackThrough()){
-				if(checkFrontThrough()){
-					addRoad();
+			if(checkX()){
+				if(checkY()){
+					addTSPRD();
 				}
 			}
 		}
 	}
 }
 
-function addRoad(){
+function addTSPRD(){
 	var formData = new FormData($("#form1")[0]);
 	$.ajax({
 		type:"post",
-		url:roadPath+"addRoad",
+		url:routeDotPath+"addTSPRD",
 		dataType: "json",
 		data:formData,
 		cache: false,
@@ -149,7 +145,7 @@ function addRoad(){
 		success: function (data){
 			if(data.status==1){
 				alert(data.msg);
-				location.href=roadPath+"road/list";
+				location.href=routeDotPath+"toSp/list";
 			}
 			else{
 				alert(data.msg);
@@ -158,20 +154,11 @@ function addRoad(){
 	});
 }
 
-function focusName(){
-	var name = $("#name").val();
-	if(name=="道路名称不能为空"){
-		$("#name").val("");
-		$("#name").css("color", "#555555");
-	}
-}
-
-//验证道路名称
-function checkName(){
-	var name = $("#name").val();
-	if(name==null||name==""||name=="道路名称不能为空"){
-		$("#name").css("color","#E15748");
-    	$("#name").val("道路名称不能为空");
+//验证选择景点
+function checkScenicPlaceId(){
+	var scenicPlaceId=scenicPlaceCBB.combobox("getValue");
+	if(scenicPlaceId==null||scenicPlaceId==""){
+    	alert("请选择景点");
     	return false;
 	}
 	else
@@ -189,22 +176,22 @@ function checkSort(){
 		return true;
 }
 
-//验证后方是否相通
-function checkBackThrough(){
-	var backThrough=backThroughCBB.combobox("getValue");
-	if(backThrough==null||backThrough==""){
-    	alert("请选择是否相通");
-    	return false;
+//验证x轴坐标
+function checkX(){
+	var x = $("#x").val();
+	if(x==null||x==""){
+	  	alert("请输入x轴坐标");
+	  	return false;
 	}
 	else
 		return true;
 }
 
-//验证前方是否相通
-function checkFrontThrough(){
-	var frontThrough=backThroughCBB.combobox("getValue");
-	if(backThrough==null||backThrough==""){
-	  	alert("请选择是否相通");
+//验证y轴坐标
+function checkY(){
+	var y = $("#y").val();
+	if(y==null||y==""){
+	  	alert("请输入y轴坐标");
 	  	return false;
 	}
 	else
@@ -234,17 +221,18 @@ function setFitWidthInParent(parent,self){
 <div class="layui-layout layui-layout-admin">	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">添加路名</div>
+	<div class="page_location_div">添加路线点</div>
 	
 	<div id="new_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
 		<table>
 		  <tr>
 			<td class="td1" align="right">
-				路名
+				景点
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入路名"/>
+				<select id="scenicPlace_cbb"></select>
+				<input type="hidden" id="scePlaId" name="scePlaId"/>
 			</td>
 			<td class="td1" align="right">
 				排序
@@ -255,18 +243,16 @@ function setFitWidthInParent(parent,self){
 		  </tr>
 		  <tr>
 			<td class="td1" align="right">
-				后方是否相通
+				x轴坐标
 			</td>
 			<td class="td2">
-				<select id="backThrough_cbb"></select>
-				<input type="hidden" id="backThrough" name="backThrough"/>
+				<input type="number" class="x_inp" id="x" name="x" placeholder="请输入x轴坐标"/>
 			</td>
 			<td class="td1" align="right">
-				前方是否相通
+				y轴坐标
 			</td>
 			<td class="td2">
-				<select id="frontThrough_cbb"></select>
-				<input type="hidden" id="frontThrough" name="frontThrough"/>
+				<input type="number" class="y_inp" id="y" name="y" placeholder="请输入y轴坐标"/>
 			</td>
 		  </tr>
 		</table>

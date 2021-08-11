@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.electronicGuideSD.entity.ToSpRoute;
+import com.electronicGuideSD.entity.*;
 
 public interface RoadMapper {
 
 	int selectForInt(@Param("name")String name);
 
-	List<ToSpRoute> selectList(@Param("name")String name, @Param("start")int start, @Param("rows")int rows, String sort, String order);
+	List<Road> selectList(@Param("name")String name, @Param("start")int start, @Param("rows")int rows, String sort, String order);
 
-	int add(ToSpRoute toSpRoute);
+	int add(Road road);
 
 }

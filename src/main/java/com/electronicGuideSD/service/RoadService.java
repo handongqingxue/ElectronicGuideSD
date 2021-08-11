@@ -8,8 +8,8 @@ public interface RoadService {
 
 	int selectForInt(String name);
 
-	List<ToSpRoute> selectList(String name, int page, int rows, String sort, String order);
+	List<Road> selectList(String name, int page, int rows, String sort, String order);
 
-	int add(ToSpRoute toSpRoute);
+	int add(Road road);
 
 }
