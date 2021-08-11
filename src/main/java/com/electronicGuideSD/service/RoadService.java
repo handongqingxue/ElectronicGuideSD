@@ -12,4 +12,8 @@ public interface RoadService {
 
 	int add(Road road);
 
+	Road selectById(String id);
+
+	int edit(Road road);
+
 }

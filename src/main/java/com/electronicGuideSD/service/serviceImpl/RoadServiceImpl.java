@@ -33,4 +33,16 @@ public class RoadServiceImpl implements RoadService {
 		return roadDao.add(road);
 	}
 
+	@Override
+	public Road selectById(String id) {
+		// TODO Auto-generated method stub
+		return roadDao.selectById(id);
+	}
+
+	@Override
+	public int edit(Road road) {
+		// TODO Auto-generated method stub
+		return roadDao.edit(road);
+	}
+
 }

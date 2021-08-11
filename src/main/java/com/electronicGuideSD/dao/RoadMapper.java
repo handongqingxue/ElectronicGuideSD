@@ -14,4 +14,8 @@ public interface RoadMapper {
 
 	int add(Road road);
 
+	Road selectById(@Param("id")String id);
+
+	int edit(Road road);
+
 }

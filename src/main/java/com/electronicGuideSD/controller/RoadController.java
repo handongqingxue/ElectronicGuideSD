@@ -35,6 +35,16 @@ public class RoadController {
 		return MODULE_NAME+"/road/add";
 	}
 	
+	@RequestMapping(value="/road/edit")
+	public String goRoadEdit(HttpServletRequest request) {
+
+		Road road = roadService.selectById(request.getParameter("id"));
+		
+		request.setAttribute("road", road);
+		
+		return MODULE_NAME+"/road/edit";
+	}
+	
 	@RequestMapping(value="/road/list")
 	public String goRoadList(HttpServletRequest request) {
 
@@ -72,6 +82,32 @@ public class RoadController {
 			else {
 				plan.setStatus(1);
 				plan.setMsg("添加路名成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	@RequestMapping(value="/editRoad",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String editRoad(Road road,
+			HttpServletRequest request) {
+
+		String json=null;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=roadService.edit(road);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("编辑路名失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("编辑路名成功！");
 				json=JsonUtil.getJsonFromObject(plan);
 			}
 		} catch (Exception e) {

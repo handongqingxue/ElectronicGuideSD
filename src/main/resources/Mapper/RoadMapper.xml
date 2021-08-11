@@ -16,6 +16,9 @@
 		</if>
  		 order by sort limit #{start},#{rows}
  	</select>
+ 	<select id="selectById" resultType="com.electronicGuideSD.entity.Road">
+ 		select * from road where id=#{id}
+ 	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.Road">
  		insert into road
  		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -50,4 +53,23 @@
  			</if>
  		</trim>
  	</insert>
+ 	<update id="edit">
+		update road set
+		<trim suffixOverrides=",">
+			<if test="name!=null">
+				name=#{name},
+			</if>
+			<if test="backThrough!=null">
+				backThrough=#{backThrough},
+			</if>
+			<if test="frontThrough!=null">
+				frontThrough=#{frontThrough},
+			</if>
+				modifyTime=now(),
+			<if test="sort!=null">
+				sort=#{sort},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
  </mapper>
