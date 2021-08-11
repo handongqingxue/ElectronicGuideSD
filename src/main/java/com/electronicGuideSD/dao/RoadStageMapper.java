@@ -13,4 +13,8 @@ public interface RoadStageMapper {
 
 	Map<String, Object> selectMinDistanceStage(@Param("x")Float x, @Param("y")Float y);
 
+	int selectForInt(@Param("roadName")String roadName, @Param("name")String name);
+
+	List<RoadStage> selectList(@Param("roadName")String roadName, @Param("name")String name, @Param("start")int start, @Param("rows")int rows, String sort, String order);
+
 }

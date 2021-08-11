@@ -9,4 +9,8 @@ public interface RoadStageService {
 
 	List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY);
 
+	int selectForInt(String roadName, String name);
+
+	List<RoadStage> selectList(String roadName, String name, int page, int rows, String sort, String order);
+
 }

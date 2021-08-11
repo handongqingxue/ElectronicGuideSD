@@ -11,6 +11,12 @@ public class RoadStage {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Float getFrontX() {
 		return frontX;
 	}
@@ -101,12 +107,19 @@ public class RoadStage {
 	public void setRoadId(Integer roadId) {
 		this.roadId = roadId;
 	}
+	public String getRoadName() {
+		return roadName;
+	}
+	public void setRoadName(String roadName) {
+		this.roadName = roadName;
+	}
 	public String getBfFlag() {
 		return bfFlag;
 	}
 	public void setBfFlag(String bfFlag) {
 		this.bfFlag = bfFlag;
 	}
+	private String name;
 	private Float frontX;
 	private Float frontY;
 	private Float backX;
@@ -122,5 +135,6 @@ public class RoadStage {
 	private String modifyTime;
 	private Integer sort;
 	private Integer roadId;
+	private String roadName;
 	private String bfFlag;
 }

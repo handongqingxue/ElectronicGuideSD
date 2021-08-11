@@ -48,4 +48,16 @@ public class RoadStageServiceImpl implements RoadStageService {
 		System.out.println("size1==="+shortNavLine.size());
 		return shortNavLine;
 	}
+
+	@Override
+	public int selectForInt(String roadName, String name) {
+		// TODO Auto-generated method stub
+		return roadStageDao.selectForInt(roadName,name);
+	}
+
+	@Override
+	public List<RoadStage> selectList(String roadName, String name, int page, int rows, String sort, String order) {
+		// TODO Auto-generated method stub
+		return roadStageDao.selectList(roadName, name, (page-1)*rows, rows, sort, order);
+	}
 }

@@ -27,6 +27,8 @@ public class RoadController {
 
 	@Autowired
 	private RoadService roadService;
+	@Autowired
+	private RoadStageService roadStageService;
 	public static final String MODULE_NAME="/background/road";
 	
 	@RequestMapping(value="/road/add")
@@ -61,16 +63,22 @@ public class RoadController {
 		return MODULE_NAME+"/road/detail";
 	}
 	
+	@RequestMapping(value="/roadStage/list")
+	public String goRoadStageList(HttpServletRequest request) {
+
+		return MODULE_NAME+"/roadStage/list";
+	}
+	
 	@RequestMapping(value="/selectRoadList")
 	@ResponseBody
 	public Map<String, Object> selectRoadList(String name,int page,int rows,String sort,String order) {
 		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		int count=roadService.selectForInt(name);
-		List<Road> sdList=roadService.selectList(name, page, rows, sort, order);
+		List<Road> roadList=roadService.selectList(name, page, rows, sort, order);
 
 		jsonMap.put("total", count);
-		jsonMap.put("rows", sdList);
+		jsonMap.put("rows", roadList);
 			
 		return jsonMap;
 	}
@@ -125,6 +133,20 @@ public class RoadController {
 			e.printStackTrace();
 		}
 		return json;
+	}
+	
+	@RequestMapping(value="/selectRoadStageList")
+	@ResponseBody
+	public Map<String, Object> selectRoadStageList(String roadName,String name,int page,int rows,String sort,String order) {
+		
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		int count=roadStageService.selectForInt(roadName,name);
+		List<RoadStage> roadStageList=roadStageService.selectList(roadName,name, page, rows, sort, order);
+
+		jsonMap.put("total", count);
+		jsonMap.put("rows", roadStageList);
+			
+		return jsonMap;
 	}
 
 }
