@@ -148,14 +148,14 @@
 				<div class="first-level-div">
 					<li class="layui-nav-item first-level">
 						<a>
-							路线管理
+							路名管理
 						</a>
 					</li>
 					<div class="line_div"></div>
 					<li class="layui-nav-item">
 						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
-						<a href="<%=basePath%>background/route/toSp/list">
-							&nbsp;&nbsp;&nbsp;去景点路线
+						<a href="<%=basePath%>background/road/road/list">
+							&nbsp;&nbsp;&nbsp;路名查询
 						</a>
 					</li>
 				</div>

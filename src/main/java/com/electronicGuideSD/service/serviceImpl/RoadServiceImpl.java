@@ -10,10 +10,10 @@ import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
 
 @Service
-public class ToSpRouteServiceImpl implements ToSpRouteService {
+public class RoadServiceImpl implements RoadService {
 	
 	@Autowired
-	private ToSpRouteMapper toSpRouteDao;
+	private RoadMapper toSpRouteDao;
 
 	@Override
 	public int selectForInt(String name) {

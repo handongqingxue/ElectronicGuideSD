@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.electronicGuideSD.entity.*;
 
-public interface ToSpRouteService {
+public interface RoadService {
 
 	int selectForInt(String name);
 

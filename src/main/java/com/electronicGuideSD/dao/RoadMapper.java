@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.electronicGuideSD.entity.ToSpRoute;
 
-public interface ToSpRouteMapper {
+public interface RoadMapper {
 
 	int selectForInt(@Param("name")String name);
 

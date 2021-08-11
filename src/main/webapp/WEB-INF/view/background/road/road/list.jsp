@@ -25,7 +25,7 @@
 <title>去景点路线点查询</title>
 <%@include file="../../js.jsp"%>
 <script type="text/javascript">
-var routePath='<%=basePath%>'+"background/route/";
+var roadPath='<%=basePath%>'+"background/road/";
 $(function(){
 	initSearchLB();
 	initAddLB();
@@ -46,23 +46,29 @@ function initAddLB(){
 	$("#add_but").linkbutton({
 		iconCls:"icon-add",
 		onClick:function(){
-			location.href=routePath+"toSp/add";
+			location.href=roadPath+"road/add";
 		}
 	});
 }
 
 function initTab1(){
 	tab1=$("#tab1").datagrid({
-		title:"去景点路线查询",
-		url:routePath+"selectToSpList",
+		title:"路名查询",
+		url:roadPath+"selectRoadList",
 		toolbar:"#toolbar",
 		width:setFitWidthInParent("body"),
 		pagination:true,
 		pageSize:10,
 		columns:[[
-			{field:"spName",title:"景点名称",width:150},
-			{field:"roadIds",title:"所含道路",width:100},
+			{field:"name",title:"路名",width:150},
+			{field:"backThrough",title:"后方是否相通",width:120,formatter:function(value,row){
+				return value?"是":"否";
+			}},
+			{field:"frontThrough",title:"前方是否相通",width:120,formatter:function(value,row){
+				return value?"是":"否";
+			}},
             {field:"createTime",title:"创建时间",width:150},
+            {field:"modifyTime",title:"修改时间",width:150},
             {field:"sort",title:"排序",width:80},
             {field:"id",title:"操作",width:110,formatter:function(value,row){
             	var str="<a href=\"edit?id="+value+"\">编辑</a>&nbsp;&nbsp;"
@@ -72,8 +78,8 @@ function initTab1(){
 	    ]],
         onLoadSuccess:function(data){
 			if(data.total==0){
-				$(this).datagrid("appendRow",{spName:"<div style=\"text-align:center;\">暂无信息<div>"});
-				$(this).datagrid("mergeCells",{index:0,field:"spName",colspan:5});
+				$(this).datagrid("appendRow",{name:"<div style=\"text-align:center;\">暂无信息<div>"});
+				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:7});
 				data.total=0;
 			}
 			

@@ -22,32 +22,32 @@ import com.electronicGuideSD.util.PlanResult;
 import net.sf.json.JSONObject;
 
 @Controller
-@RequestMapping(RouteController.MODULE_NAME)
-public class RouteController {
+@RequestMapping(RoadController.MODULE_NAME)
+public class RoadController {
 
 	@Autowired
-	private ToSpRouteService toSpRouteDotService;
-	public static final String MODULE_NAME="/background/route";
+	private RoadService roadService;
+	public static final String MODULE_NAME="/background/road";
 	
-	@RequestMapping(value="/toSp/add")
-	public String goToSpAdd(HttpServletRequest request) {
+	@RequestMapping(value="/road/add")
+	public String goRoadAdd(HttpServletRequest request) {
 
-		return MODULE_NAME+"/toSp/add";
+		return MODULE_NAME+"/road/add";
 	}
 	
-	@RequestMapping(value="/toSp/list")
-	public String goToSpList(HttpServletRequest request) {
+	@RequestMapping(value="/road/list")
+	public String goRoadList(HttpServletRequest request) {
 
-		return MODULE_NAME+"/toSp/list";
+		return MODULE_NAME+"/road/list";
 	}
 	
-	@RequestMapping(value="/selectToSpList")
+	@RequestMapping(value="/selectRoadList")
 	@ResponseBody
-	public Map<String, Object> selectToSpList(String name,int page,int rows,String sort,String order) {
+	public Map<String, Object> selectRoadList(String name,int page,int rows,String sort,String order) {
 		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		int count=toSpRouteDotService.selectForInt(name);
-		List<ToSpRoute> sdList=toSpRouteDotService.selectList(name, page, rows, sort, order);
+		int count=roadService.selectForInt(name);
+		List<ToSpRoute> sdList=roadService.selectList(name, page, rows, sort, order);
 
 		jsonMap.put("total", count);
 		jsonMap.put("rows", sdList);
@@ -63,7 +63,7 @@ public class RouteController {
 		String json=null;;
 		try {
 			PlanResult plan=new PlanResult();
-			int count=toSpRouteDotService.add(toSpRouteDot);
+			int count=roadService.add(toSpRouteDot);
 			if(count==0) {
 				plan.setStatus(0);
 				plan.setMsg("添加路线点失败！");
