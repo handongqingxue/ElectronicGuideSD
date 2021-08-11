@@ -51,6 +51,16 @@ public class RoadController {
 		return MODULE_NAME+"/road/list";
 	}
 	
+	@RequestMapping(value="/road/detail")
+	public String goRoadDetail(HttpServletRequest request) {
+
+		Road road = roadService.selectById(request.getParameter("id"));
+		
+		request.setAttribute("road", road);
+		
+		return MODULE_NAME+"/road/detail";
+	}
+	
 	@RequestMapping(value="/selectRoadList")
 	@ResponseBody
 	public Map<String, Object> selectRoadList(String name,int page,int rows,String sort,String order) {

@@ -22,7 +22,7 @@
 	margin-left: 13px;
 }
 </style>
-<title>去景点路线点查询</title>
+<title>路名查询</title>
 <%@include file="../../js.jsp"%>
 <script type="text/javascript">
 var roadPath='<%=basePath%>'+"background/road/";
