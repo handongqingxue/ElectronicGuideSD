@@ -123,12 +123,12 @@ var scenicPlace;
 var scenicPlaceX;
 var scenicPlaceY;
 $(function(){
+	jiSuanScale();
 	initNewDialog();
 	initAddSpSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 	
-	jiSuanScale();
 	initSceDisCanvas();
 });
 

@@ -123,12 +123,12 @@ var scenicPlace;
 var scenicPlaceX;
 var scenicPlaceY;
 $(function(){
+	jiSuanScale();
 	initEditDialog();
 	initEditSpSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 	
-	jiSuanScale();
 	initSceDisCanvas();
 });
 
@@ -218,13 +218,17 @@ function initSceDisCanvas(reSizeFlag){
 	           scenicPlaceX=x;
 	           scenicPlaceY=sceDisCanvasMinHeight-y;//将y轴坐标从最初的左上角计算转换为从左下角计算
 	           
-	       	   var picUrl=$("#picUrl_img").attr("src");
-		       var picWidth=$("#picWidth").val();
-		       var picHeight=$("#picHeight").val();
-	           scenicPlace={x:x,y:y,picUrl:picUrl,picWidth:picWidth,picHeight:picHeight};
+	           resetScenicPlace(x,y);
 	           initSceDisCanvas(0);
 	    }
 	}
+}
+
+function resetScenicPlace(x,y){
+	var picUrl=$("#picUrl_img").attr("src");
+    var picWidth=$("#picWidth").val();
+    var picHeight=$("#picHeight").val();
+    scenicPlace={x:x,y:y,picUrl:picUrl,picWidth:picWidth,picHeight:picHeight};
 }
 
 function setScenicPlaceLocation(){
@@ -241,17 +245,17 @@ function initDialogPosition(){
 	var edpw=$("body").find(".panel.window").eq(edNum);
 	var edws=$("body").find(".window-shadow").eq(edNum);
 	
-	var aspsdmdpw=$("body").find(".panel.window").eq(espsdmdNum);
-	var aspsdmdws=$("body").find(".window-shadow").eq(espsdmdNum);
+	var espsdmdpw=$("body").find(".panel.window").eq(espsdmdNum);
+	var espsdmdws=$("body").find(".window-shadow").eq(espsdmdNum);
 
 	var ccDiv=$("#center_con_div");
 	ccDiv.append(edpw);
 	ccDiv.append(edws);
 	ccDiv.css("width",setFitWidthInParent("body","center_con_div")+"px");
 	
-	var aspsdmdDiv=$("#edit_sp_canvas_dialog_div");
-	aspsdmdDiv.append(aspsdmdpw);
-	aspsdmdDiv.append(aspsdmdws);
+	var espsdmdDiv=$("#edit_sp_canvas_dialog_div");
+	espsdmdDiv.append(espsdmdpw);
+	espsdmdDiv.append(espsdmdws);
 }
 
 function initEditSpSDMapDialogDiv(){
@@ -313,6 +317,7 @@ function initEditSpSDMapDialogDiv(){
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 	openEditSpSdMDialog(0);
+	resetScenicPlace('${requestScope.scenicPlace.x }',sceDisCanvasMinHeight-parseInt('${requestScope.scenicPlace.y }'));
 }
 
 function initEditDialog(){
