@@ -364,4 +364,22 @@ public class RoadStageUtil {
 		}
 		return flag;
 	}
+	
+	public static Map<String,String> initRSNameMap(List<RoadStage> roadStageList) {
+		Map<String,String> rsNameMap=new HashMap<>();
+		for (RoadStage roadStage : roadStageList) {
+			rsNameMap.put("roadStage"+roadStage.getId(), roadStage.getName());
+		}
+		return rsNameMap;
+	}
+	
+	public static String getRSNameFromMapByIds(Map<String, String> rsNameMap, String ids) {
+		String[] idArr = ids.split(",");
+		String rsNames="";
+		for (String id : idArr) {
+			String rsName = rsNameMap.get("roadStage"+id);
+			rsNames+=","+rsName;
+		}
+		return rsNames.substring(1);
+	}
 }

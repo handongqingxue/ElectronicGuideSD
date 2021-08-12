@@ -30,6 +30,6 @@
 		<if test="name!=null&amp;name!=''">
 			and rs.name like'%${name}%'
 		</if>
- 		 order by rs.sort limit #{start},#{rows}
+ 		 order by r.sort,rs.sort limit #{start},#{rows}
  	</select>
  </mapper>

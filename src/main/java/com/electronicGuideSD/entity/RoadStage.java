@@ -71,6 +71,12 @@ public class RoadStage {
 	public void setFrontCrossRSIds(String frontCrossRSIds) {
 		this.frontCrossRSIds = frontCrossRSIds;
 	}
+	public String getFrontCrossRSNames() {
+		return frontCrossRSNames;
+	}
+	public void setFrontCrossRSNames(String frontCrossRSNames) {
+		this.frontCrossRSNames = frontCrossRSNames;
+	}
 	public Boolean getBackIsCross() {
 		return backIsCross;
 	}
@@ -82,6 +88,12 @@ public class RoadStage {
 	}
 	public void setBackCrossRSIds(String backCrossRSIds) {
 		this.backCrossRSIds = backCrossRSIds;
+	}
+	public String getBackCrossRSNames() {
+		return backCrossRSNames;
+	}
+	public void setBackCrossRSNames(String backCrossRSNames) {
+		this.backCrossRSNames = backCrossRSNames;
 	}
 	public String getCreateTime() {
 		return createTime;
@@ -129,8 +141,10 @@ public class RoadStage {
 	private Boolean backThrough;//后方是否通
 	private Boolean frontIsCross;//前方是否是交叉点
 	private String frontCrossRSIds;//前方交叉点id，可能包含多个交叉点
+	private String frontCrossRSNames;
 	private Boolean backIsCross;//后方是否是交叉点
 	private String backCrossRSIds;
+	private String backCrossRSNames;
 	private String createTime;
 	private String modifyTime;
 	private Integer sort;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,21 @@ public class RoadStageServiceImpl implements RoadStageService {
 	@Override
 	public List<RoadStage> selectList(String roadName, String name, int page, int rows, String sort, String order) {
 		// TODO Auto-generated method stub
-		return roadStageDao.selectList(roadName, name, (page-1)*rows, rows, sort, order);
+		List<RoadStage> roadStageList = roadStageDao.selectList(roadName, name, (page-1)*rows, rows, sort, order);
+		List<RoadStage> allRSList = roadStageDao.select();
+		Map<String, String> rsNameMap = RoadStageUtil.initRSNameMap(allRSList);
+		for (RoadStage roadStage : roadStageList) {
+			String backCrossRSIds = roadStage.getBackCrossRSIds();
+			if(roadStage.getBackIsCross()&&!StringUtils.isEmpty(backCrossRSIds)) {
+				String backCrossRSNames = RoadStageUtil.getRSNameFromMapByIds(rsNameMap,backCrossRSIds);
+				roadStage.setBackCrossRSNames(backCrossRSNames);
+			}
+			String frontCrossRSIds = roadStage.getFrontCrossRSIds();
+			if(roadStage.getFrontIsCross()&&!StringUtils.isEmpty(frontCrossRSIds)) {
+				String frontCrossRSNames = RoadStageUtil.getRSNameFromMapByIds(rsNameMap,frontCrossRSIds);
+				roadStage.setFrontCrossRSNames(frontCrossRSNames);
+			}
+		}
+		return roadStageList;
 	}
 }
