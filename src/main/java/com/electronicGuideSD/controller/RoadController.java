@@ -63,6 +63,12 @@ public class RoadController {
 		return MODULE_NAME+"/road/detail";
 	}
 	
+	@RequestMapping(value="/roadStage/add")
+	public String goRoadStageAdd(HttpServletRequest request) {
+
+		return MODULE_NAME+"/roadStage/add";
+	}
+	
 	@RequestMapping(value="/roadStage/list")
 	public String goRoadStageList(HttpServletRequest request) {
 
@@ -146,6 +152,24 @@ public class RoadController {
 		jsonMap.put("total", count);
 		jsonMap.put("rows", roadStageList);
 			
+		return jsonMap;
+	}
+	
+	@RequestMapping(value="/selectRoadCBBData")
+	@ResponseBody
+	public Map<String, Object> selectRoadCBBData() {
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<Road> roadList = roadService.selectRoadCBBData();
+
+		if(roadList.size()==0) {
+			jsonMap.put("status", "no");
+			jsonMap.put("message", "ÔÝÎÞµÀÂ·");
+		}
+		else {
+			jsonMap.put("status", "ok");
+			jsonMap.put("roadList", roadList);
+		}
 		return jsonMap;
 	}
 

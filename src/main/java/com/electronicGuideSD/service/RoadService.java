@@ -16,4 +16,6 @@ public interface RoadService {
 
 	int edit(Road road);
 
+	List<Road> selectRoadCBBData();
+
 }

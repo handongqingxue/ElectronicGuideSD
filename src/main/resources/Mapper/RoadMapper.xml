@@ -16,6 +16,9 @@
 		</if>
  		 order by sort limit #{start},#{rows}
  	</select>
+ 	<select id="selectRoadCBBData" resultType="com.electronicGuideSD.entity.Road">
+ 		select id,name from road order by sort
+ 	</select>
  	<select id="selectById" resultType="com.electronicGuideSD.entity.Road">
  		select * from road where id=#{id}
  	</select>

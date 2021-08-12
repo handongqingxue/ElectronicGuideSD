@@ -18,8 +18,8 @@
 	margin-left: 20px;
 	font-size: 18px;
 }
-.x_inp,.y_inp{
-	width: 130px;
+.backX_inp,.backY_inp{
+	width: 150px;
 	height:30px;
 }
 .sort_inp{
@@ -29,37 +29,36 @@
 </style>
 <script type="text/javascript">
 var path='<%=basePath %>';
-var routeDotPath='<%=basePath%>'+"background/routeDot/";
-var wechatAppletPath='<%=basePath%>'+"wechatApplet/";
+var roadPath='<%=basePath%>'+"background/road/";
 var dialogTop=10;
 var dialogLeft=20;
 var ndNum=0;
 $(function(){
-	initScenicPlaceCBB();
+	initRoadCBB();
 	initNewDialog();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 });
 
-function initScenicPlaceCBB(){
-	$.post(wechatAppletPath+"selectScenicPlaceList",
+function initRoadCBB(){
+	$.post(roadPath+"selectRoadCBBData",
 		function(result){
 			var data=[];
 			data.push({id:"",name:"请选择"});
 			if(result.status=="ok"){
-				var spList=result.scenicPlaceList;
-				for(var i=0;i<spList.length;i++){
-					var sp=spList[i];
-					data.push({id:sp.id,name:sp.name});
+				var roadList=result.roadList;
+				for(var i=0;i<roadList.length;i++){
+					var road=roadList[i];
+					data.push({id:road.id,name:road.name});
 				}
 			}
-			scenicPlaceCBB=$("#scenicPlace_cbb").combobox({
+			roadCBB=$("#road_cbb").combobox({
 				width:150,
 				data:data,
 				valueField:"id",
 				textField:"name",
 				onSelect:function(){
-					$("#scePlaId").val(scenicPlaceCBB.combobox("getValue"));
+					$("#scePlaId").val(roadCBB.combobox("getValue"));
 				}
 			});
 		}
@@ -80,7 +79,7 @@ function initDialogPosition(){
 function initNewDialog(){
 	dialogTop+=20;
 	$("#new_div").dialog({
-		title:"路线点信息",
+		title:"路段信息",
 		width:setFitWidthInParent("body","new_div"),
 		height:730,
 		top:dialogTop,
@@ -136,7 +135,7 @@ function addTSPRD(){
 	var formData = new FormData($("#form1")[0]);
 	$.ajax({
 		type:"post",
-		url:routeDotPath+"addTSPRD",
+		url:roadPath+"addTSPRD",
 		dataType: "json",
 		data:formData,
 		cache: false,
@@ -145,7 +144,7 @@ function addTSPRD(){
 		success: function (data){
 			if(data.status==1){
 				alert(data.msg);
-				location.href=routeDotPath+"toSp/list";
+				location.href=roadPath+"toSp/list";
 			}
 			else{
 				alert(data.msg);
@@ -156,7 +155,7 @@ function addTSPRD(){
 
 //验证选择景点
 function checkScenicPlaceId(){
-	var scenicPlaceId=scenicPlaceCBB.combobox("getValue");
+	var scenicPlaceId=roadCBB.combobox("getValue");
 	if(scenicPlaceId==null||scenicPlaceId==""){
     	alert("请选择景点");
     	return false;
@@ -221,17 +220,17 @@ function setFitWidthInParent(parent,self){
 <div class="layui-layout layui-layout-admin">	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">添加路线点</div>
+	<div class="page_location_div">添加路段</div>
 	
 	<div id="new_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
 		<table>
 		  <tr>
 			<td class="td1" align="right">
-				景点
+				路名
 			</td>
 			<td class="td2">
-				<select id="scenicPlace_cbb"></select>
+				<select id="road_cbb"></select>
 				<input type="hidden" id="scePlaId" name="scePlaId"/>
 			</td>
 			<td class="td1" align="right">
@@ -243,16 +242,16 @@ function setFitWidthInParent(parent,self){
 		  </tr>
 		  <tr>
 			<td class="td1" align="right">
-				x轴坐标
+				后方x轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="x_inp" id="x" name="x" placeholder="请输入x轴坐标"/>
+				<input type="number" class="backX_inp" id="backX" name="backX" placeholder="请输入后方x轴坐标"/>
 			</td>
 			<td class="td1" align="right">
-				y轴坐标
+				后方y轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="y_inp" id="y" name="y" placeholder="请输入y轴坐标"/>
+				<input type="number" class="backY_inp" id="backY" name="backY" placeholder="请输入后方y轴坐标"/>
 			</td>
 		  </tr>
 		</table>

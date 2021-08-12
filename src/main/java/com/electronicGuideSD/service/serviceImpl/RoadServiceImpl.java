@@ -45,4 +45,10 @@ public class RoadServiceImpl implements RoadService {
 		return roadDao.edit(road);
 	}
 
+	@Override
+	public List<Road> selectRoadCBBData() {
+		// TODO Auto-generated method stub
+		return roadDao.selectRoadCBBData();
+	}
+
 }

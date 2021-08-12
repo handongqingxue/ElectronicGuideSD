@@ -48,7 +48,7 @@ function initAddLB(){
 	$("#add_but").linkbutton({
 		iconCls:"icon-add",
 		onClick:function(){
-			location.href=roadPath+"road/add";
+			location.href=roadPath+"roadStage/add";
 		}
 	});
 }

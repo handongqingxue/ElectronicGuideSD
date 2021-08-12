@@ -18,4 +18,6 @@ public interface RoadMapper {
 
 	int edit(Road road);
 
+	List<Road> selectRoadCBBData();
+
 }
