@@ -13,9 +13,7 @@
 	background-color: rgba(0,0,0,.45);
 	position: fixed;
 	z-index: 9016;
-	/*
 	display:none;
-	*/
 }
 .add_rs_canvas_div{
 	width: 1800px;
@@ -271,7 +269,6 @@ function setRoadStageLocation(){
 	}
 	*/
 
-	alert(roadStage.frontX)
 	if(roadStage.backX!=-1&roadStage.backY!=-1){
 		sceDisCanvasContext.beginPath();
 		sceDisCanvasContext.strokeStyle = 'red';//点填充
@@ -375,7 +372,7 @@ function initAddRsSDMapDialogDiv(){
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
-	//openAddRsSdMDialog(0);
+	openAddRsSdMDialog(0);
 }
 
 function initNewDialog(){
@@ -527,6 +524,22 @@ function checkY(){
 	}
 	else
 		return true;
+}
+
+function loadSceDisCanvas(flag){
+	var bigButDiv=$("#add_rs_sd_map_dialog_div #big_but");
+	var smallButDiv=$("#add_rs_sd_map_dialog_div #small_but");
+	if(flag){
+		bigButDiv.css("display","none");
+		smallButDiv.css("display","none");
+	}
+	else{
+		reSizeTimeout=setTimeout(function(){
+			bigButDiv.css("display","block");
+			smallButDiv.css("display","block");
+			clearTimeout(reSizeTimeout);
+		},"1000");
+	}
 }
 
 function setFitWidthInParent(parent,self){
