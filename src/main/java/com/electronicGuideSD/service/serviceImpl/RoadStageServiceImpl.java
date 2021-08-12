@@ -76,4 +76,10 @@ public class RoadStageServiceImpl implements RoadStageService {
 		}
 		return roadStageList;
 	}
+
+	@Override
+	public List<RoadStage> selectCBBData() {
+		// TODO Auto-generated method stub
+		return roadStageDao.selectCBBData();
+	}
 }

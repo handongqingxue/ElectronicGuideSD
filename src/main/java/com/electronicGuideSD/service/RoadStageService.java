@@ -13,4 +13,6 @@ public interface RoadStageService {
 
 	List<RoadStage> selectList(String roadName, String name, int page, int rows, String sort, String order);
 
+	List<RoadStage> selectCBBData();
+
 }

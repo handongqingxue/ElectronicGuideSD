@@ -172,5 +172,23 @@ public class RoadController {
 		}
 		return jsonMap;
 	}
+	
+	@RequestMapping(value="/selectRoadStageCBBData")
+	@ResponseBody
+	public Map<String, Object> selectRoadStageCBBData() {
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<RoadStage> roadStageList = roadStageService.selectCBBData();
+
+		if(roadStageList.size()==0) {
+			jsonMap.put("status", "no");
+			jsonMap.put("message", "ÔÝÎÞÂ·¶Î");
+		}
+		else {
+			jsonMap.put("status", "ok");
+			jsonMap.put("roadStageList", roadStageList);
+		}
+		return jsonMap;
+	}
 
 }

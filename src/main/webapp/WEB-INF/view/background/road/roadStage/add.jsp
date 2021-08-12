@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>添加路线点</title>
+<title>添加路段</title>
 <%@include file="../../js.jsp"%>
 <style type="text/css">
 .add_rs_canvas_bg_div{
@@ -60,13 +60,26 @@
 	margin-left: 20px;
 	font-size: 18px;
 }
-.backX_inp,.backY_inp{
+.name_inp,.backX_inp,.backY_inp,.frontX_inp,.frontY_inp{
 	width: 150px;
 	height:30px;
 }
 .sort_inp{
 	width: 100px;
 	height:30px;
+}
+.upBut_div{
+	height: 30px;
+	line-height:30px;
+	text-align:center;
+	color:#fff;
+	background-color: #1777FF;
+	border-radius:5px;
+}
+.showMapBut_div{
+	width: 90px;
+	margin-top: -33px;
+	margin-left: 173px;
 }
 </style>
 <script type="text/javascript">
@@ -100,6 +113,12 @@ var lineWidth=10;
 $(function(){
 	jiSuanScale();
 	initRoadCBB();
+	initBackThroughCBB();
+	initFrontThroughCBB();
+	initBackIsCrossCBB();
+	initBackCrossRSIdsCBB();
+	initFrontIsCrossCBB();
+	initFrontCrossRSIdsCBB();
 	initNewDialog();
 	initAddRsSDMapDialogDiv();
 
@@ -126,9 +145,135 @@ function initRoadCBB(){
 				valueField:"id",
 				textField:"name",
 				onSelect:function(){
-					$("#scePlaId").val(roadCBB.combobox("getValue"));
+					$("#roadId").val(roadCBB.combobox("getValue"));
 				}
 			});
+		}
+	,"json");
+}
+
+function initBackThroughCBB(){
+	var data=[];
+	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	backThroughCBB=$("#backThrough_cbb").combobox({
+		width:150,
+		data:data,
+		valueField:"id",
+		textField:"name",
+		onSelect:function(){
+			$("#backThrough").val(backThroughCBB.combobox("getValue"));
+		}
+	});
+}
+
+function initFrontThroughCBB(){
+	var data=[];
+	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	frontThroughCBB=$("#frontThrough_cbb").combobox({
+		width:150,
+		data:data,
+		valueField:"id",
+		textField:"name",
+		onSelect:function(){
+			$("#frontThrough").val(frontThroughCBB.combobox("getValue"));
+		}
+	});
+}
+
+function initBackIsCrossCBB(){
+	var data=[];
+	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	backIsCrossCBB=$("#backIsCross_cbb").combobox({
+		width:150,
+		data:data,
+		valueField:"id",
+		textField:"name",
+		onSelect:function(){
+			$("#backIsCross").val(backIsCrossCBB.combobox("getValue"));
+		}
+	});
+}
+
+function initBackCrossRSIdsCBB(){
+	var data=[];
+	data.push({id:"",name:"请选择"});
+	$.post(roadPath+"selectRoadStageCBBData",
+		function(result){
+			if(result.status=="ok"){
+				var roadStageList=result.roadStageList;
+				for(var i=0;i<roadStageList.length;i++){
+					var roadStage=roadStageList[i];
+					data.push({id:roadStage.id,name:roadStage.name});
+				}
+				backCrossRSIdsCBB=$("#backCrossRSIds_cbb").combobox({
+					width:150,
+					data:data,
+	                multiple:true,
+					valueField:"id",
+					textField:"name",
+					onSelect:function(){
+						var backCrossRSIds=backCrossRSIdsCBB.combobox("getValues").toString();
+						var backCrossRSIdArr=backCrossRSIds.split(",");
+						var bcrsIds="";
+						for (var i = 0; i < backCrossRSIdArr.length; i++) {
+							var backCrossRSId=backCrossRSIdArr[i];
+							if(backCrossRSId=="")
+								continue;
+							bcrsIds+=","+backCrossRSId;
+						}
+						$("#backCrossRSIds").val(bcrsIds.substring(1));
+					}
+				});
+			}
+		}
+	,"json");
+}
+
+function initFrontIsCrossCBB(){
+	var data=[];
+	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	frontIsCrossCBB=$("#frontIsCross_cbb").combobox({
+		width:150,
+		data:data,
+		valueField:"id",
+		textField:"name",
+		onSelect:function(){
+			$("#frontIsCross").val(frontIsCrossCBB.combobox("getValue"));
+		}
+	});
+}
+
+function initFrontCrossRSIdsCBB(){
+	var data=[];
+	data.push({id:"",name:"请选择"});
+	$.post(roadPath+"selectRoadStageCBBData",
+		function(result){
+			if(result.status=="ok"){
+				var roadStageList=result.roadStageList;
+				for(var i=0;i<roadStageList.length;i++){
+					var roadStage=roadStageList[i];
+					data.push({id:roadStage.id,name:roadStage.name});
+				}
+				frontCrossRSIdsCBB=$("#frontCrossRSIds_cbb").combobox({
+					width:150,
+					data:data,
+	                multiple:true,
+					valueField:"id",
+					textField:"name",
+					onSelect:function(){
+						var frontCrossRSIds=frontCrossRSIdsCBB.combobox("getValues").toString();
+						var frontCrossRSIdArr=frontCrossRSIds.split(",");
+						var fcrsIds="";
+						for (var i = 0; i < frontCrossRSIdArr.length; i++) {
+							var frontCrossRSId=frontCrossRSIdArr[i];
+							if(frontCrossRSId=="")
+								continue;
+							fcrsIds+=","+frontCrossRSId;
+						}
+						$("#frontCrossRSIds").val(fcrsIds.substring(1));
+					}
+				});
+			}
 		}
 	,"json");
 }
@@ -326,10 +471,10 @@ function initAddRsSDMapDialogDiv(){
         	   openAddRsDialog(0);
            }},
            {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   $("#x_span").text(backX);
-        	   $("#y_span").text(backY);
-        	   $("#x_inp").val(backX);
-        	   $("#y_inp").val(backY);
+        	   $("#backX").val(roadStage.backX);
+        	   $("#backY").val(sceDisCanvasMinHeight-roadStage.backY);
+        	   $("#frontX").val(roadStage.frontX);
+        	   $("#frontY").val(sceDisCanvasMinHeight-roadStage.frontY);
         	   openAddRsDialog(0);
            }},
            {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
@@ -600,17 +745,18 @@ function setFitWidthInParent(parent,self){
 		<table>
 		  <tr>
 			<td class="td1" align="right">
-				路名
+				路段名
+			</td>
+			<td class="td2">
+				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入路段名"/>
+				<div class="upBut_div showMapBut_div" onclick="openAddRsDialog(1);">地图打点</div>
+			</td>
+			<td class="td1" align="right">
+				所属道路
 			</td>
 			<td class="td2">
 				<select id="road_cbb"></select>
-				<input type="hidden" id="scePlaId" name="scePlaId"/>
-			</td>
-			<td class="td1" align="right">
-				排序
-			</td>
-			<td class="td2">
-				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
+				<input type="hidden" id="roadId" name="roadId"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -625,6 +771,80 @@ function setFitWidthInParent(parent,self){
 			</td>
 			<td class="td2">
 				<input type="number" class="backY_inp" id="backY" name="backY" placeholder="请输入后方y轴坐标"/>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				前方x轴坐标
+			</td>
+			<td class="td2">
+				<input type="number" class="frontX_inp" id="frontX" name="frontX" placeholder="请输入前方x轴坐标"/>
+			</td>
+			<td class="td1" align="right">
+				前方y轴坐标
+			</td>
+			<td class="td2">
+				<input type="number" class="frontY_inp" id="frontY" name="frontY" placeholder="请输入前方y轴坐标"/>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				后方是否相通
+			</td>
+			<td class="td2">
+				<select id="backThrough_cbb"></select>
+				<input type="hidden" id="backThrough" name="backThrough"/>
+			</td>
+			<td class="td1" align="right">
+				前方是否相通
+			</td>
+			<td class="td2">
+				<select id="frontThrough_cbb"></select>
+				<input type="hidden" id="frontThrough" name="frontThrough"/>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				后方是否是交叉点
+			</td>
+			<td class="td2">
+				<select id="backIsCross_cbb"></select>
+				<input type="hidden" id="backIsCross" name="backIsCross"/>
+			</td>
+			<td class="td1" align="right">
+				后方交叉点路段名
+			</td>
+			<td class="td2">
+				<select id="backCrossRSIds_cbb"></select>
+				<input type="hidden" id="backCrossRSIds" name="backCrossRSIds"/>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				前方是否是交叉点
+			</td>
+			<td class="td2">
+				<select id="frontIsCross_cbb"></select>
+				<input type="hidden" id="frontIsCross" name="frontIsCross"/>
+			</td>
+			<td class="td1" align="right">
+				前方交叉点路段名
+			</td>
+			<td class="td2">
+				<select id="frontCrossRSIds_cbb"></select>
+				<input type="hidden" id="frontCrossRSIds" name="frontCrossRSIds"/>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				排序
+			</td>
+			<td class="td2">
+				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
+			</td>
+			<td class="td1" align="right">
+			</td>
+			<td class="td2">
 			</td>
 		  </tr>
 		</table>
