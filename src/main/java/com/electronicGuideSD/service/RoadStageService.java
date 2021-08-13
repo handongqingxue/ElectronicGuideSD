@@ -17,4 +17,6 @@ public interface RoadStageService {
 
 	int add(RoadStage roadStage);
 
+	RoadStage selectById(String id);
+
 }

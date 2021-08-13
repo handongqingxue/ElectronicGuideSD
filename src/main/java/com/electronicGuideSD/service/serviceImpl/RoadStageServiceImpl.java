@@ -88,4 +88,10 @@ public class RoadStageServiceImpl implements RoadStageService {
 		// TODO Auto-generated method stub
 		return roadStageDao.add(roadStage);
 	}
+
+	@Override
+	public RoadStage selectById(String id) {
+		// TODO Auto-generated method stub
+		return roadStageDao.selectById(id);
+	}
 }

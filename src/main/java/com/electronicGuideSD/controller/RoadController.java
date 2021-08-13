@@ -71,6 +71,10 @@ public class RoadController {
 	
 	@RequestMapping(value="/roadStage/edit")
 	public String goRoadStageEdit(HttpServletRequest request) {
+		
+		RoadStage roadStage = roadStageService.selectById(request.getParameter("id"));
+		
+		request.setAttribute("roadStage", roadStage);
 
 		return MODULE_NAME+"/roadStage/edit";
 	}

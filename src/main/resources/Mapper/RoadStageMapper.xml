@@ -32,6 +32,9 @@
 		</if>
  		 order by r.sort,rs.sort limit #{start},#{rows}
  	</select>
+ 	<select id="selectById" resultType="com.electronicGuideSD.entity.RoadStage">
+ 		select * from road_stage where id=#{id}
+ 	</select>
  	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.RoadStage">
  		select id,name from road_stage order by sort
  	</select>
