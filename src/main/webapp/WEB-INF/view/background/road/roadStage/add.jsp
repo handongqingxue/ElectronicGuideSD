@@ -154,7 +154,7 @@ function initRoadCBB(){
 
 function initBackThroughCBB(){
 	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
 	backThroughCBB=$("#backThrough_cbb").combobox({
 		width:150,
 		data:data,
@@ -168,7 +168,7 @@ function initBackThroughCBB(){
 
 function initFrontThroughCBB(){
 	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
 	frontThroughCBB=$("#frontThrough_cbb").combobox({
 		width:150,
 		data:data,
@@ -182,7 +182,7 @@ function initFrontThroughCBB(){
 
 function initBackIsCrossCBB(){
 	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
 	backIsCrossCBB=$("#backIsCross_cbb").combobox({
 		width:150,
 		data:data,
@@ -231,7 +231,7 @@ function initBackCrossRSIdsCBB(){
 
 function initFrontIsCrossCBB(){
 	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
 	frontIsCrossCBB=$("#frontIsCross_cbb").combobox({
 		width:150,
 		data:data,
@@ -583,11 +583,29 @@ function openAddRsSdMDialog(flag){
 }
 
 function checkAdd(){
-	if(checkRoadId()){
-		if(checkSort()){
-			if(checkX()){
-				if(checkY()){
-					addTSPRD();
+	if(checkName()){
+		if(checkRoadId()){
+			if(checkBackX()){
+				if(checkBackY()){
+					if(checkFrontX()){
+						if(checkFrontY()){
+							if(checkBackThrough()){
+								if(checkFrontThrough()){
+									if(checkBackIsCross()){
+										if(checkBackCrossRSIds()){
+											if(checkFrontIsCross()){
+												if(checkFrontCrossRSIds()){
+													if(checkSort()){
+														addRoadStage();
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -605,11 +623,11 @@ function checkXYRadio(){
 	}
 }
 
-function addTSPRD(){
+function addRoadStage(){
 	var formData = new FormData($("#form1")[0]);
 	$.ajax({
 		type:"post",
-		url:roadPath+"addTSPRD",
+		url:roadPath+"addRoadStage",
 		dataType: "json",
 		data:formData,
 		cache: false,
@@ -618,7 +636,7 @@ function addTSPRD(){
 		success: function (data){
 			if(data.status==1){
 				alert(data.msg);
-				location.href=roadPath+"toSp/list";
+				location.href=roadPath+"roadStage/list";
 			}
 			else{
 				alert(data.msg);
@@ -627,12 +645,148 @@ function addTSPRD(){
 	});
 }
 
+function focusName(){
+	var name = $("#name").val();
+	if(name=="路段名不能为空"){
+		$("#name").val("");
+		$("#name").css("color", "#555555");
+	}
+}
+
+//验证路段名
+function checkName(){
+	var name = $("#name").val();
+	if(name==null||name==""||name=="路段名不能为空"){
+		$("#name").css("color","#E15748");
+    	$("#name").val("路段名不能为空");
+    	return false;
+	}
+	else
+		return true;
+}
+
 //验证选择路名
 function checkRoadId(){
 	var roadId=roadCBB.combobox("getValue");
 	if(roadId==null||roadId==""){
     	alert("请选择路名");
     	return false;
+	}
+	else
+		return true;
+}
+
+//验证后方x轴坐标
+function checkBackX(){
+	var backX = $("#backX").val();
+	if(backX==null||backX==""){
+	  	alert("请输入后方x轴坐标");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证后方y轴坐标
+function checkBackY(){
+	var backY = $("#backY").val();
+	if(backY==null||backY==""){
+	  	alert("请输入前方y轴坐标");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证前方x轴坐标
+function checkFrontX(){
+	var frontX = $("#frontX").val();
+	if(frontX==null||frontX==""){
+	  	alert("请输入前方x轴坐标");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证前方y轴坐标
+function checkFrontY(){
+	var frontY = $("#frontY").val();
+	if(frontY==null||frontY==""){
+	  	alert("请输入前方y轴坐标");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证后方是否相通
+function checkBackThrough(){
+	var backThrough=backThroughCBB.combobox("getValue");
+	if(backThrough==null||backThrough==""){
+	  	alert("请选择后方是否相通");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证前方是否相通
+function checkFrontThrough(){
+	var frontThrough=frontThroughCBB.combobox("getValue");
+	if(frontThrough==null||frontThrough==""){
+	  	alert("请选择前方是否相通");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证后方是否是交叉点
+function checkBackIsCross(){
+	var backIsCross=backIsCrossCBB.combobox("getValue");
+	if(backIsCross==null||backIsCross==""){
+	  	alert("请选择后方是否是交叉点");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证后方交叉点路段名
+function checkBackCrossRSIds(){
+	var backIsCross=backIsCrossCBB.combobox("getValue");
+	if(!convertStringToBoolean(backIsCross))
+		return true;
+	var backCrossRSIds=backCrossRSIdsCBB.combobox("getValue");
+	if(backCrossRSIds==null||backCrossRSIds==""){
+	  	alert("请选择后方交叉点路段名");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证前方是否是交叉点
+function checkFrontIsCross(){
+	var frontIsCross=frontIsCrossCBB.combobox("getValue");
+	if(frontIsCross==null||frontIsCross==""){
+	  	alert("请选择前方是否是交叉点");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证前方交叉点路段名
+function checkFrontCrossRSIds(){
+	var frontIsCross=frontIsCrossCBB.combobox("getValue");
+	if(!convertStringToBoolean(frontIsCross))
+		return true;
+	var frontCrossRSIds=frontCrossRSIdsCBB.combobox("getValue");
+	if(frontCrossRSIds==null||frontCrossRSIds==""){
+	  	alert("请选择前方交叉点路段名");
+	  	return false;
 	}
 	else
 		return true;
@@ -649,26 +803,11 @@ function checkSort(){
 		return true;
 }
 
-//验证x轴坐标
-function checkX(){
-	var x = $("#x").val();
-	if(x==null||x==""){
-	  	alert("请输入x轴坐标");
-	  	return false;
-	}
-	else
+function convertStringToBoolean(str){
+	if(str=="true")
 		return true;
-}
-
-//验证y轴坐标
-function checkY(){
-	var y = $("#y").val();
-	if(y==null||y==""){
-	  	alert("请输入y轴坐标");
-	  	return false;
-	}
-	else
-		return true;
+	else if(str=="false")
+		return false;
 }
 
 function loadSceDisCanvas(flag){
@@ -748,7 +887,7 @@ function setFitWidthInParent(parent,self){
 				路段名
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入路段名"/>
+				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入路段名" onfocus="focusName()" onblur="checkName()"/>
 				<div class="upBut_div showMapBut_div" onclick="openAddRsDialog(1);">地图打点</div>
 			</td>
 			<td class="td1" align="right">

@@ -35,4 +35,92 @@
  	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.RoadStage">
  		select id,name from road_stage order by sort
  	</select>
+ 	<insert id="add" parameterType="com.electronicGuideSD.entity.RoadStage">
+ 		insert into road_stage
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				name,
+ 			</if>
+ 			<if test="backX!=null">
+ 				backX,
+ 			</if>
+ 			<if test="backY!=null">
+ 				backY,
+ 			</if>
+ 			<if test="frontX!=null">
+ 				frontX,
+ 			</if>
+ 			<if test="frontY!=null">
+ 				frontY,
+ 			</if>
+ 			<if test="backThrough!=null">
+ 				backThrough,
+ 			</if>
+ 			<if test="frontThrough!=null">
+ 				frontThrough,
+ 			</if>
+ 			<if test="backIsCross!=null">
+ 				backIsCross,
+ 			</if>
+ 			<if test="backCrossRSIds!=null">
+ 				backCrossRSIds,
+ 			</if>
+ 			<if test="frontIsCross!=null">
+ 				frontIsCross,
+ 			</if>
+ 			<if test="frontCrossRSIds!=null">
+ 				frontCrossRSIds,
+ 			</if>
+ 				createTime,
+ 			<if test="sort!=null">
+ 				sort,
+ 			</if>
+ 			<if test="roadId!=null">
+ 				roadId,
+ 			</if>
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				#{name},
+ 			</if>
+ 			<if test="backX!=null">
+ 				#{backX},
+ 			</if>
+ 			<if test="backY!=null">
+ 				#{backY},
+ 			</if>
+ 			<if test="frontX!=null">
+ 				#{frontX},
+ 			</if>
+ 			<if test="frontY!=null">
+ 				#{frontY},
+ 			</if>
+ 			<if test="backThrough!=null">
+ 				#{backThrough},
+ 			</if>
+ 			<if test="frontThrough!=null">
+ 				#{frontThrough},
+ 			</if>
+ 			<if test="backIsCross!=null">
+ 				#{backIsCross},
+ 			</if>
+ 			<if test="backCrossRSIds!=null">
+ 				#{backCrossRSIds},
+ 			</if>
+ 			<if test="frontIsCross!=null">
+ 				#{frontIsCross},
+ 			</if>
+ 			<if test="frontCrossRSIds!=null">
+ 				#{frontCrossRSIds},
+ 			</if>
+ 				now(),
+ 			<if test="sort!=null">
+ 				#{sort},
+ 			</if>
+ 			<if test="roadId!=null">
+ 				#{roadId},
+ 			</if>
+ 		</trim>
+ 	</insert>
  </mapper>

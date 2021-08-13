@@ -19,4 +19,6 @@ public interface RoadStageMapper {
 
 	List<RoadStage> selectCBBData();
 
+	int add(RoadStage roadStage);
+
 }

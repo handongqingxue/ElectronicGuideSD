@@ -82,4 +82,10 @@ public class RoadStageServiceImpl implements RoadStageService {
 		// TODO Auto-generated method stub
 		return roadStageDao.selectCBBData();
 	}
+
+	@Override
+	public int add(RoadStage roadStage) {
+		// TODO Auto-generated method stub
+		return roadStageDao.add(roadStage);
+	}
 }

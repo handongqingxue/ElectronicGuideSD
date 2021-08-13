@@ -141,6 +141,32 @@ public class RoadController {
 		return json;
 	}
 	
+	@RequestMapping(value="/addRoadStage",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String addRoadStage(RoadStage roadStage,
+			HttpServletRequest request) {
+
+		String json=null;;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=roadStageService.add(roadStage);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("添加路段名失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("添加路段名成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
 	@RequestMapping(value="/selectRoadStageList")
 	@ResponseBody
 	public Map<String, Object> selectRoadStageList(String roadName,String name,int page,int rows,String sort,String order) {

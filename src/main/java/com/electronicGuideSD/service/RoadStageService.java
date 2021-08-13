@@ -15,4 +15,6 @@ public interface RoadStageService {
 
 	List<RoadStage> selectCBBData();
 
+	int add(RoadStage roadStage);
+
 }
