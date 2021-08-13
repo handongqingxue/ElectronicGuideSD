@@ -126,4 +126,50 @@
  			</if>
  		</trim>
  	</insert>
+ 	<update id="edit">
+		update road_stage set
+		<trim suffixOverrides=",">
+			<if test="name!=null">
+				name=#{name},
+			</if>
+ 			<if test="backX!=null">
+ 				backX=#{backX},
+ 			</if>
+ 			<if test="backY!=null">
+ 				backY=#{backY},
+ 			</if>
+ 			<if test="frontX!=null">
+ 				frontX=#{frontX},
+ 			</if>
+ 			<if test="frontY!=null">
+ 				frontY=#{frontY},
+ 			</if>
+			<if test="backThrough!=null">
+				backThrough=#{backThrough},
+			</if>
+			<if test="frontThrough!=null">
+				frontThrough=#{frontThrough},
+			</if>
+ 			<if test="backIsCross!=null">
+ 				backIsCross=#{backIsCross},
+ 			</if>
+ 			<if test="backCrossRSIds!=null">
+ 				backCrossRSIds=#{backCrossRSIds},
+ 			</if>
+ 			<if test="frontIsCross!=null">
+ 				frontIsCross=#{frontIsCross},
+ 			</if>
+ 			<if test="frontCrossRSIds!=null">
+ 				frontCrossRSIds=#{frontCrossRSIds},
+ 			</if>
+				modifyTime=now(),
+			<if test="sort!=null">
+				sort=#{sort},
+			</if>
+ 			<if test="roadId!=null">
+ 				roadId=#{roadId},
+ 			</if>
+		</trim>
+		where id=#{id}
+	</update>
  </mapper>

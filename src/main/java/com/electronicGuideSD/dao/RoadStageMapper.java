@@ -21,6 +21,8 @@ public interface RoadStageMapper {
 
 	int add(RoadStage roadStage);
 
+	int edit(RoadStage roadStage);
+
 	RoadStage selectById(@Param("id")String id);
 
 }
