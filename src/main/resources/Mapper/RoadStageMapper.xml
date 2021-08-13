@@ -33,7 +33,7 @@
  		 order by r.sort,rs.sort limit #{start},#{rows}
  	</select>
  	<select id="selectById" resultType="com.electronicGuideSD.entity.RoadStage">
- 		select * from road_stage where id=#{id}
+ 		select rs.*,r.name roadName from road_stage rs,road r where rs.roadId=r.id and rs.id=#{id}
  	</select>
  	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.RoadStage">
  		select id,name from road_stage order by sort

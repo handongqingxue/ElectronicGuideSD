@@ -119,7 +119,7 @@ $(function(){
 	initBackCrossRSIdsCBB();
 	initFrontIsCrossCBB();
 	initFrontCrossRSIdsCBB();
-	initNewDialog();
+	initEditDialog();
 	initEditRsSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
@@ -475,9 +475,9 @@ function initDialogPosition(){
 	ccDiv.append(edws);
 	ccDiv.css("width",setFitWidthInParent("body","center_con_div")+"px");
 	
-	var erssdmdDiv=$("#edit_rs_canvas_dialog_div");
-	erssdmdDiv.append(erssdmdpw);
-	erssdmdDiv.append(erssdmdws);
+	var erscdDiv=$("#edit_rs_canvas_dialog_div");
+	erscdDiv.append(erssdmdpw);
+	erscdDiv.append(erssdmdws);
 }
 
 function initEditRsSDMapDialogDiv(){
@@ -541,7 +541,7 @@ function initEditRsSDMapDialogDiv(){
 	openEditRsSdMDialog(0);
 }
 
-function initNewDialog(){
+function initEditDialog(){
 	dialogTop+=20;
 	$("#edit_div").dialog({
 		title:"路段信息",

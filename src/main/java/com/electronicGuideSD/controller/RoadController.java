@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import com.electronicGuideSD.service.*;
 import com.electronicGuideSD.util.FileUploadUtils;
 import com.electronicGuideSD.util.JsonUtil;
 import com.electronicGuideSD.util.PlanResult;
+import com.electronicGuideSD.util.RoadStageUtil;
 
 import net.sf.json.JSONObject;
 
@@ -83,6 +85,29 @@ public class RoadController {
 	public String goRoadStageList(HttpServletRequest request) {
 
 		return MODULE_NAME+"/roadStage/list";
+	}
+	
+	@RequestMapping(value="/roadStage/detail")
+	public String goRoadStageDetail(HttpServletRequest request) {
+		
+		RoadStage roadStage = roadStageService.selectById(request.getParameter("id"));
+		
+		List<RoadStage> allRSList = roadStageService.selectCBBData();
+		Map<String, String> rsNameMap = RoadStageUtil.initRSNameMap(allRSList);
+		String backCrossRSIds = roadStage.getBackCrossRSIds();
+		if(roadStage.getBackIsCross()&&!StringUtils.isEmpty(backCrossRSIds)) {
+			String backCrossRSNames = RoadStageUtil.getRSNameFromMapByIds(rsNameMap,backCrossRSIds);
+			roadStage.setBackCrossRSNames(backCrossRSNames);
+		}
+		String frontCrossRSIds = roadStage.getFrontCrossRSIds();
+		if(roadStage.getFrontIsCross()&&!StringUtils.isEmpty(frontCrossRSIds)) {
+			String frontCrossRSNames = RoadStageUtil.getRSNameFromMapByIds(rsNameMap,frontCrossRSIds);
+			roadStage.setFrontCrossRSNames(frontCrossRSNames);
+		}
+		
+		request.setAttribute("roadStage", roadStage);
+
+		return MODULE_NAME+"/roadStage/detail";
 	}
 	
 	@RequestMapping(value="/selectRoadList")
