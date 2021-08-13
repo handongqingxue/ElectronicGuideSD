@@ -69,6 +69,12 @@ public class RoadController {
 		return MODULE_NAME+"/roadStage/add";
 	}
 	
+	@RequestMapping(value="/roadStage/edit")
+	public String goRoadStageEdit(HttpServletRequest request) {
+
+		return MODULE_NAME+"/roadStage/edit";
+	}
+	
 	@RequestMapping(value="/roadStage/list")
 	public String goRoadStageList(HttpServletRequest request) {
 
