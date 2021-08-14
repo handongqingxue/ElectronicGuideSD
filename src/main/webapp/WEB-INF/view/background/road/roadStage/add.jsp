@@ -461,25 +461,6 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.stroke();
 	}
 
-	/*
-	var backX=$("#backX").val();
-	if(backX!=""&backX!=null)
-		roadStage.backX=backX;
-	var backY=$("#backY").val();
-	if(backY!=""&backY!=null)
-		roadStage.backY=backY;
-	var frontX=$("#frontX").val();
-	if(frontX!=""&frontX!=null)
-		roadStage.frontX=frontX;
-	var frontY=$("#frontY").val();
-	if(frontY!=""&frontY!=null)
-		roadStage.frontY=frontY;
-	$("#backX").val(roadStage.backX);
-	$("#backY").val(sceDisCanvasMinHeight-roadStage.backY);
-	$("#frontX").val(roadStage.frontX);
-	$("#frontY").val(sceDisCanvasMinHeight-roadStage.frontY);
-	*/
-	
 	if(roadStage.backX!=-1&roadStage.backY!=-1){
 		sceDisCanvasContext.beginPath();
 		sceDisCanvasContext.strokeStyle = 'red';//点填充
@@ -523,6 +504,23 @@ function initDialogPosition(){
 	var arssdmdDiv=$("#add_rs_canvas_dialog_div");
 	arssdmdDiv.append(arssdmdpw);
 	arssdmdDiv.append(arssdmdws);
+}
+
+function putXYFromInpToVar(){
+	var backX=$("#backX").val();
+	if(backX!=""&backX!=null)
+		roadStage.backX=backX;
+	var backY=$("#backY").val();
+	if(backY!=""&backY!=null)
+		roadStage.backY=sceDisCanvasMinHeight-backY;
+	var frontX=$("#frontX").val();
+	if(frontX!=""&frontX!=null)
+		roadStage.frontX=frontX;
+	var frontY=$("#frontY").val();
+	if(frontY!=""&frontY!=null)
+		roadStage.frontY=sceDisCanvasMinHeight-frontY;
+    initSceDisCanvas(0);
+	openAddRsDialog(1);
 }
 
 function initAddRsSDMapDialogDiv(){
@@ -954,7 +952,7 @@ function setFitWidthInParent(parent,self){
 			</td>
 			<td class="td2">
 				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入路段名" onfocus="focusName()" onblur="checkName()"/>
-				<div class="upBut_div showMapBut_div" onclick="openAddRsDialog(1);">地图打点</div>
+				<div class="upBut_div showMapBut_div" onclick="putXYFromInpToVar();">地图打点</div>
 			</td>
 			<td class="td1" align="right">
 				所属道路
