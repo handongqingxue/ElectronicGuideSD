@@ -110,9 +110,11 @@ var frontX;
 var frontY;
 var arcR=10;
 var lineWidth=10;
+var scenicPlaceJA;
 var otherRSJA;
 $(function(){
 	jiSuanScale();
+	initScenicPlaceJA();
 	initOtherRSJA();
 	initRoadCBB();
 	initBackThroughCBB();
@@ -295,6 +297,14 @@ function jiSuanScale(){
 	heightScale=sceDisCanvasStyleHeight/sceDisCanvasHeight;
 }
 
+function initScenicPlaceJA(){
+	scenicPlaceJA=JSON.parse('${requestScope.scenicPlaceJAStr}');
+	for(var i=0;i<scenicPlaceJA.length;i++){
+		var scenicPlaceJO=scenicPlaceJA[i];
+		scenicPlaceJO.y=sceDisCanvasMinHeight-scenicPlaceJO.y;
+	}
+}
+
 function initOtherRSJA(){
 	otherRSJA=JSON.parse('${requestScope.otherRSJAStr}');
 	for(var i=0;i<otherRSJA.length;i++){
@@ -354,7 +364,8 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
 		
-		setRoadStageLocation();
+		initScenicPlaceLocation();
+		initRoadStageLocation();
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
@@ -415,7 +426,20 @@ function initSceDisCanvas(reSizeFlag){
 	}
 }
 
-function setRoadStageLocation(){
+function initScenicPlaceLocation(){
+	for(var i=0;i<scenicPlaceJA.length;i++){
+		var scenicPlaceJO=scenicPlaceJA[i];
+		var entityImg = new Image();
+		entityImg.src=scenicPlaceJO.picUrl;
+		console.log(entityImg.src+","+scenicPlaceJO.x+","+scenicPlaceJO.y);
+		entityImg.onload=function(){
+			//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
+			sceDisCanvasContext.drawImage(entityImg, scenicPlaceJO.x/widthScale-scenicPlaceJO.picWidth/2, scenicPlaceJO.y/heightScale-scenicPlaceJO.picHeight/2, scenicPlaceJO.picWidth, scenicPlaceJO.picHeight);
+		}
+	}
+}
+
+function initRoadStageLocation(){
 	/*
 	var entityImg = new Image();
 	entityImg.src=scenicPlace.picUrl;
