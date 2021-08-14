@@ -461,7 +461,18 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.stroke();
 	}
 
-	alert($("#backX").val()=="");
+	var backX=$("#backX").val();
+	if(backX!=""&backX!=null)
+		roadStage.backX=backX;
+	var backY=$("#backY").val();
+	if(backY!=""&backY!=null)
+		roadStage.backY=backY;
+	var frontX=$("#frontX").val();
+	if(frontX!=""&frontX!=null)
+		roadStage.frontX=frontX;
+	var frontY=$("#frontY").val();
+	if(frontY!=""&frontY!=null)
+		roadStage.frontY=frontY;
 	/*
 	$("#backX").val(roadStage.backX);
 	$("#backY").val(sceDisCanvasMinHeight-roadStage.backY);
