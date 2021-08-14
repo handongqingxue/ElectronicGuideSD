@@ -461,6 +461,14 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.stroke();
 	}
 
+	alert($("#backX").val()=="");
+	/*
+	$("#backX").val(roadStage.backX);
+	$("#backY").val(sceDisCanvasMinHeight-roadStage.backY);
+	$("#frontX").val(roadStage.frontX);
+	$("#frontY").val(sceDisCanvasMinHeight-roadStage.frontY);
+	*/
+	
 	if(roadStage.backX!=-1&roadStage.backY!=-1){
 		sceDisCanvasContext.beginPath();
 		sceDisCanvasContext.strokeStyle = 'red';//点填充
