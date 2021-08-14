@@ -89,6 +89,9 @@ public class RoadController {
 		
 		List<RoadStage> otherRSList = roadStageService.selectOtherList(id);
 		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
+		
+		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
+		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
 
 		return MODULE_NAME+"/roadStage/edit";
 	}
@@ -122,6 +125,9 @@ public class RoadController {
 		
 		List<RoadStage> otherRSList = roadStageService.selectOtherList(id);
 		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
+		
+		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
+		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
 
 		return MODULE_NAME+"/roadStage/detail";
 	}
