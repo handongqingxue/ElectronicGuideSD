@@ -461,6 +461,7 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.stroke();
 	}
 
+	/*
 	var backX=$("#backX").val();
 	if(backX!=""&backX!=null)
 		roadStage.backX=backX;
@@ -473,7 +474,6 @@ function initRoadStageLocation(){
 	var frontY=$("#frontY").val();
 	if(frontY!=""&frontY!=null)
 		roadStage.frontY=frontY;
-	/*
 	$("#backX").val(roadStage.backX);
 	$("#backY").val(sceDisCanvasMinHeight-roadStage.backY);
 	$("#frontX").val(roadStage.frontX);
