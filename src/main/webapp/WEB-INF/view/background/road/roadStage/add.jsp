@@ -363,8 +363,10 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasContext = sceDisCanvas.getContext("2d");
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
-		
-		initScenicPlaceLocation();
+
+		for(var i=0;i<scenicPlaceJA.length;i++){
+			initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+		}
 		initRoadStageLocation();
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
@@ -426,16 +428,13 @@ function initSceDisCanvas(reSizeFlag){
 	}
 }
 
-function initScenicPlaceLocation(){
-	for(var i=0;i<scenicPlaceJA.length;i++){
-		var scenicPlaceJO=scenicPlaceJA[i];
-		var entityImg = new Image();
-		entityImg.src=scenicPlaceJO.picUrl;
-		console.log(entityImg.src+","+scenicPlaceJO.x+","+scenicPlaceJO.y);
-		entityImg.onload=function(){
-			//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
-			sceDisCanvasContext.drawImage(entityImg, scenicPlaceJO.x/widthScale-scenicPlaceJO.picWidth/2, scenicPlaceJO.y/heightScale-scenicPlaceJO.picHeight/2, scenicPlaceJO.picWidth, scenicPlaceJO.picHeight);
-		}
+function initScenicPlaceLocation(scenicPlaceJO){
+	var entityImg = new Image();
+	entityImg.src=scenicPlaceJO.picUrl;
+	entityImg.onload=function(){
+		//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
+		sceDisCanvasContext.drawImage(entityImg, scenicPlaceJO.x/widthScale-scenicPlaceJO.picWidth/2, scenicPlaceJO.y/heightScale-scenicPlaceJO.picHeight/2, scenicPlaceJO.picWidth, scenicPlaceJO.picHeight);
+		
 	}
 }
 
