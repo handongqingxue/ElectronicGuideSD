@@ -110,8 +110,10 @@ var frontX;
 var frontY;
 var arcR=10;
 var lineWidth=10;
+var otherRSJA;
 $(function(){
 	jiSuanScale();
+	initOtherRSJA();
 	initRoadCBB();
 	initBackThroughCBB();
 	initFrontThroughCBB();
@@ -293,6 +295,15 @@ function jiSuanScale(){
 	heightScale=sceDisCanvasStyleHeight/sceDisCanvasHeight;
 }
 
+function initOtherRSJA(){
+	otherRSJA=JSON.parse('${requestScope.otherRSJAStr}');
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		otherRSJO.backY=sceDisCanvasMinHeight-otherRSJO.backY;
+		otherRSJO.frontY=sceDisCanvasMinHeight-otherRSJO.frontY;
+	}
+}
+
 function changeCanvasSize(bigFlag,resetFlag){
 	loadSceDisCanvas(true);
     var mcw=sceDisCanvasStyleWidth;
@@ -413,6 +424,19 @@ function setRoadStageLocation(){
 		sceDisCanvasContext.drawImage(entityImg, scenicPlace.x/widthScale-scenicPlace.picWidth/2, scenicPlace.y/heightScale-scenicPlace.picHeight/2, scenicPlace.picWidth, scenicPlace.picHeight);
 	}
 	*/
+
+	sceDisCanvasContext.strokeStyle = 'blue';//点填充
+	sceDisCanvasContext.fillStyle='blue';
+	sceDisCanvasContext.lineWidth=lineWidth;
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		sceDisCanvasContext.beginPath();
+		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.moveTo(otherRSJO.backX/widthScale, otherRSJO.backY/heightScale);//起始位置
+		sceDisCanvasContext.lineTo(otherRSJO.frontX/widthScale, otherRSJO.frontY/heightScale);//停止位置
+		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.stroke();
+	}
 
 	if(roadStage.backX!=-1&roadStage.backY!=-1){
 		sceDisCanvasContext.beginPath();

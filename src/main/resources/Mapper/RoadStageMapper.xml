@@ -35,6 +35,13 @@
  	<select id="selectById" resultType="com.electronicGuideSD.entity.RoadStage">
  		select rs.*,r.name roadName from road_stage rs,road r where rs.roadId=r.id and rs.id=#{id}
  	</select>
+ 	<select id="selectOtherList" resultType="com.electronicGuideSD.entity.RoadStage">
+ 		select * from road_stage where 1=1
+		<if test="id!=null&amp;id!=''">
+			and id!=#{id}
+		</if>
+		 order by roadId,sort
+ 	</select>
  	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.RoadStage">
  		select id,name from road_stage order by sort
  	</select>

@@ -21,4 +21,6 @@ public interface RoadStageService {
 
 	RoadStage selectById(String id);
 
+	List<RoadStage> selectOtherList(String id);
+
 }

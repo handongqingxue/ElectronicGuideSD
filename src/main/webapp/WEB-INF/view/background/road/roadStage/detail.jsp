@@ -93,7 +93,7 @@ var sceDisCanvasHeight;
 var widthScale;
 var heightScale;
 var reSizeTimeout;
-var roadStage={backX:-1,backY:-1,frontX:-1,frontY:-1};;
+var roadStage;
 var startPoint=null;
 var endPoint=null;
 var backX;
@@ -102,8 +102,11 @@ var frontX;
 var frontY;
 var arcR=10;
 var lineWidth=10;
+var otherRSJA;
 $(function(){
 	jiSuanScale();
+	initOtherRSJA();
+	initRoadStage();
 	initDetailDialog();
 	initDetailRsSDMapDialogDiv();
 
@@ -125,6 +128,19 @@ function jiSuanScale(){
 
 	widthScale=sceDisCanvasStyleWidth/sceDisCanvasWidth;
 	heightScale=sceDisCanvasStyleHeight/sceDisCanvasHeight;
+}
+
+function initOtherRSJA(){
+	otherRSJA=JSON.parse('${requestScope.otherRSJAStr}');
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		otherRSJO.backY=sceDisCanvasMinHeight-otherRSJO.backY;
+		otherRSJO.frontY=sceDisCanvasMinHeight-otherRSJO.frontY;
+	}
+}
+
+function initRoadStage(){
+	roadStage={backX:'${requestScope.roadStage.backX }',backY:sceDisCanvasMinHeight-'${requestScope.roadStage.backY }',frontX:'${requestScope.roadStage.frontX }',frontY:sceDisCanvasMinHeight-'${requestScope.roadStage.frontY }'};;
 }
 
 function changeCanvasSize(bigFlag,resetFlag){
@@ -190,6 +206,19 @@ function initSceDisCanvas(reSizeFlag){
 }
 
 function setRoadStageLocation(){
+	sceDisCanvasContext.strokeStyle = 'blue';//点填充
+	sceDisCanvasContext.fillStyle='blue';
+	sceDisCanvasContext.lineWidth=lineWidth;
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		sceDisCanvasContext.beginPath();
+		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.moveTo(otherRSJO.backX/widthScale, otherRSJO.backY/heightScale);//起始位置
+		sceDisCanvasContext.lineTo(otherRSJO.frontX/widthScale, otherRSJO.frontY/heightScale);//停止位置
+		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.stroke();
+	}
+	
 	if(roadStage.backX!=-1&roadStage.backY!=-1){
 		sceDisCanvasContext.beginPath();
 		sceDisCanvasContext.strokeStyle = 'red';//点填充

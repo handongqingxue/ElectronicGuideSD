@@ -100,4 +100,10 @@ public class RoadStageServiceImpl implements RoadStageService {
 		// TODO Auto-generated method stub
 		return roadStageDao.selectById(id);
 	}
+
+	@Override
+	public List<RoadStage> selectOtherList(String id) {
+		// TODO Auto-generated method stub
+		return roadStageDao.selectOtherList(id);
+	}
 }

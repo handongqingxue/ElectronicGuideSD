@@ -21,6 +21,7 @@ import com.electronicGuideSD.util.JsonUtil;
 import com.electronicGuideSD.util.PlanResult;
 import com.electronicGuideSD.util.RoadStageUtil;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -67,6 +68,9 @@ public class RoadController {
 	
 	@RequestMapping(value="/roadStage/add")
 	public String goRoadStageAdd(HttpServletRequest request) {
+		
+		List<RoadStage> otherRSList = roadStageService.selectOtherList(null);
+		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
 
 		return MODULE_NAME+"/roadStage/add";
 	}
@@ -74,9 +78,12 @@ public class RoadController {
 	@RequestMapping(value="/roadStage/edit")
 	public String goRoadStageEdit(HttpServletRequest request) {
 		
-		RoadStage roadStage = roadStageService.selectById(request.getParameter("id"));
-		
+		String id = request.getParameter("id");
+		RoadStage roadStage = roadStageService.selectById(id);
 		request.setAttribute("roadStage", roadStage);
+		
+		List<RoadStage> otherRSList = roadStageService.selectOtherList(id);
+		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
 
 		return MODULE_NAME+"/roadStage/edit";
 	}
@@ -90,7 +97,8 @@ public class RoadController {
 	@RequestMapping(value="/roadStage/detail")
 	public String goRoadStageDetail(HttpServletRequest request) {
 		
-		RoadStage roadStage = roadStageService.selectById(request.getParameter("id"));
+		String id = request.getParameter("id");
+		RoadStage roadStage = roadStageService.selectById(id);
 		
 		List<RoadStage> allRSList = roadStageService.selectCBBData();
 		Map<String, String> rsNameMap = RoadStageUtil.initRSNameMap(allRSList);
@@ -106,6 +114,9 @@ public class RoadController {
 		}
 		
 		request.setAttribute("roadStage", roadStage);
+		
+		List<RoadStage> otherRSList = roadStageService.selectOtherList(id);
+		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
 
 		return MODULE_NAME+"/roadStage/detail";
 	}

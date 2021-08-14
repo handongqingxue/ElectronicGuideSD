@@ -25,4 +25,6 @@ public interface RoadStageMapper {
 
 	RoadStage selectById(@Param("id")String id);
 
+	List<RoadStage> selectOtherList(@Param("id")String id);
+
 }
