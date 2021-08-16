@@ -531,6 +531,23 @@ function initDialogPosition(){
 	erscdDiv.append(erssdmdws);
 }
 
+function putXYFromInpToVar(){
+	var backX=$("#backX").val();
+	if(backX!=""&backX!=null)
+		roadStage.backX=backX;
+	var backY=$("#backY").val();
+	if(backY!=""&backY!=null)
+		roadStage.backY=sceDisCanvasMinHeight-backY;
+	var frontX=$("#frontX").val();
+	if(frontX!=""&frontX!=null)
+		roadStage.frontX=frontX;
+	var frontY=$("#frontY").val();
+	if(frontY!=""&frontY!=null)
+		roadStage.frontY=sceDisCanvasMinHeight-frontY;
+    initSceDisCanvas(0);
+	openEditRsDialog(1);
+}
+
 function initEditRsSDMapDialogDiv(){
 	editRsSdMDialog=$("#edit_rs_sd_map_dialog_div").dialog({
 		title:"景区地图",
@@ -543,10 +560,22 @@ function initEditRsSDMapDialogDiv(){
         	   openEditRsDialog(0);
            }},
            {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   $("#backX").val(roadStage.backX);
-        	   $("#backY").val(sceDisCanvasMinHeight-roadStage.backY);
-        	   $("#frontX").val(roadStage.frontX);
-        	   $("#frontY").val(sceDisCanvasMinHeight-roadStage.frontY);
+        	   var backX=roadStage.backX;
+        	   var backY=sceDisCanvasMinHeight-roadStage.backY;
+        	   var frontX=roadStage.frontX;
+        	   var frontY=sceDisCanvasMinHeight-roadStage.frontY;
+        	   if(backX<frontX||backY<frontY){
+	        	   $("#backX").val(backX);
+	        	   $("#backY").val(backY);
+	        	   $("#frontX").val(frontX);
+	        	   $("#frontY").val(frontY);
+        	   }
+        	   else{
+        		   $("#backX").val(frontX);
+	        	   $("#backY").val(frontY);
+	        	   $("#frontX").val(backX);
+	        	   $("#frontY").val(backY);
+        	   }
         	   openEditRsDialog(0);
            }},
            {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
@@ -961,7 +990,7 @@ function setFitWidthInParent(parent,self){
 			</td>
 			<td class="td2">
 				<input type="text" class="name_inp" id="name" name="name" value="${requestScope.roadStage.name }" placeholder="请输入路段名" onfocus="focusName()" onblur="checkName()"/>
-				<div class="upBut_div showMapBut_div" onclick="openEditRsDialog(1);">地图打点</div>
+				<div class="upBut_div showMapBut_div" onclick="putXYFromInpToVar();">地图打点</div>
 			</td>
 			<td class="td1" align="right">
 				所属道路

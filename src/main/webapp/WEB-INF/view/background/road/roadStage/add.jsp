@@ -535,10 +535,22 @@ function initAddRsSDMapDialogDiv(){
         	   openAddRsDialog(0);
            }},
            {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   $("#backX").val(roadStage.backX);
-        	   $("#backY").val(sceDisCanvasMinHeight-roadStage.backY);
-        	   $("#frontX").val(roadStage.frontX);
-        	   $("#frontY").val(sceDisCanvasMinHeight-roadStage.frontY);
+        	   var backX=roadStage.backX;
+        	   var backY=sceDisCanvasMinHeight-roadStage.backY;
+        	   var frontX=roadStage.frontX;
+        	   var frontY=sceDisCanvasMinHeight-roadStage.frontY;
+        	   if(backX<frontX||backY<frontY){
+	        	   $("#backX").val(backX);
+	        	   $("#backY").val(backY);
+	        	   $("#frontX").val(frontX);
+	        	   $("#frontY").val(frontY);
+        	   }
+        	   else{
+        		   $("#backX").val(frontX);
+	        	   $("#backY").val(frontY);
+	        	   $("#frontX").val(backX);
+	        	   $("#frontY").val(backY);
+        	   }
         	   openAddRsDialog(0);
            }},
            {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
