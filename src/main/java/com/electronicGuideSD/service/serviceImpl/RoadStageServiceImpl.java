@@ -26,12 +26,12 @@ public class RoadStageServiceImpl implements RoadStageService {
 		// TODO Auto-generated method stub
 		System.out.println("scenicPlaceX==="+scenicPlaceX);
 		System.out.println("scenicPlaceY==="+scenicPlaceY);
-		Map<String,Object> meToRoadMap = roadStageDao.selectMinDistanceStage(meX,meY);
+		Map<String,Object> mtrNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);
 		/*
-		System.out.println("meRoadId="+Integer.valueOf(meToRoadMap.get("roadId").toString()));
-		System.out.println("meFrontThrough="+Boolean.valueOf(meToRoadMap.get("frontThrough").toString()));
-		System.out.println("meBackThrough="+Boolean.valueOf(meToRoadMap.get("backThrough").toString()));
-		System.out.println("meBfFlag="+meToRoadMap.get("bfFlag").toString());
+		System.out.println("meRoadId="+Integer.valueOf(mtrNearRSMap.get("roadId").toString()));
+		System.out.println("meFrontThrough="+Boolean.valueOf(mtrNearRSMap.get("frontThrough").toString()));
+		System.out.println("meBackThrough="+Boolean.valueOf(mtrNearRSMap.get("backThrough").toString()));
+		System.out.println("meBfFlag="+mtrNearRSMap.get("bfFlag").toString());
 		*/
 		
 		Map<String,Object> spToRoadMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
@@ -42,8 +42,8 @@ public class RoadStageServiceImpl implements RoadStageService {
 		*/
 
 		List<RoadStage> roadStageList = roadStageDao.select();
-		Map<String, Object> roadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
-		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(roadStageMap,meToRoadMap,spToRoadMap,meX,meY,scenicPlaceX,scenicPlaceY);
+		Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
+		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRoadStageMap,mtrNearRSMap,spToRoadMap,meX,meY,scenicPlaceX,scenicPlaceY);
 		List<RoadStage> shortNavLine=RoadStageUtil.initGetSPShortNavLine(allNavList);
 		//System.out.println("size1==="+((List<RoadStage>)allNavList.get(3).get("navLine")).size());
 		System.out.println("size1==="+shortNavLine.size());

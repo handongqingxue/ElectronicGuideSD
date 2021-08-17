@@ -125,11 +125,17 @@ public class RoadStage {
 	public void setRoadName(String roadName) {
 		this.roadName = roadName;
 	}
-	public String getBfFlag() {
-		return bfFlag;
+	public String getPreBfFlag() {
+		return preBfFlag;
 	}
-	public void setBfFlag(String bfFlag) {
-		this.bfFlag = bfFlag;
+	public void setPreBfFlag(String preBfFlag) {
+		this.preBfFlag = preBfFlag;
+	}
+	public String getNextBfFlag() {
+		return nextBfFlag;
+	}
+	public void setNextBfFlag(String nextBfFlag) {
+		this.nextBfFlag = nextBfFlag;
 	}
 	private String name;
 	private Float frontX;
@@ -150,5 +156,6 @@ public class RoadStage {
 	private Integer sort;
 	private Integer roadId;
 	private String roadName;
-	private String bfFlag;
+	private String preBfFlag;//上一个路段与该路段的交点位置
+	private String nextBfFlag;//下一个路段与该路段的交点位置
 }
