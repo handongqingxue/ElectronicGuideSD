@@ -83,8 +83,14 @@ public class RoadStageUtil {
 				}
 			}
 		}
-		System.out.println("shortNavMap="+shortNavMap.get("navLong"));
-		return (List<RoadStage>)shortNavMap.get("navLine");
+		
+		if(shortNavMap==null) {
+			return null;
+		}
+		else {
+			System.out.println("shortNavMap="+shortNavMap.get("navLong"));
+			return (List<RoadStage>)shortNavMap.get("navLine");
+		}
 	}
 	
 	public static void initNavLineFromItemIndex(Map<String, Object> allRoadStageMap,List<RoadStage> childNavList,RoadStage roadStage,List<RoadStage> rsList,RoadStage rtspRoadStage,String preBfFlag,int itemIndex,Float rtspBackX,Float rtspBackY,List<Map<String,Object>> allNavList,float preDistance) {
