@@ -183,15 +183,17 @@ public class RoadStageUtil {
 		
 		//顺着入口段的路段往前遍历，先把本路段加进去，为了方便下面的遍历
 		if(RoadStage.BACK_FLAG.equals(preBfFlag)) {
-			RoadStage nextRS = rsList.get(itemIndex+1);
-			String nextBfFlag = RoadStageUtil.checkConnectBackOrFront(currentRS.getBackX(),currentRS.getBackY(),nextRS);
-			System.out.println("nextBfFlag==="+nextBfFlag);
-			if(RoadStage.BACK_FLAG.equals(nextBfFlag)) {
-				RoadStageUtil.addNextConnectRSNavInList(nextRS,frontChildNavList,preBfFlag);//先把第一个路段添加到向前遍历的集合里
-				itemIndex++;
-			}
-			else {
-				RoadStageUtil.addRSNavInList(preRoadStage.getFrontX(),preRoadStage.getFrontY(),currentRS,frontChildNavList,preBfFlag);//先把第一个路段添加到向前遍历的集合里
+			if(itemIndex+1<rsList.size()) {
+				RoadStage nextRS = rsList.get(itemIndex+1);
+				String nextBfFlag = RoadStageUtil.checkConnectBackOrFront(currentRS.getBackX(),currentRS.getBackY(),nextRS);
+				System.out.println("nextBfFlag==="+nextBfFlag);
+				if(RoadStage.BACK_FLAG.equals(nextBfFlag)) {
+					RoadStageUtil.addNextConnectRSNavInList(nextRS,frontChildNavList,preBfFlag);//先把第一个路段添加到向前遍历的集合里
+					itemIndex++;
+				}
+				else {
+					RoadStageUtil.addRSNavInList(preRoadStage.getFrontX(),preRoadStage.getFrontY(),currentRS,frontChildNavList,preBfFlag);//先把第一个路段添加到向前遍历的集合里
+				}
 			}
 		}
 		else if(RoadStage.FRONT_FLAG.equals(preBfFlag)) {

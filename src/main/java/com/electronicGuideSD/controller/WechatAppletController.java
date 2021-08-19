@@ -69,9 +69,10 @@ public class WechatAppletController {
 		System.out.println("meY="+meY);
 		System.out.println("scenicPlaceX="+scenicPlaceX);
 		System.out.println("scenicPlaceY="+scenicPlaceY);
+		
 		/*
-		meX=(float) 1130.0;
-		meY=(float) 580.0;
+		meX=(float) 1166.0;
+		meY=(float) 496.0;
 		scenicPlaceX=(float) 909.0;
 		scenicPlaceY=(float) 439.0;
 		*/

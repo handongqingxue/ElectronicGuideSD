@@ -454,10 +454,10 @@ function initRoadStageLocation(){
 	for(var i=0;i<otherRSJA.length;i++){
 		var otherRSJO=otherRSJA[i];
 		sceDisCanvasContext.beginPath();
-		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR/15,0,2*Math.PI);
 		sceDisCanvasContext.moveTo(otherRSJO.backX/widthScale, otherRSJO.backY/heightScale);//起始位置
 		sceDisCanvasContext.lineTo(otherRSJO.frontX/widthScale, otherRSJO.frontY/heightScale);//停止位置
-		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR/15,0,2*Math.PI);
 		sceDisCanvasContext.stroke();
 	}
 
@@ -466,7 +466,7 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.strokeStyle = 'red';//点填充
 		sceDisCanvasContext.fillStyle='red';
 		sceDisCanvasContext.lineWidth=arcR*1.5;
-		sceDisCanvasContext.arc(roadStage.backX/widthScale,roadStage.backY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.arc(roadStage.backX/widthScale,roadStage.backY/heightScale,arcR/5,0,2*Math.PI);
 		sceDisCanvasContext.stroke();
 	}
 	if(roadStage.frontX!=-1&roadStage.frontY!=-1){
@@ -474,7 +474,7 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.strokeStyle = 'red';//点填充
 		sceDisCanvasContext.fillStyle='red';
 		sceDisCanvasContext.lineWidth=arcR*1.5;
-		sceDisCanvasContext.arc(roadStage.frontX/widthScale,roadStage.frontY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.arc(roadStage.frontX/widthScale,roadStage.frontY/heightScale,arcR/5,0,2*Math.PI);
 		sceDisCanvasContext.stroke();
 	}
 	if(roadStage.backX!=-1&roadStage.backY!=-1&roadStage.frontX!=-1&roadStage.frontY!=-1){

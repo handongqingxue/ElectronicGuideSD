@@ -44,7 +44,7 @@ $(function(){
 
 function initBackThroughCBB(){
 	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
 	backThroughCBB=$("#backThrough_cbb").combobox({
 		width:150,
 		data:data,
@@ -58,7 +58,7 @@ function initBackThroughCBB(){
 
 function initFrontThroughCBB(){
 	var data=[];
-	data.push({id:"",name:"请选择"},{id:true,name:"是"},{id:false,name:"否"});
+	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
 	frontThroughCBB=$("#frontThrough_cbb").combobox({
 		width:150,
 		data:data,
