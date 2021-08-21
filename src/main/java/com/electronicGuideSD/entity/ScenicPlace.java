@@ -69,6 +69,18 @@ public class ScenicPlace {
 	public void setDetailIntroVoiceUrl(String detailIntroVoiceUrl) {
 		this.detailIntroVoiceUrl = detailIntroVoiceUrl;
 	}
+	public Float getDetailIntroScope() {
+		return detailIntroScope;
+	}
+	public void setDetailIntroScope(Float detailIntroScope) {
+		this.detailIntroScope = detailIntroScope;
+	}
+	public Float getArroundScope() {
+		return arroundScope;
+	}
+	public void setArroundScope(Float arroundScope) {
+		this.arroundScope = arroundScope;
+	}
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -97,6 +109,8 @@ public class ScenicPlace {
 	private String detailIntro;
 	private String simpleIntroVoiceUrl;
 	private String detailIntroVoiceUrl;
+	private Float detailIntroScope;
+	private Float arroundScope;
 	private String createTime;
 	private String modifyTime;
 	private Integer sort;

@@ -31,8 +31,8 @@ public class BackgroundController {
 	public static final String MODULE_NAME="/background";
 	//public static final String SERVER_PATH_CQ="https://www.qrcodesy.com/ElectronicGuideCQ";
 	public static final String SERVER_PATH_CQ="https://localhost/ElectronicGuideCQ";
-	public static final String SERVER_PATH_SD="http://120.27.5.36:8080/ElectronicGuideSD";
-	//public static final String SERVER_PATH_SD="http://localhost:8080/ElectronicGuideSD";
+	//public static final String SERVER_PATH_SD="https://www.qrcodesy.com/ElectronicGuideSD";
+	public static final String SERVER_PATH_SD="https://localhost/ElectronicGuideSD";
 	
 	/**
 	 * Ìø×ªÖÁµÇÂ¼Ò³Ãæ
