@@ -497,7 +497,7 @@ function setFitWidthInParent(parent,self){
 				详细介绍语音包
 			</td>
 			<td class="td2">
-				<img class="detailIntroVoiceUrl_embed" id="detailIntroVoiceUrl_embed" alt="" src="${requestScope.scenicPlace.detailIntroVoiceUrl }"/>
+				<embed class="detailIntroVoiceUrl_embed" id="detailIntroVoiceUrl_embed" alt="" src="${requestScope.scenicPlace.detailIntroVoiceUrl }"/>
 			</td>
 		  </tr>
 		</table>

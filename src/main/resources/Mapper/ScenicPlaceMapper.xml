@@ -55,6 +55,12 @@
  			<if test="detailIntroVoiceUrl!=null">
  				detailIntroVoiceUrl,
  			</if>
+ 			<if test="detailIntroScope!=null">
+ 				detailIntroScope,
+ 			</if>
+ 			<if test="arroundScope!=null">
+ 				arroundScope,
+ 			</if>
  				createTime,
  			<if test="sort!=null">
  				sort,
@@ -91,6 +97,12 @@
  			</if>
  			<if test="detailIntroVoiceUrl!=null">
  				#{detailIntroVoiceUrl},
+ 			</if>
+ 			<if test="detailIntroScope!=null">
+ 				#{detailIntroScope},
+ 			</if>
+ 			<if test="arroundScope!=null">
+ 				#{arroundScope},
  			</if>
  				now(),
  			<if test="sort!=null">
@@ -130,6 +142,12 @@
 			</if>
 			<if test="detailIntroVoiceUrl!=null">
 				detailIntroVoiceUrl=#{detailIntroVoiceUrl},
+			</if>
+			<if test="detailIntroScope!=null">
+				detailIntroScope=#{detailIntroScope},
+			</if>
+			<if test="arroundScope!=null">
+				arroundScope=#{arroundScope},
 			</if>
 				modifyTime=now(),
 			<if test="sort!=null">

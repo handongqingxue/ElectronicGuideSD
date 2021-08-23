@@ -60,12 +60,8 @@
 	margin-left: 20px;
 	font-size: 18px;
 }
-.name_inp{
-	width: 150px;
-	height:30px;
-}
-.picWidth_inp,.picHeight_inp{
-	width: 130px;
+.name_inp,.picWidth_inp,.picHeight_inp,.detailIntroScope_inp,.arroundScope_inp{
+	width: 180px;
 	height:30px;
 }
 .sort_inp{
@@ -400,7 +396,11 @@ function checkEdit(){
 						if(checkPicHeight()){
 							if(checkSimpleIntro()){
 								if(checkDetailIntro()){
-									editScenicPlace();
+									if(checkDetailIntroScope()){
+										if(checkArroundScope()){
+											editScenicPlace();
+										}
+									}
 								}
 							}
 						}
@@ -486,7 +486,7 @@ function checkSort(){
 
 //验证x轴坐标
 function checkX(){
-	var x = $("#x").val();
+	var x = $("#x_inp").val();
 	if(x==null||x==""){
 	  	alert("请输入x轴坐标");
 	  	return false;
@@ -497,7 +497,7 @@ function checkX(){
 
 //验证y轴坐标
 function checkY(){
-	var y = $("#y").val();
+	var y = $("#y_inp").val();
 	if(y==null||y==""){
 	  	alert("请输入y轴坐标");
 	  	return false;
@@ -563,6 +563,28 @@ function checkDetailIntro(){
 		$("#detailIntro").css("color","#E15748");
     	$("#detailIntro").val("详细介绍不能为空");
     	return false;
+	}
+	else
+		return true;
+}
+
+//验证详细介绍范围
+function checkDetailIntroScope(){
+	var detailIntroScope = $("#detailIntroScope").val();
+	if(detailIntroScope==null||detailIntroScope==""){
+	  	alert("请输入详细介绍范围");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证景点范围
+function checkArroundScope(){
+	var arroundScope = $("#arroundScope").val();
+	if(arroundScope==null||arroundScope==""){
+	  	alert("请输入景点范围");
+	  	return false;
 	}
 	else
 		return true;
@@ -805,7 +827,21 @@ function setFitWidthInParent(parent,self){
 			<td class="td2">
 				<div class="upBut_div upDetailIntroVoiceBut_div" onclick="uploadDetailIntroVoiceUrl()">选择语音包</div>
 				<input type="file" id="detailIntroVoiceUrl_file" name="detailIntroVoiceUrl_file" style="display: none;" onchange="showDetailIntroVoiceUrl(this)"/>
-				<img class="detailIntroVoiceUrl_embed" id="detailIntroVoiceUrl_embed" alt="" src="${requestScope.scenicPlace.detailIntroVoiceUrl }"/>
+				<embed class="detailIntroVoiceUrl_embed" id="detailIntroVoiceUrl_embed" alt="" src="${requestScope.scenicPlace.detailIntroVoiceUrl }"/>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				详细介绍范围
+			</td>
+			<td class="td2">
+				<input type="number" class="detailIntroScope_inp" id="detailIntroScope" name="detailIntroScope" value="${requestScope.scenicPlace.detailIntroScope }" placeholder="请输入详细介绍范围"/>
+			</td>
+			<td class="td1" align="right">
+				景点范围
+			</td>
+			<td class="td2">
+				<input type="number" class="arroundScope_inp" id="arroundScope" name="arroundScope" value="${requestScope.scenicPlace.arroundScope }" placeholder="请输入景点范围"/>
 			</td>
 		  </tr>
 		</table>
