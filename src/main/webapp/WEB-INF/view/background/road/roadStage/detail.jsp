@@ -102,6 +102,8 @@ var frontX;
 var frontY;
 var arcR=10;
 var lineWidth=10;
+var fontMarginLeft=45;
+var atSpace=10;
 var scenicPlaceJA;
 var otherRSJA;
 $(function(){
@@ -207,6 +209,7 @@ function initSceDisCanvas(reSizeFlag){
 			initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
 		}
 		initRoadStageLocation();
+		initXYLabelLocation();
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
@@ -234,10 +237,10 @@ function initRoadStageLocation(){
 	for(var i=0;i<otherRSJA.length;i++){
 		var otherRSJO=otherRSJA[i];
 		sceDisCanvasContext.beginPath();
-		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR/15,0,2*Math.PI);
 		sceDisCanvasContext.moveTo(otherRSJO.backX/widthScale, otherRSJO.backY/heightScale);//起始位置
 		sceDisCanvasContext.lineTo(otherRSJO.frontX/widthScale, otherRSJO.frontY/heightScale);//停止位置
-		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR,0,2*Math.PI);
+		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR/15,0,2*Math.PI);
 		sceDisCanvasContext.stroke();
 	}
 	
@@ -265,6 +268,29 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.moveTo(roadStage.backX/widthScale, roadStage.backY/heightScale);//起始位置
 		sceDisCanvasContext.lineTo(roadStage.frontX/widthScale, roadStage.frontY/heightScale);//停止位置
 		sceDisCanvasContext.stroke();
+	}
+}
+
+function initXYLabelLocation(){
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		var backXY="("+otherRSJO.backX+","+otherRSJO.backY+")";
+		var backRectWidth=20*backXY.length+20;
+		var frontXY="("+otherRSJO.frontX+","+otherRSJO.frontY+")";
+		var frontRectWidth=20*frontXY.length+20;
+		sceDisCanvasContext.beginPath();
+		
+		//sceDisCanvasContext.translate(1280,818);
+		//sceDisCanvasContext.rotate(Math.PI/6);
+		
+		sceDisCanvasContext.font="25px bold 黑体";
+		sceDisCanvasContext.fillStyle = "#f00";
+		sceDisCanvasContext.fillText(backXY,otherRSJO.backX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.backY/heightScale-atSpace);
+		sceDisCanvasContext.fillText(frontXY,otherRSJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.frontY/heightScale-atSpace);
+		sceDisCanvasContext.stroke();
+
+		//sceDisCanvasContext.translate(0,0)
+		//sceDisCanvasContext.rotate(-Math.PI/6);
 	}
 }
 

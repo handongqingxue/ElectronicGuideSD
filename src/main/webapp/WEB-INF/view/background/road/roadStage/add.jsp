@@ -110,6 +110,8 @@ var frontX;
 var frontY;
 var arcR=10;
 var lineWidth=10;
+var fontMarginLeft=45;
+var atSpace=10;
 var scenicPlaceJA;
 var otherRSJA;
 $(function(){
@@ -368,6 +370,7 @@ function initSceDisCanvas(reSizeFlag){
 			initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
 		}
 		initRoadStageLocation();
+		initXYLabelLocation();
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
@@ -484,6 +487,22 @@ function initRoadStageLocation(){
 		sceDisCanvasContext.beginPath();
 		sceDisCanvasContext.moveTo(roadStage.backX/widthScale, roadStage.backY/heightScale);//起始位置
 		sceDisCanvasContext.lineTo(roadStage.frontX/widthScale, roadStage.frontY/heightScale);//停止位置
+		sceDisCanvasContext.stroke();
+	}
+}
+
+function initXYLabelLocation(){
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		var backXY="("+otherRSJO.backX+","+otherRSJO.backY+")";
+		var backRectWidth=20*backXY.length+20;
+		var frontXY="("+otherRSJO.frontX+","+otherRSJO.frontY+")";
+		var frontRectWidth=20*frontXY.length+20;
+		sceDisCanvasContext.beginPath();
+		sceDisCanvasContext.font="25px bold 黑体";
+		sceDisCanvasContext.fillStyle = "#f00";
+		sceDisCanvasContext.fillText(backXY,otherRSJO.backX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.backY/heightScale-atSpace);
+		sceDisCanvasContext.fillText(frontXY,otherRSJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.frontY/heightScale-atSpace);
 		sceDisCanvasContext.stroke();
 	}
 }
