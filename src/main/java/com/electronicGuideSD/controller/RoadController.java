@@ -78,6 +78,9 @@ public class RoadController {
 		
 		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
 		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
+		
+		List<TextLabel> textLabelList = textLabelService.selectList();
+		request.setAttribute("textLabelJAStr", JSONArray.fromObject(textLabelList));
 
 		return MODULE_NAME+"/roadStage/add";
 	}
@@ -94,6 +97,9 @@ public class RoadController {
 		
 		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
 		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
+		
+		List<TextLabel> textLabelList = textLabelService.selectList();
+		request.setAttribute("textLabelJAStr", JSONArray.fromObject(textLabelList));
 
 		return MODULE_NAME+"/roadStage/edit";
 	}
@@ -308,6 +314,20 @@ public class RoadController {
 			jsonMap.put("status", "ok");
 			jsonMap.put("roadStageList", roadStageList);
 		}
+		return jsonMap;
+	}
+	
+	@RequestMapping(value="/selectTextLabelList")
+	@ResponseBody
+	public Map<String, Object> selectTextLabelList(String name,int page,int rows,String sort,String order) {
+		
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		int count=textLabelService.selectForInt(name);
+		List<TextLabel> textLabelList=textLabelService.selectList(name, page, rows, sort, order);
+
+		jsonMap.put("total", count);
+		jsonMap.put("rows", textLabelList);
+			
 		return jsonMap;
 	}
 

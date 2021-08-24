@@ -118,6 +118,7 @@ $(function(){
 	jiSuanScale();
 	initScenicPlaceJA();
 	initOtherRSJA();
+	initTextLabelJA();
 	initRoadCBB();
 	initBackThroughCBB();
 	initFrontThroughCBB();
@@ -316,6 +317,14 @@ function initOtherRSJA(){
 	}
 }
 
+function initTextLabelJA(){
+	textLabelJA=JSON.parse('${requestScope.textLabelJAStr}');
+	for(var i=0;i<textLabelJA.length;i++){
+		var textLabelJO=textLabelJA[i];
+		textLabelJO.y=sceDisCanvasMinHeight-textLabelJO.y;
+	}
+}
+
 function changeCanvasSize(bigFlag,resetFlag){
 	loadSceDisCanvas(true);
     var mcw=sceDisCanvasStyleWidth;
@@ -371,6 +380,7 @@ function initSceDisCanvas(reSizeFlag){
 		}
 		initRoadStageLocation();
 		initXYLabelLocation();
+		initTextLabelLocation();
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
@@ -494,9 +504,9 @@ function initRoadStageLocation(){
 function initXYLabelLocation(){
 	for(var i=0;i<otherRSJA.length;i++){
 		var otherRSJO=otherRSJA[i];
-		var backXY="("+otherRSJO.backX+","+otherRSJO.backY+")";
+		var backXY="("+otherRSJO.backX+","+(sceDisCanvasMinHeight-otherRSJO.backY)+")";
 		var backRectWidth=20*backXY.length+20;
-		var frontXY="("+otherRSJO.frontX+","+otherRSJO.frontY+")";
+		var frontXY="("+otherRSJO.frontX+","+(sceDisCanvasMinHeight-otherRSJO.frontY)+")";
 		var frontRectWidth=20*frontXY.length+20;
 		sceDisCanvasContext.beginPath();
 		sceDisCanvasContext.font="25px bold 黑体";
@@ -504,6 +514,30 @@ function initXYLabelLocation(){
 		sceDisCanvasContext.fillText(backXY,otherRSJO.backX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.backY/heightScale-atSpace);
 		sceDisCanvasContext.fillText(frontXY,otherRSJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.frontY/heightScale-atSpace);
 		sceDisCanvasContext.stroke();
+	}
+}
+
+function initTextLabelLocation(){
+	for(var i=0;i<textLabelJA.length;i++){
+		var textLabelJO=textLabelJA[i];
+		var name=textLabelJO.name;
+		var rectWidth=20*name.length+20;
+		sceDisCanvasContext.beginPath();
+		
+		sceDisCanvasContext.translate(textLabelJO.x/widthScale-rectWidth/2+fontMarginLeft,textLabelJO.y/heightScale-atSpace);
+		sceDisCanvasContext.rotate(textLabelJO.rotate*(Math.PI/180));
+		
+		
+		sceDisCanvasContext.font="25px bold 黑体";
+		sceDisCanvasContext.fillStyle = "#000";
+		sceDisCanvasContext.fillText(name,0,0);
+		
+		//sceDisCanvasContext.fillText(backXY,otherRSJO.backX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.backY/heightScale-atSpace);
+		//sceDisCanvasContext.fillText(frontXY,otherRSJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.frontY/heightScale-atSpace);
+		sceDisCanvasContext.stroke();
+
+		sceDisCanvasContext.rotate(-(textLabelJO.rotate*(Math.PI/180)));
+		sceDisCanvasContext.translate(-(textLabelJO.x/widthScale-rectWidth/2+fontMarginLeft),-(textLabelJO.y/heightScale-atSpace));
 	}
 }
 

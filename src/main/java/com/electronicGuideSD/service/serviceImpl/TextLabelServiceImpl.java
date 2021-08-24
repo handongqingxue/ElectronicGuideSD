@@ -20,4 +20,16 @@ public class TextLabelServiceImpl implements TextLabelService {
 		// TODO Auto-generated method stub
 		return textLabelDao.selectWAList();
 	}
+
+	@Override
+	public int selectForInt(String name) {
+		// TODO Auto-generated method stub
+		return textLabelDao.selectForInt(name);
+	}
+
+	@Override
+	public List<TextLabel> selectList(String name, int page, int rows, String sort, String order) {
+		// TODO Auto-generated method stub
+		return textLabelDao.selectList(name, (page-1)*rows, rows, sort, order);
+	}
 }

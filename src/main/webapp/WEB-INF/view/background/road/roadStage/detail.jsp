@@ -153,6 +153,7 @@ function initOtherRSJA(){
 	}
 }
 
+//https://www.cnblogs.com/ye-hcj/p/10356397.html
 function initTextLabelJA(){
 	textLabelJA=JSON.parse('${requestScope.textLabelJAStr}');
 	for(var i=0;i<textLabelJA.length;i++){
