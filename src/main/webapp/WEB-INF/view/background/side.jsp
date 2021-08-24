@@ -165,6 +165,13 @@
 							&nbsp;&nbsp;&nbsp;路段查询
 						</a>
 					</li>
+					<div class="line_div"></div>
+					<li class="layui-nav-item">
+						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
+						<a href="<%=basePath%>background/road/textLabel/list">
+							&nbsp;&nbsp;&nbsp;标签查询
+						</a>
+					</li>
 				</div>
 			</ul>
 		</div>

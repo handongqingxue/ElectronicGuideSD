@@ -137,6 +137,12 @@ public class RoadController {
 		return MODULE_NAME+"/roadStage/detail";
 	}
 	
+	@RequestMapping(value="/textLabel/list")
+	public String goTextLabelList(HttpServletRequest request) {
+
+		return MODULE_NAME+"/textLabel/list";
+	}
+	
 	@RequestMapping(value="/selectRoadList")
 	@ResponseBody
 	public Map<String, Object> selectRoadList(String name,int page,int rows,String sort,String order) {
