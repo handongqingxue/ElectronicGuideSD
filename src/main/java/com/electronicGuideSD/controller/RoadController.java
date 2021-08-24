@@ -34,6 +34,8 @@ public class RoadController {
 	private RoadStageService roadStageService;
 	@Autowired
 	private ScenicPlaceService scenicPlaceService;
+	@Autowired
+	private TextLabelService textLabelService;
 	public static final String MODULE_NAME="/background/road";
 	
 	@RequestMapping(value="/road/add")
@@ -128,6 +130,9 @@ public class RoadController {
 		
 		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
 		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
+		
+		List<TextLabel> textLabelList = textLabelService.selectList();
+		request.setAttribute("textLabelJAStr", JSONArray.fromObject(textLabelList));
 
 		return MODULE_NAME+"/roadStage/detail";
 	}
