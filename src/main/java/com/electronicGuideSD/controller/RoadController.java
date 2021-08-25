@@ -71,14 +71,7 @@ public class RoadController {
 	@RequestMapping(value="/roadStage/add")
 	public String goRoadStageAdd(HttpServletRequest request) {
 		
-		List<RoadStage> otherRSList = roadStageService.selectOtherList(null);
-		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
-		
-		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
-		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
-		
-		List<TextLabel> textLabelList = textLabelService.selectList();
-		request.setAttribute("textLabelJAStr", JSONArray.fromObject(textLabelList));
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
 
 		return MODULE_NAME+"/roadStage/add";
 	}
@@ -90,14 +83,7 @@ public class RoadController {
 		RoadStage roadStage = roadStageService.selectById(id);
 		request.setAttribute("roadStage", roadStage);
 		
-		List<RoadStage> otherRSList = roadStageService.selectOtherList(id);
-		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
-		
-		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
-		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
-		
-		List<TextLabel> textLabelList = textLabelService.selectList();
-		request.setAttribute("textLabelJAStr", JSONArray.fromObject(textLabelList));
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
 
 		return MODULE_NAME+"/roadStage/edit";
 	}
@@ -136,6 +122,8 @@ public class RoadController {
 	
 	@RequestMapping(value="/textLabel/add")
 	public String goTextLabelAdd(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
 
 		return MODULE_NAME+"/textLabel/add";
 	}
