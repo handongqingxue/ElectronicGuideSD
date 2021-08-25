@@ -99,9 +99,10 @@ var sceDisCanvasHeight;
 var widthScale;
 var heightScale;
 var reSizeTimeout;
-var scenicPlace;
-var scenicPlaceX;
-var scenicPlaceY;
+var textLabel;
+var textLabelY;
+var fontMarginLeft=45;
+var atSpace=10;
 $(function(){
 	jiSuanScale();
 	initNewDialog();
@@ -168,7 +169,6 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasImg.src='${sessionScope.user.scenicDistrict.mapUrl}';
 	sceDisCanvas = document.createElement("canvas");
 	sceDisCanvas.id="sceDisCanvas";
-	console.log(sceDisCanvasStyleWidth);
 	sceDisCanvas.style.width=sceDisCanvasStyleWidth+"px";//通过缩放来改变画布大小，画布大小改变后，上面的定位点位置也就跟着改变了
 	sceDisCanvas.style.height=sceDisCanvasStyleHeight+"px";
 	sceDisCanvas.width=sceDisCanvasWidth;
@@ -177,8 +177,8 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
 		
-		if(scenicPlace!=undefined)
-			setScenicPlaceLocation();
+		if(textLabel!=undefined)
+			setTextLabelLocation();
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
@@ -195,25 +195,34 @@ function initSceDisCanvas(reSizeFlag){
 	           x=x*(sceDisCanvasMinWidth/sceDisCanvasStyleWidth);//用最初的画布宽度比上当前画布宽度，得出缩放比例，从而将点击获得的坐标还原为画布上的坐标
 	           y=y*(sceDisCanvasMinHeight/sceDisCanvasStyleHeight);
 	           
-	           scenicPlaceX=x;
-	           scenicPlaceY=sceDisCanvasMinHeight-y;//将y轴坐标从最初的左上角计算转换为从左下角计算
+	           textLabelY=sceDisCanvasMinHeight-y;//将y轴坐标从最初的左上角计算转换为从左下角计算
 	           
-	       	   var picUrl=$("#picUrl_img").attr("src");
-		       var picWidth=$("#picWidth").val();
-		       var picHeight=$("#picHeight").val();
-	           scenicPlace={x:x,y:y,picUrl:picUrl,picWidth:picWidth,picHeight:picHeight};
+		       var name=$("#name").val();
+		       var rotate=$("#rotate").val();
+		       textLabel={name:name,x:x,y:y,rotate:rotate};
 	           initSceDisCanvas(0);
 	    }
 	}
 }
 
-function setScenicPlaceLocation(){
-	var entityImg = new Image();
-	entityImg.src=scenicPlace.picUrl;
-	entityImg.onload=function(){
-		//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
-		sceDisCanvasContext.drawImage(entityImg, scenicPlace.x/widthScale-scenicPlace.picWidth/2, scenicPlace.y/heightScale-scenicPlace.picHeight/2, scenicPlace.picWidth, scenicPlace.picHeight);
-	}
+function setTextLabelLocation(){
+	var name=textLabel.name;
+	var rectWidth=60*name.length;
+	var x=textLabel.x;
+	var y=textLabel.y;
+	var rotate=textLabel.rotate;
+	
+	sceDisCanvasContext.translate(x/widthScale-rectWidth/2+fontMarginLeft,y/heightScale-atSpace);
+	sceDisCanvasContext.rotate(rotate*(Math.PI/180));
+	
+	sceDisCanvasContext.font="25px bold 黑体";
+	sceDisCanvasContext.fillStyle = "#000";
+	sceDisCanvasContext.fillText(name,0,0);
+	
+	sceDisCanvasContext.stroke();
+
+	sceDisCanvasContext.rotate(-(rotate*(Math.PI/180)));
+	sceDisCanvasContext.translate(-(x/widthScale-rectWidth/2+fontMarginLeft),-(y/heightScale-atSpace));
 }
 
 function initDialogPosition(){
@@ -246,10 +255,9 @@ function initAddTLSDMapDialogDiv(){
         	   openAddTLDialog(0);
            }},
            {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   $("#x_span").text(scenicPlaceX);
-        	   $("#y_span").text(scenicPlaceY);
-        	   $("#x_inp").val(scenicPlaceX);
-        	   $("#y_inp").val(scenicPlaceY);
+        	   $("#x").val(textLabel.x);
+        	   $("#y").val(textLabelY);
+        	   $("#ratate").val(textLabel.ratate);
         	   openAddTLDialog(0);
            }},
            {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
@@ -400,6 +408,14 @@ function addTextLabel(){
 			}
 		}
 	});
+}
+
+function checkTextLabelInfo(){
+	if(checkName()){
+		if(checkRotate()){
+			openAddTLDialog(1);
+		}
+	}
 }
 
 function focusName(){
@@ -553,7 +569,7 @@ function setFitWidthInParent(parent,self){
 				景区地图
 			</td>
 			<td class="td2">
-				<div class="upBut_div showMapBut_div" onclick="openAddTLDialog(1);">显示地图</div>
+				<div class="upBut_div showMapBut_div" onclick="checkTextLabelInfo();">显示地图</div>
 				<img class="sceDis_img" id="sceDis_img" alt="" src="${sessionScope.user.scenicDistrict.mapUrl }"/>
 			</td>
 			<td class="td1" align="right">

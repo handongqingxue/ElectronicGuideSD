@@ -1,5 +1,6 @@
 package com.electronicGuideSD.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
-import com.electronicGuideSD.util.FileUploadUtils;
-import com.electronicGuideSD.util.JsonUtil;
-import com.electronicGuideSD.util.PlanResult;
-import com.electronicGuideSD.util.RoadStageUtil;
+import com.electronicGuideSD.util.*;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -131,14 +129,7 @@ public class RoadController {
 		
 		request.setAttribute("roadStage", roadStage);
 		
-		List<RoadStage> otherRSList = roadStageService.selectOtherList(id);
-		request.setAttribute("otherRSJAStr", JSONArray.fromObject(otherRSList));
-		
-		List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
-		request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
-		
-		List<TextLabel> textLabelList = textLabelService.selectList();
-		request.setAttribute("textLabelJAStr", JSONArray.fromObject(textLabelList));
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
 
 		return MODULE_NAME+"/roadStage/detail";
 	}
