@@ -101,10 +101,18 @@ var heightScale;
 var reSizeTimeout;
 var textLabel;
 var textLabelY;
+var lineWidth=10;
 var fontMarginLeft=45;
+var arcR=10;
 var atSpace=10;
+var scenicPlaceJA;
+var otherRSJA;
+var textLabelJA;
 $(function(){
 	jiSuanScale();
+	initScenicPlaceJA();
+	initOtherRSJA();
+	initTextLabelJA();
 	initNewDialog();
 	initAddTLSDMapDialogDiv();
 
@@ -126,6 +134,32 @@ function jiSuanScale(){
 
 	widthScale=sceDisCanvasStyleWidth/sceDisCanvasWidth;
 	heightScale=sceDisCanvasStyleHeight/sceDisCanvasHeight;
+}
+
+function initScenicPlaceJA(){
+	scenicPlaceJA=JSON.parse('${requestScope.scenicPlaceJAStr}');
+	for(var i=0;i<scenicPlaceJA.length;i++){
+		var scenicPlaceJO=scenicPlaceJA[i];
+		scenicPlaceJO.y=sceDisCanvasMinHeight-scenicPlaceJO.y;
+	}
+}
+
+function initOtherRSJA(){
+	otherRSJA=JSON.parse('${requestScope.otherRSJAStr}');
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		otherRSJO.backY=sceDisCanvasMinHeight-otherRSJO.backY;
+		otherRSJO.frontY=sceDisCanvasMinHeight-otherRSJO.frontY;
+	}
+}
+
+//https://www.cnblogs.com/ye-hcj/p/10356397.html
+function initTextLabelJA(){
+	textLabelJA=JSON.parse('${requestScope.textLabelJAStr}');
+	for(var i=0;i<textLabelJA.length;i++){
+		var textLabelJO=textLabelJA[i];
+		textLabelJO.y=sceDisCanvasMinHeight-textLabelJO.y;
+	}
 }
 
 function changeCanvasSize(bigFlag,resetFlag){
@@ -176,6 +210,13 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasContext = sceDisCanvas.getContext("2d");
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
+
+		for(var i=0;i<scenicPlaceJA.length;i++){
+			initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+		}
+		initRoadStageLocation();
+		initXYLabelLocation();
+		initTextLabelLocation();
 		
 		if(textLabel!=undefined)
 			setTextLabelLocation();
@@ -202,6 +243,69 @@ function initSceDisCanvas(reSizeFlag){
 		       textLabel={name:name,x:x,y:y,rotate:rotate};
 	           initSceDisCanvas(0);
 	    }
+	}
+}
+
+function initScenicPlaceLocation(scenicPlaceJO){
+	var entityImg = new Image();
+	entityImg.src=scenicPlaceJO.picUrl;
+	entityImg.onload=function(){
+		//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
+		sceDisCanvasContext.drawImage(entityImg, scenicPlaceJO.x/widthScale-scenicPlaceJO.picWidth/2, scenicPlaceJO.y/heightScale-scenicPlaceJO.picHeight/2, scenicPlaceJO.picWidth, scenicPlaceJO.picHeight);
+		
+	}
+}
+
+function initRoadStageLocation(){
+	sceDisCanvasContext.strokeStyle = 'blue';//点填充
+	sceDisCanvasContext.fillStyle='blue';
+	sceDisCanvasContext.lineWidth=lineWidth;
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		sceDisCanvasContext.beginPath();
+		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR/15,0,2*Math.PI);
+		sceDisCanvasContext.moveTo(otherRSJO.backX/widthScale, otherRSJO.backY/heightScale);//起始位置
+		sceDisCanvasContext.lineTo(otherRSJO.frontX/widthScale, otherRSJO.frontY/heightScale);//停止位置
+		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR/15,0,2*Math.PI);
+		sceDisCanvasContext.stroke();
+	}
+}
+
+function initXYLabelLocation(){
+	for(var i=0;i<otherRSJA.length;i++){
+		var otherRSJO=otherRSJA[i];
+		var backXY="("+otherRSJO.backX+","+(sceDisCanvasMinHeight-otherRSJO.backY)+")";
+		var backRectWidth=20*backXY.length+20;
+		var frontXY="("+otherRSJO.frontX+","+(sceDisCanvasMinHeight-otherRSJO.frontY)+")";
+		var frontRectWidth=20*frontXY.length+20;
+		sceDisCanvasContext.beginPath();
+		sceDisCanvasContext.font="25px bold 黑体";
+		sceDisCanvasContext.fillStyle = "#f00";
+		sceDisCanvasContext.fillText(backXY,otherRSJO.backX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.backY/heightScale-atSpace);
+		sceDisCanvasContext.fillText(frontXY,otherRSJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.frontY/heightScale-atSpace);
+		sceDisCanvasContext.stroke();
+	}
+}
+
+function initTextLabelLocation(){
+	for(var i=0;i<textLabelJA.length;i++){
+		var textLabelJO=textLabelJA[i];
+		var name=textLabelJO.name;
+		var rectWidth=20*name.length+20;
+		sceDisCanvasContext.beginPath();
+		
+		sceDisCanvasContext.translate(textLabelJO.x/widthScale-rectWidth/2+fontMarginLeft,textLabelJO.y/heightScale-atSpace);
+		sceDisCanvasContext.rotate(textLabelJO.rotate*(Math.PI/180));
+		
+		
+		sceDisCanvasContext.font="25px bold 黑体";
+		sceDisCanvasContext.fillStyle = "#000";
+		sceDisCanvasContext.fillText(name,0,0);
+		
+		sceDisCanvasContext.stroke();
+
+		sceDisCanvasContext.rotate(-(textLabelJO.rotate*(Math.PI/180)));
+		sceDisCanvasContext.translate(-(textLabelJO.x/widthScale-rectWidth/2+fontMarginLeft),-(textLabelJO.y/heightScale-atSpace));
 	}
 }
 

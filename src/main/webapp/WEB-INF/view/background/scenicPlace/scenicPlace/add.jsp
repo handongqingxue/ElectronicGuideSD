@@ -184,7 +184,6 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasImg.src='${sessionScope.user.scenicDistrict.mapUrl}';
 	sceDisCanvas = document.createElement("canvas");
 	sceDisCanvas.id="sceDisCanvas";
-	console.log(sceDisCanvasStyleWidth);
 	sceDisCanvas.style.width=sceDisCanvasStyleWidth+"px";//通过缩放来改变画布大小，画布大小改变后，上面的定位点位置也就跟着改变了
 	sceDisCanvas.style.height=sceDisCanvasStyleHeight+"px";
 	sceDisCanvas.width=sceDisCanvasWidth;
