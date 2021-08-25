@@ -18,4 +18,6 @@ public interface TextLabelMapper {
 
 	List<TextLabel> selectOtherList(@Param("id")String id);
 
+	TextLabel selectById(@Param("id")String id);
+
 }

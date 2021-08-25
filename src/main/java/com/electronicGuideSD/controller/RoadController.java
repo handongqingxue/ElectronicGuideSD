@@ -128,10 +128,34 @@ public class RoadController {
 		return MODULE_NAME+"/textLabel/add";
 	}
 	
+	@RequestMapping(value="/textLabel/edit")
+	public String goTextLabelEdit(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.OTHER_TL),request);
+
+		TextLabel textLabel = textLabelService.selectById(request.getParameter("id"));
+		
+		request.setAttribute("textLabel", textLabel);
+		
+		return MODULE_NAME+"/textLabel/edit";
+	}
+	
 	@RequestMapping(value="/textLabel/list")
 	public String goTextLabelList(HttpServletRequest request) {
 
 		return MODULE_NAME+"/textLabel/list";
+	}
+	
+	@RequestMapping(value="/textLabel/detail")
+	public String goTextLabelDetail(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.OTHER_TL),request);
+
+		TextLabel textLabel = textLabelService.selectById(request.getParameter("id"));
+		
+		request.setAttribute("textLabel", textLabel);
+		
+		return MODULE_NAME+"/textLabel/detail";
 	}
 	
 	@RequestMapping(value="/selectRoadList")

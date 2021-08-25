@@ -16,4 +16,6 @@ public interface TextLabelService {
 
 	List<TextLabel> selectOtherList(String id);
 
+	TextLabel selectById(String id);
+
 }

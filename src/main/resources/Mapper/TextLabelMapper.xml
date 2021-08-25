@@ -23,6 +23,9 @@
 		</if>
 		 order by sort
  	</select>
+ 	<select id="selectById" resultType="com.electronicGuideSD.entity.TextLabel">
+ 		select * from text_label where id=#{id}
+ 	</select>
  	<select id="selectWAList" resultType="com.electronicGuideSD.entity.TextLabel">
  		select * from text_label
  	</select>

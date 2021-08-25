@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>添加标签</title>
+<title>编辑标签</title>
 <%@include file="../../js.jsp"%>
 <style type="text/css">
-.add_tl_canvas_bg_div{
+.edit_tl_canvas_bg_div{
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0,0,0,.45);
@@ -15,7 +15,7 @@
 	z-index: 9016;
 	display:none;
 }
-.add_tl_canvas_div{
+.edit_tl_canvas_div{
 	width: 1800px;
 	height: 850px;
 	margin: 50px auto 0;
@@ -25,27 +25,27 @@
 	left: 0;
 	right: 0;
 }
-.add_tl_canvas_div .tjst_div{
+.edit_tl_canvas_div .tjst_div{
 	width: 100%;
 	height: 50px;
 	line-height: 50px;
 	border-bottom: #eee solid 1px;
 }
-.add_tl_canvas_div .tjst_span{
+.edit_tl_canvas_div .tjst_span{
 	margin-left: 30px;
 }
-.add_tl_canvas_div .close_span{
+.edit_tl_canvas_div .close_span{
 	float: right;margin-right: 30px;cursor: pointer;
 }
-.add_tl_canvas_dialog_div{
+.edit_tl_canvas_dialog_div{
 	width: 1775px;
 	height: 800px;
 	position: absolute;
 }
-.add_tl_canvas_div .title_div{
+.edit_tl_canvas_div .title_div{
 	width: 100%;height: 50px;line-height: 50px;
 }
-.add_tl_canvas_div .title_span{
+.edit_tl_canvas_div .title_span{
 	margin-left: 30px;
 }
 
@@ -85,8 +85,8 @@ var path='<%=basePath %>';
 var roadPath='<%=basePath%>'+"background/road/";
 var dialogTop=10;
 var dialogLeft=20;
-var ndNum=0;
-var atlsdmdNum=1;
+var edNum=0;
+var etlsdmdNum=1;
 var sceDisCanvas;
 var sceDisCanvasMinWidth;
 var sceDisCanvasMinHeight;
@@ -107,12 +107,12 @@ var arcR=10;
 var atSpace=10;
 var scenicPlaceJA;
 var roadStageJA;
-var textLabelJA;
+var otherTLJA;
 $(function(){
 	jiSuanScale();
 	initScenicPlaceJA();
 	initRoadStageJA();
-	initTextLabelJA();
+	initOtherTLJA();
 	initNewDialog();
 	initAddTLSDMapDialogDiv();
 
@@ -154,11 +154,11 @@ function initRoadStageJA(){
 }
 
 //https://www.cnblogs.com/ye-hcj/p/10356397.html
-function initTextLabelJA(){
-	textLabelJA=JSON.parse('${requestScope.textLabelJAStr}');
-	for(var i=0;i<textLabelJA.length;i++){
-		var textLabelJO=textLabelJA[i];
-		textLabelJO.y=sceDisCanvasMinHeight-textLabelJO.y;
+function initOtherTLJA(){
+	otherTLJA=JSON.parse('${requestScope.otherTLJAStr}');
+	for(var i=0;i<otherTLJA.length;i++){
+		var otherTLJO=otherTLJA[i];
+		otherTLJO.y=sceDisCanvasMinHeight-otherTLJO.y;
 	}
 }
 
@@ -288,14 +288,14 @@ function initXYLabelLocation(){
 }
 
 function initTextLabelLocation(){
-	for(var i=0;i<textLabelJA.length;i++){
-		var textLabelJO=textLabelJA[i];
-		var name=textLabelJO.name;
+	for(var i=0;i<otherTLJA.length;i++){
+		var otherTLJO=otherTLJA[i];
+		var name=otherTLJO.name;
 		var rectWidth=20*name.length+20;
 		sceDisCanvasContext.beginPath();
 		
-		sceDisCanvasContext.translate(textLabelJO.x/widthScale-rectWidth/2+fontMarginLeft,textLabelJO.y/heightScale-atSpace);
-		sceDisCanvasContext.rotate(textLabelJO.rotate*(Math.PI/180));
+		sceDisCanvasContext.translate(otherTLJO.x/widthScale-rectWidth/2+fontMarginLeft,otherTLJO.y/heightScale-atSpace);
+		sceDisCanvasContext.rotate(otherTLJO.rotate*(Math.PI/180));
 		
 		
 		sceDisCanvasContext.font="25px bold 黑体";
@@ -304,8 +304,8 @@ function initTextLabelLocation(){
 		
 		sceDisCanvasContext.stroke();
 
-		sceDisCanvasContext.rotate(-(textLabelJO.rotate*(Math.PI/180)));
-		sceDisCanvasContext.translate(-(textLabelJO.x/widthScale-rectWidth/2+fontMarginLeft),-(textLabelJO.y/heightScale-atSpace));
+		sceDisCanvasContext.rotate(-(otherTLJO.rotate*(Math.PI/180)));
+		sceDisCanvasContext.translate(-(otherTLJO.x/widthScale-rectWidth/2+fontMarginLeft),-(otherTLJO.y/heightScale-atSpace));
 	}
 }
 
@@ -331,38 +331,38 @@ function setTextLabelLocation(){
 
 function initDialogPosition(){
 	//基本属性组
-	var ndpw=$("body").find(".panel.window").eq(ndNum);
-	var ndws=$("body").find(".window-shadow").eq(ndNum);
+	var ndpw=$("body").find(".panel.window").eq(edNum);
+	var ndws=$("body").find(".window-shadow").eq(edNum);
 	
-	var atlsdmdpw=$("body").find(".panel.window").eq(atlsdmdNum);
-	var atlsdmdws=$("body").find(".window-shadow").eq(atlsdmdNum);
+	var etlsdmdpw=$("body").find(".panel.window").eq(etlsdmdNum);
+	var etlsdmdws=$("body").find(".window-shadow").eq(etlsdmdNum);
 
 	var ccDiv=$("#center_con_div");
 	ccDiv.append(ndpw);
 	ccDiv.append(ndws);
 	ccDiv.css("width",setFitWidthInParent("body","center_con_div")+"px");
 	
-	var atlsdmdDiv=$("#add_tl_canvas_dialog_div");
-	atlsdmdDiv.append(atlsdmdpw);
-	atlsdmdDiv.append(atlsdmdws);
+	var etlsdmdDiv=$("#edit_tl_canvas_dialog_div");
+	etlsdmdDiv.append(etlsdmdpw);
+	etlsdmdDiv.append(etlsdmdws);
 }
 
 function initAddTLSDMapDialogDiv(){
-	addTLSDMDialog=$("#add_tl_sd_map_dialog_div").dialog({
+	editTLSDMDialog=$("#edit_tl_sd_map_dialog_div").dialog({
 		title:"景区地图",
-		width:setFitWidthInParent("body","add_tl_sd_map_dialog_div"),
+		width:setFitWidthInParent("body","edit_tl_sd_map_dialog_div"),
 		height:730,
 		top:10,
 		left:20,
 		buttons:[
            {text:"取消",id:"cancel_but",iconCls:"icon-cancel",handler:function(){
-        	   openAddTLDialog(0);
+        	   openEditTLDialog(0);
            }},
            {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
         	   $("#x").val(textLabel.x);
         	   $("#y").val(textLabelY);
         	   $("#ratate").val(textLabel.ratate);
-        	   openAddTLDialog(0);
+        	   openEditTLDialog(0);
            }},
            {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
         	   changeCanvasSize(null,true);
@@ -376,105 +376,105 @@ function initAddTLSDMapDialogDiv(){
         ]
 	});
 
-	$(".panel.window").eq(atlsdmdNum).css("margin-top","40px");
-	$(".panel.window .panel-title").eq(atlsdmdNum).css("color","#000");
-	$(".panel.window .panel-title").eq(atlsdmdNum).css("font-size","15px");
-	$(".panel.window .panel-title").eq(atlsdmdNum).css("padding-left","10px");
+	$(".panel.window").eq(etlsdmdNum).css("margin-top","40px");
+	$(".panel.window .panel-title").eq(etlsdmdNum).css("color","#000");
+	$(".panel.window .panel-title").eq(etlsdmdNum).css("font-size","15px");
+	$(".panel.window .panel-title").eq(etlsdmdNum).css("padding-left","10px");
 	
-	$(".panel-header, .panel-body").eq(atlsdmdNum).css("border-color","#ddd");
+	$(".panel-header, .panel-body").eq(etlsdmdNum).css("border-color","#ddd");
 	
 	//以下的是表格下面的面板
-	$(".window-shadow").eq(atlsdmdNum).css("margin-top","40px");
-	$(".window,.window .window-body").eq(atlsdmdNum).css("border-color","#ddd");
+	$(".window-shadow").eq(etlsdmdNum).css("margin-top","40px");
+	$(".window,.window .window-body").eq(etlsdmdNum).css("border-color","#ddd");
 
-	$("#add_tl_sd_map_dialog_div #cancel_but").css("left","20%");
-	$("#add_tl_sd_map_dialog_div #cancel_but").css("position","absolute");
+	$("#edit_tl_sd_map_dialog_div #cancel_but").css("left","20%");
+	$("#edit_tl_sd_map_dialog_div #cancel_but").css("position","absolute");
 
-	$("#add_tl_sd_map_dialog_div #ok_but").css("left","35%");
-	$("#add_tl_sd_map_dialog_div #ok_but").css("position","absolute");
+	$("#edit_tl_sd_map_dialog_div #ok_but").css("left","35%");
+	$("#edit_tl_sd_map_dialog_div #ok_but").css("position","absolute");
 
-	$("#add_tl_sd_map_dialog_div #reset_but").css("left","50%");
-	$("#add_tl_sd_map_dialog_div #reset_but").css("position","absolute");
+	$("#edit_tl_sd_map_dialog_div #reset_but").css("left","50%");
+	$("#edit_tl_sd_map_dialog_div #reset_but").css("position","absolute");
 
-	$("#add_tl_sd_map_dialog_div #big_but").css("left","65%");
-	$("#add_tl_sd_map_dialog_div #big_but").css("position","absolute");
+	$("#edit_tl_sd_map_dialog_div #big_but").css("left","65%");
+	$("#edit_tl_sd_map_dialog_div #big_but").css("position","absolute");
 
-	$("#add_tl_sd_map_dialog_div #small_but").css("left","80%");
-	$("#add_tl_sd_map_dialog_div #small_but").css("position","absolute");
+	$("#edit_tl_sd_map_dialog_div #small_but").css("left","80%");
+	$("#edit_tl_sd_map_dialog_div #small_but").css("position","absolute");
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
-	openAddTLSDMDialog(0);
+	openEditTLSDMDialog(0);
 }
 
 function initNewDialog(){
 	dialogTop+=20;
-	$("#new_div").dialog({
+	$("#edit_div").dialog({
 		title:"标签信息",
-		width:setFitWidthInParent("body","new_div"),
+		width:setFitWidthInParent("body","edit_div"),
 		height:730,
 		top:dialogTop,
 		left:dialogLeft,
 		buttons:[
            {text:"保存",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   checkAdd();
+        	   checkEdit();
            }}
         ]
 	});
 
-	$("#new_div table").css("width",(setFitWidthInParent("body","new_div_table"))+"px");
-	$("#new_div table").css("magin","-100px");
-	$("#new_div table td").css("padding-left","30px");
-	$("#new_div table td").css("padding-right","20px");
-	$("#new_div table td").css("font-size","15px");
-	$("#new_div table .td1").css("width","10%");
-	$("#new_div table .td2").css("width","35%");
-	$("#new_div table tr").css("border-bottom","#CAD9EA solid 1px");
-	$("#new_div table tr").each(function(i){
+	$("#edit_div table").css("width",(setFitWidthInParent("body","edit_div_table"))+"px");
+	$("#edit_div table").css("magin","-100px");
+	$("#edit_div table td").css("padding-left","30px");
+	$("#edit_div table td").css("padding-right","20px");
+	$("#edit_div table td").css("font-size","15px");
+	$("#edit_div table .td1").css("width","10%");
+	$("#edit_div table .td2").css("width","35%");
+	$("#edit_div table tr").css("border-bottom","#CAD9EA solid 1px");
+	$("#edit_div table tr").each(function(i){
 		if(i==1)
 			$(this).css("height","250px");
 		else
 			$(this).css("height","45px");
 	});
 
-	$(".panel.window").eq(ndNum).css("margin-top","20px");
-	$(".panel.window .panel-title").eq(ndNum).css("color","#000");
-	$(".panel.window .panel-title").eq(ndNum).css("font-size","15px");
-	$(".panel.window .panel-title").eq(ndNum).css("padding-left","10px");
+	$(".panel.window").eq(edNum).css("margin-top","20px");
+	$(".panel.window .panel-title").eq(edNum).css("color","#000");
+	$(".panel.window .panel-title").eq(edNum).css("font-size","15px");
+	$(".panel.window .panel-title").eq(edNum).css("padding-left","10px");
 	
 	$(".panel-header, .panel-body").css("border-color","#ddd");
 	
 	//以下的是表格下面的面板
-	$(".window-shadow").eq(ndNum).css("margin-top","20px");
-	$(".window,.window .window-body").eq(ndNum).css("border-color","#ddd");
+	$(".window-shadow").eq(edNum).css("margin-top","20px");
+	$(".window,.window .window-body").eq(edNum).css("border-color","#ddd");
 
-	$("#new_div #ok_but").css("left","45%");
-	$("#new_div #ok_but").css("position","absolute");
+	$("#edit_div #ok_but").css("left","45%");
+	$("#edit_div #ok_but").css("position","absolute");
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 }
 
-function openAddTLDialog(flag){
+function openEditTLDialog(flag){
 	if(flag==1){
-		$("#add_tl_canvas_bg_div").css("display","block");
+		$("#edit_tl_canvas_bg_div").css("display","block");
 	}
 	else{
-		$("#add_tl_canvas_bg_div").css("display","none");
+		$("#edit_tl_canvas_bg_div").css("display","none");
 	}
-	openAddTLSDMDialog(flag);
+	openEditTLSDMDialog(flag);
 }
 
-function openAddTLSDMDialog(flag){
+function openEditTLSDMDialog(flag){
 	if(flag==1){
-		addTLSDMDialog.dialog("open");
+		editTLSDMDialog.dialog("open");
 	}
 	else{
-		addTLSDMDialog.dialog("close");
+		editTLSDMDialog.dialog("close");
 	}
 }
 
-function checkAdd(){
+function checkEdit(){
 	if(checkName()){
 		if(checkSort()){
 			if(checkRotate()){
@@ -513,7 +513,7 @@ function addTextLabel(){
 function checkTextLabelInfo(){
 	if(checkName()){
 		if(checkRotate()){
-			openAddTLDialog(1);
+			openEditTLDialog(1);
 		}
 	}
 }
@@ -583,8 +583,8 @@ function checkY(){
 }
 
 function loadSceDisCanvas(flag){
-	var bigButDiv=$("#add_tl_sd_map_dialog_div #big_but");
-	var smallButDiv=$("#add_tl_sd_map_dialog_div #small_but");
+	var bigButDiv=$("#edit_tl_sd_map_dialog_div #big_but");
+	var smallButDiv=$("#edit_tl_sd_map_dialog_div #small_but");
 	if(flag){
 		bigButDiv.css("display","none");
 		smallButDiv.css("display","none");
@@ -604,13 +604,13 @@ function setFitWidthInParent(parent,self){
 	case "center_con_div":
 		space=205;
 		break;
-	case "new_div":
+	case "edit_div":
 		space=340;
 		break;
-	case "add_tl_sd_map_dialog_div":
+	case "edit_tl_sd_map_dialog_div":
 		space=170;
 		break;
-	case "new_div_table":
+	case "edit_div_table":
 	case "panel_window":
 		space=355;
 		break;
@@ -622,18 +622,18 @@ function setFitWidthInParent(parent,self){
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">	
-	<div class="add_tl_canvas_bg_div" id="add_tl_canvas_bg_div">
-		<div class="add_tl_canvas_div" id="add_tl_canvas_div">
+	<div class="edit_tl_canvas_bg_div" id="edit_tl_canvas_bg_div">
+		<div class="edit_tl_canvas_div" id="edit_tl_canvas_div">
 			<div class="tjst_div">
-				<span class="tjst_span">添加实体</span>
-				<span class="close_span" onclick="openAddTLDialog(0)">X</span>
+				<span class="tjst_span">编辑实体</span>
+				<span class="close_span" onclick="openEditTLDialog(0)">X</span>
 			</div>
-			<div class="add_tl_canvas_dialog_div" id="add_tl_canvas_dialog_div">
+			<div class="edit_tl_canvas_dialog_div" id="edit_tl_canvas_dialog_div">
 				<div class="title_div">
-					<span class="title_span">道路管理-标签查询-添加</span>
+					<span class="title_span">道路管理-标签查询-编辑</span>
 				</div>
 				<input type="hidden" id="id"/>
-				<div id="add_tl_sd_map_dialog_div">
+				<div id="edit_tl_sd_map_dialog_div">
 					<div id="sceDisCanvas_div">
 						<canvas id="sceDisCanvas">
 						</canvas>
@@ -645,9 +645,9 @@ function setFitWidthInParent(parent,self){
 	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">添加标签</div>
+	<div class="page_location_div">编辑标签</div>
 	
-	<div id="new_div">
+	<div id="edit_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
 		<table>
 		  <tr>
@@ -655,13 +655,13 @@ function setFitWidthInParent(parent,self){
 				名称
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入标签名称" onfocus="focusName()" onblur="checkName()"/>
+				<input type="text" class="name_inp" id="name" name="name" value="${requestScope.textLabel.name }" placeholder="请输入标签名称" onfocus="focusName()" onblur="checkName()"/>
 			</td>
 			<td class="td1" align="right">
 				排序
 			</td>
 			<td class="td2">
-				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
+				<input type="number" class="sort_inp" id="sort" name="sort" value="${requestScope.textLabel.sort }" placeholder="请输入排序"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -676,7 +676,7 @@ function setFitWidthInParent(parent,self){
 				旋转角度
 			</td>
 			<td class="td2">
-				<input type="number" class="rotate_inp" id="rotate" name="rotate" placeholder="请输入旋转角度"/>
+				<input type="number" class="rotate_inp" id="rotate" name="rotate" value="${requestScope.textLabel.rotate }" placeholder="请输入旋转角度"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -684,13 +684,13 @@ function setFitWidthInParent(parent,self){
 				x轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="x_inp" id="x" name="x" placeholder="请输入x轴坐标"/>
+				<input type="number" class="x_inp" id="x" name="x" value="${requestScope.textLabel.x }" placeholder="请输入x轴坐标"/>
 			</td>
 			<td class="td1" align="right">
 				y轴坐标
 			</td>
 			<td class="td2">
-				<input type="number" class="y_inp" id="y" name="y" placeholder="请输入y轴坐标"/>
+				<input type="number" class="y_inp" id="y" name="y" value="${requestScope.textLabel.y }" placeholder="请输入y轴坐标"/>
 			</td>
 		  </tr>
 		</table>
