@@ -32,4 +32,10 @@ public class TextLabelServiceImpl implements TextLabelService {
 		// TODO Auto-generated method stub
 		return textLabelDao.selectList(name, (page-1)*rows, rows, sort, order);
 	}
+
+	@Override
+	public int add(TextLabel textLabel) {
+		// TODO Auto-generated method stub
+		return textLabelDao.add(textLabel);
+	}
 }

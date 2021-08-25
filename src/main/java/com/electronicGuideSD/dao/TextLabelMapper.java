@@ -14,4 +14,6 @@ public interface TextLabelMapper {
 
 	List<TextLabel> selectList(@Param("name")String name, @Param("start")int start, @Param("rows")int rows, String sort, String order);
 
+	int add(TextLabel textLabel);
+
 }

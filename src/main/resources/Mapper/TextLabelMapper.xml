@@ -19,4 +19,44 @@
  	<select id="selectWAList" resultType="com.electronicGuideSD.entity.TextLabel">
  		select * from text_label
  	</select>
+ 	<insert id="add" parameterType="com.electronicGuideSD.entity.TextLabel">
+ 		insert into text_label
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				name,
+ 			</if>
+ 			<if test="x!=null">
+ 				x,
+ 			</if>
+ 			<if test="y!=null">
+ 				y,
+ 			</if>
+ 			<if test="rotate!=null">
+ 				rotate,
+ 			</if>
+ 				createTime,
+ 			<if test="sort!=null">
+ 				sort,
+ 			</if>
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				#{name},
+ 			</if>
+ 			<if test="x!=null">
+ 				#{x},
+ 			</if>
+ 			<if test="y!=null">
+ 				#{y},
+ 			</if>
+ 			<if test="rotate!=null">
+ 				#{rotate},
+ 			</if>
+ 				now(),
+ 			<if test="sort!=null">
+ 				#{sort},
+ 			</if>
+ 		</trim>
+ 	</insert>
  </mapper>

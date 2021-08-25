@@ -47,7 +47,7 @@ function initAddLB(){
 	$("#add_but").linkbutton({
 		iconCls:"icon-add",
 		onClick:function(){
-			location.href=roadPath+"roadStage/add";
+			location.href=roadPath+"textLabel/add";
 		}
 	});
 }
@@ -101,8 +101,8 @@ function setFitWidthInParent(o){
 	<%@include file="../../side.jsp"%>
 	<div class="tab1_div" id="tab1_div">
 		<div class="toolbar" id="toolbar">
-			<span class="name_span">路段名：</span>
-			<input type="text" class="name_inp" id="name" placeholder="请输入路段名"/>
+			<span class="name_span">标签名：</span>
+			<input type="text" class="name_inp" id="name" placeholder="请输入标签名"/>
 			<a class="search_but" id="search_but">查询</a>
 			<a id="add_but">添加</a>
 		</div>

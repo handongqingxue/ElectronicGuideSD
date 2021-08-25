@@ -12,4 +12,6 @@ public interface TextLabelService {
 
 	List<TextLabel> selectList(String name, int page, int rows, String sort, String order);
 
+	int add(TextLabel textLabel);
+
 }

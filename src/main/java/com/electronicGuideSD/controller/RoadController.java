@@ -143,6 +143,12 @@ public class RoadController {
 		return MODULE_NAME+"/roadStage/detail";
 	}
 	
+	@RequestMapping(value="/textLabel/add")
+	public String goTextLabelAdd(HttpServletRequest request) {
+
+		return MODULE_NAME+"/textLabel/add";
+	}
+	
 	@RequestMapping(value="/textLabel/list")
 	public String goTextLabelList(HttpServletRequest request) {
 
@@ -329,6 +335,32 @@ public class RoadController {
 		jsonMap.put("rows", textLabelList);
 			
 		return jsonMap;
+	}
+
+	@RequestMapping(value="/addTextLabel",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String addTextLabel(TextLabel textLabel,
+			HttpServletRequest request) {
+
+		String json=null;;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=textLabelService.add(textLabel);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("添加标签失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("添加标签成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
 	}
 
 }
