@@ -38,4 +38,10 @@ public class TextLabelServiceImpl implements TextLabelService {
 		// TODO Auto-generated method stub
 		return textLabelDao.add(textLabel);
 	}
+
+	@Override
+	public List<TextLabel> selectOtherList(String id) {
+		// TODO Auto-generated method stub
+		return textLabelDao.selectOtherList(id);
+	}
 }

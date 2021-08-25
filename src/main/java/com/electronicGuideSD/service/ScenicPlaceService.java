@@ -18,4 +18,6 @@ public interface ScenicPlaceService {
 
 	List<ScenicPlace> selectList();
 
+	List<ScenicPlace> selectOtherList(String id);
+
 }

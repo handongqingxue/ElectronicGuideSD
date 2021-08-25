@@ -71,7 +71,7 @@ public class RoadController {
 	@RequestMapping(value="/roadStage/add")
 	public String goRoadStageAdd(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
 
 		return MODULE_NAME+"/roadStage/add";
 	}
@@ -83,7 +83,7 @@ public class RoadController {
 		RoadStage roadStage = roadStageService.selectById(id);
 		request.setAttribute("roadStage", roadStage);
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.OTHER_RS,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
 
 		return MODULE_NAME+"/roadStage/edit";
 	}
@@ -115,7 +115,7 @@ public class RoadController {
 		
 		request.setAttribute("roadStage", roadStage);
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.OTHER_RS,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
 
 		return MODULE_NAME+"/roadStage/detail";
 	}
@@ -123,7 +123,7 @@ public class RoadController {
 	@RequestMapping(value="/textLabel/add")
 	public String goTextLabelAdd(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,scenicPlaceService,textLabelService),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
 
 		return MODULE_NAME+"/textLabel/add";
 	}

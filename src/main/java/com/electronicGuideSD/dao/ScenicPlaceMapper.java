@@ -20,4 +20,6 @@ public interface ScenicPlaceMapper {
 
 	List<ScenicPlace> selectWAList();
 
+	List<ScenicPlace> selectOtherList(@Param("id")String id);
+
 }

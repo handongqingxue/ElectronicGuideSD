@@ -26,16 +26,24 @@ public class ScenicPlaceController {
 
 	@Autowired
 	private ScenicPlaceService scenicPlaceService;
+	@Autowired
+	private RoadStageService roadStageService;
+	@Autowired
+	private TextLabelService textLabelService;
 	public static final String MODULE_NAME="/background/scenicPlace";
 	
 	@RequestMapping(value="/scenicPlace/add")
 	public String goScenicPlaceAdd(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
 
 		return MODULE_NAME+"/scenicPlace/add";
 	}
 
 	@RequestMapping(value="/scenicPlace/edit")
 	public String goScenicPlaceEdit(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.OTHER_SP,textLabelService,EntityUtil.TEXT_LABEL),request);
 		
 		ScenicPlace sp = scenicPlaceService.selectById(request.getParameter("id"));
 		request.setAttribute("scenicPlace", sp);
@@ -51,6 +59,8 @@ public class ScenicPlaceController {
 
 	@RequestMapping(value="/scenicPlace/detail")
 	public String goScenicPlaceDetail(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.OTHER_SP,textLabelService,EntityUtil.TEXT_LABEL),request);
 		
 		ScenicPlace sp = scenicPlaceService.selectById(request.getParameter("id"));
 		request.setAttribute("scenicPlace", sp);

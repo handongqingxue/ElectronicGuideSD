@@ -50,4 +50,10 @@ public class ScenicPlaceServiceImpl implements ScenicPlaceService {
 		// TODO Auto-generated method stub
 		return scenicPlaceDao.selectWAList();
 	}
+
+	@Override
+	public List<ScenicPlace> selectOtherList(String id) {
+		// TODO Auto-generated method stub
+		return scenicPlaceDao.selectOtherList(id);
+	}
 }

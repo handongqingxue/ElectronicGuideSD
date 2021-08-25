@@ -13,31 +13,37 @@ import com.electronicGuideSD.service.*;
 import net.sf.json.JSONArray;
 
 public class EntityUtil {
-	
+
+	public static final String ROAD_STAGE="roadStage";
 	public static final String OTHER_RS="otherRS";
 	public static final String SCENIC_PLACE="scenicPlace";
+	public static final String OTHER_SP="otherSP";
 	public static final String TEXT_LABEL="textLabel";
+	public static final String OTHER_TL="otherTL";
 	
 	public static List<Map<String,Object>> initServiceParamList(RoadStageService roadStageService,
+			String roadStageType,
 			ScenicPlaceService scenicPlaceService,
-			TextLabelService textLabelService) {
+			String scenicPlaceType,
+			TextLabelService textLabelService,
+			String textLabelType) {
 		List<Map<String,Object>> paramList=new ArrayList<>();
 		Map<String,Object> paramMap=null;
 		if(roadStageService!=null) {
 			paramMap=new HashMap<>();
-			paramMap.put("type", OTHER_RS);
+			paramMap.put("type", roadStageType);
 			paramMap.put("service", roadStageService);
 			paramList.add(paramMap);
 		}
 		if(scenicPlaceService!=null) {
 			paramMap=new HashMap<>();
-			paramMap.put("type", SCENIC_PLACE);
+			paramMap.put("type", scenicPlaceType);
 			paramMap.put("service", scenicPlaceService);
 			paramList.add(paramMap);
 		}
 		if(textLabelService!=null) {
 			paramMap=new HashMap<>();
-			paramMap.put("type", TEXT_LABEL);
+			paramMap.put("type", textLabelType);
 			paramMap.put("service", textLabelService);
 			paramList.add(paramMap);
 		}
@@ -47,7 +53,12 @@ public class EntityUtil {
     public static void putJAStrInRequest(List<Map<String,Object>> paramList, HttpServletRequest request) {
 		for (Map<String, Object> paramMap : paramList) {
     		String type = paramMap.get("type").toString();
-    		if(OTHER_RS.equals(type)) {
+    		if(ROAD_STAGE.equals(type)) {
+    			RoadStageService roadStageService=(RoadStageService)paramMap.get("service");
+    			List<RoadStage> roadStageList = roadStageService.selectOtherList(null);
+    			request.setAttribute("roadStageJAStr", JSONArray.fromObject(roadStageList));
+    		}
+    		else if(OTHER_RS.equals(type)) {
     			RoadStageService roadStageService=(RoadStageService)paramMap.get("service");
     			String id = request.getParameter("id");
     			List<RoadStage> otherRSList = roadStageService.selectOtherList(id);
@@ -55,13 +66,25 @@ public class EntityUtil {
     		}
     		else if(SCENIC_PLACE.equals(type)) {
     			ScenicPlaceService scenicPlaceService=(ScenicPlaceService)paramMap.get("service");
-    			List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectList();
+    			List<ScenicPlace> scenicPlaceList = scenicPlaceService.selectOtherList(null);
     			request.setAttribute("scenicPlaceJAStr", JSONArray.fromObject(scenicPlaceList));
+    		}
+    		else if(OTHER_SP.equals(type)) {
+    			ScenicPlaceService scenicPlaceService=(ScenicPlaceService)paramMap.get("service");
+    			String id = request.getParameter("id");
+    			List<ScenicPlace> otherSPList = scenicPlaceService.selectOtherList(id);
+    			request.setAttribute("otherSPJAStr", JSONArray.fromObject(otherSPList));
     		}
     		else if(TEXT_LABEL.equals(type)) {
     			TextLabelService textLabelService=(TextLabelService)paramMap.get("service");
-    			List<TextLabel> textLabelList = textLabelService.selectList();
+    			List<TextLabel> textLabelList = textLabelService.selectOtherList(null);
     			request.setAttribute("textLabelJAStr", JSONArray.fromObject(textLabelList));
+    		}
+    		else if(OTHER_TL.equals(type)) {
+    			TextLabelService textLabelService=(TextLabelService)paramMap.get("service");
+    			String id = request.getParameter("id");
+    			List<TextLabel> otherTLList = textLabelService.selectOtherList(id);
+    			request.setAttribute("otherTLJAStr", JSONArray.fromObject(otherTLList));
     		}
 		}
 	}

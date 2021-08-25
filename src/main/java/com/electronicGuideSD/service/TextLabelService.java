@@ -14,4 +14,6 @@ public interface TextLabelService {
 
 	int add(TextLabel textLabel);
 
+	List<TextLabel> selectOtherList(String id);
+
 }

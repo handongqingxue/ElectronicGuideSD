@@ -16,6 +16,13 @@
 		</if>
  		 order by sort limit #{start},#{rows}
  	</select>
+ 	<select id="selectOtherList" resultType="com.electronicGuideSD.entity.ScenicPlace">
+ 		select * from scenic_place where 1=1
+		<if test="id!=null&amp;id!=''">
+			and id!=#{id}
+		</if>
+		 order by sort
+ 	</select>
  	<select id="selectWAList" resultType="com.electronicGuideSD.entity.ScenicPlace">
  		select * from scenic_place
  	</select>
