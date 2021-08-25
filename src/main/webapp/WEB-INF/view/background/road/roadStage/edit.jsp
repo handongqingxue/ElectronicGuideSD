@@ -477,15 +477,6 @@ function initScenicPlaceLocation(scenicPlaceJO){
 }
 
 function initRoadStageLocation(){
-	/*
-	var entityImg = new Image();
-	entityImg.src=scenicPlace.picUrl;
-	entityImg.onload=function(){
-		//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
-		sceDisCanvasContext.drawImage(entityImg, scenicPlace.x/widthScale-scenicPlace.picWidth/2, scenicPlace.y/heightScale-scenicPlace.picHeight/2, scenicPlace.picWidth, scenicPlace.picHeight);
-	}
-	*/
-
 	sceDisCanvasContext.strokeStyle = 'blue';//点填充
 	sceDisCanvasContext.fillStyle='blue';
 	sceDisCanvasContext.lineWidth=lineWidth;

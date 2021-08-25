@@ -113,11 +113,11 @@ var lineWidth=10;
 var fontMarginLeft=45;
 var atSpace=10;
 var scenicPlaceJA;
-var otherRSJA;
+var roadStageJA;
 $(function(){
 	jiSuanScale();
 	initScenicPlaceJA();
-	initOtherRSJA();
+	initRoadStageJA();
 	initTextLabelJA();
 	initRoadCBB();
 	initBackThroughCBB();
@@ -308,12 +308,12 @@ function initScenicPlaceJA(){
 	}
 }
 
-function initOtherRSJA(){
-	otherRSJA=JSON.parse('${requestScope.otherRSJAStr}');
-	for(var i=0;i<otherRSJA.length;i++){
-		var otherRSJO=otherRSJA[i];
-		otherRSJO.backY=sceDisCanvasMinHeight-otherRSJO.backY;
-		otherRSJO.frontY=sceDisCanvasMinHeight-otherRSJO.frontY;
+function initRoadStageJA(){
+	roadStageJA=JSON.parse('${requestScope.roadStageJAStr}');
+	for(var i=0;i<roadStageJA.length;i++){
+		var roadStageJO=roadStageJA[i];
+		roadStageJO.backY=sceDisCanvasMinHeight-roadStageJO.backY;
+		roadStageJO.frontY=sceDisCanvasMinHeight-roadStageJO.frontY;
 	}
 }
 
@@ -464,13 +464,13 @@ function initRoadStageLocation(){
 	sceDisCanvasContext.strokeStyle = 'blue';//点填充
 	sceDisCanvasContext.fillStyle='blue';
 	sceDisCanvasContext.lineWidth=lineWidth;
-	for(var i=0;i<otherRSJA.length;i++){
-		var otherRSJO=otherRSJA[i];
+	for(var i=0;i<roadStageJA.length;i++){
+		var roadStageJO=roadStageJA[i];
 		sceDisCanvasContext.beginPath();
-		sceDisCanvasContext.arc(otherRSJO.backX/widthScale,otherRSJO.backY/heightScale,arcR/15,0,2*Math.PI);
-		sceDisCanvasContext.moveTo(otherRSJO.backX/widthScale, otherRSJO.backY/heightScale);//起始位置
-		sceDisCanvasContext.lineTo(otherRSJO.frontX/widthScale, otherRSJO.frontY/heightScale);//停止位置
-		sceDisCanvasContext.arc(otherRSJO.frontX/widthScale,otherRSJO.frontY/heightScale,arcR/15,0,2*Math.PI);
+		sceDisCanvasContext.arc(roadStageJO.backX/widthScale,roadStageJO.backY/heightScale,arcR/15,0,2*Math.PI);
+		sceDisCanvasContext.moveTo(roadStageJO.backX/widthScale, roadStageJO.backY/heightScale);//起始位置
+		sceDisCanvasContext.lineTo(roadStageJO.frontX/widthScale, roadStageJO.frontY/heightScale);//停止位置
+		sceDisCanvasContext.arc(roadStageJO.frontX/widthScale,roadStageJO.frontY/heightScale,arcR/15,0,2*Math.PI);
 		sceDisCanvasContext.stroke();
 	}
 
@@ -502,17 +502,17 @@ function initRoadStageLocation(){
 }
 
 function initXYLabelLocation(){
-	for(var i=0;i<otherRSJA.length;i++){
-		var otherRSJO=otherRSJA[i];
-		var backXY="("+otherRSJO.backX+","+(sceDisCanvasMinHeight-otherRSJO.backY)+")";
+	for(var i=0;i<roadStageJA.length;i++){
+		var roadStageJO=roadStageJA[i];
+		var backXY="("+roadStageJO.backX+","+(sceDisCanvasMinHeight-roadStageJO.backY)+")";
 		var backRectWidth=20*backXY.length+20;
-		var frontXY="("+otherRSJO.frontX+","+(sceDisCanvasMinHeight-otherRSJO.frontY)+")";
+		var frontXY="("+roadStageJO.frontX+","+(sceDisCanvasMinHeight-roadStageJO.frontY)+")";
 		var frontRectWidth=20*frontXY.length+20;
 		sceDisCanvasContext.beginPath();
 		sceDisCanvasContext.font="25px bold 黑体";
 		sceDisCanvasContext.fillStyle = "#f00";
-		sceDisCanvasContext.fillText(backXY,otherRSJO.backX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.backY/heightScale-atSpace);
-		sceDisCanvasContext.fillText(frontXY,otherRSJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.frontY/heightScale-atSpace);
+		sceDisCanvasContext.fillText(backXY,roadStageJO.backX/widthScale-backRectWidth/2+fontMarginLeft,roadStageJO.backY/heightScale-atSpace);
+		sceDisCanvasContext.fillText(frontXY,roadStageJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,roadStageJO.frontY/heightScale-atSpace);
 		sceDisCanvasContext.stroke();
 	}
 }
@@ -532,8 +532,6 @@ function initTextLabelLocation(){
 		sceDisCanvasContext.fillStyle = "#000";
 		sceDisCanvasContext.fillText(name,0,0);
 		
-		//sceDisCanvasContext.fillText(backXY,otherRSJO.backX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.backY/heightScale-atSpace);
-		//sceDisCanvasContext.fillText(frontXY,otherRSJO.frontX/widthScale-backRectWidth/2+fontMarginLeft,otherRSJO.frontY/heightScale-atSpace);
 		sceDisCanvasContext.stroke();
 
 		sceDisCanvasContext.rotate(-(textLabelJO.rotate*(Math.PI/180)));
