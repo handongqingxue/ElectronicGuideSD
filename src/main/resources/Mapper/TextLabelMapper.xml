@@ -69,4 +69,26 @@
  			</if>
  		</trim>
  	</insert>
+ 	<update id="edit">
+		update text_label set
+		<trim suffixOverrides=",">
+			<if test="name!=null">
+				name=#{name},
+			</if>
+			<if test="x!=null">
+				x=#{x},
+			</if>
+			<if test="y!=null">
+				y=#{y},
+			</if>
+			<if test="rotate!=null">
+				rotate=#{rotate},
+			</if>
+				modifyTime=now(),
+			<if test="sort!=null">
+				sort=#{sort},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
  </mapper>

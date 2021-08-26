@@ -40,6 +40,12 @@ public class TextLabelServiceImpl implements TextLabelService {
 	}
 
 	@Override
+	public int edit(TextLabel textLabel) {
+		// TODO Auto-generated method stub
+		return textLabelDao.edit(textLabel);
+	}
+
+	@Override
 	public List<TextLabel> selectOtherList(String id) {
 		// TODO Auto-generated method stub
 		return textLabelDao.selectOtherList(id);

@@ -16,6 +16,8 @@ public interface TextLabelMapper {
 
 	int add(TextLabel textLabel);
 
+	int edit(TextLabel textLabel);
+
 	List<TextLabel> selectOtherList(@Param("id")String id);
 
 	TextLabel selectById(@Param("id")String id);

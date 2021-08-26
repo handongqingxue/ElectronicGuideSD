@@ -113,8 +113,8 @@ $(function(){
 	initScenicPlaceJA();
 	initRoadStageJA();
 	initOtherTLJA();
-	initNewDialog();
-	initAddTLSDMapDialogDiv();
+	initEditDialog();
+	initEditTLSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 	
@@ -216,10 +216,12 @@ function initSceDisCanvas(reSizeFlag){
 		}
 		initRoadStageLocation();
 		initXYLabelLocation();
-		initTextLabelLocation();
-		
+		for(var i=0;i<otherTLJA.length;i++){
+			var otherTLJO=otherTLJA[i];
+			initTextLabelLocation(otherTLJO);
+		}
 		if(textLabel!=undefined)
-			setTextLabelLocation();
+			initTextLabelLocation(textLabel);
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
@@ -238,9 +240,7 @@ function initSceDisCanvas(reSizeFlag){
 	           
 	           textLabelY=sceDisCanvasMinHeight-y;//将y轴坐标从最初的左上角计算转换为从左下角计算
 	           
-		       var name=$("#name").val();
-		       var rotate=$("#rotate").val();
-		       textLabel={name:name,x:x,y:y,rotate:rotate};
+	           resetTextLabel(x,y);
 	           initSceDisCanvas(0);
 	    }
 	}
@@ -287,37 +287,14 @@ function initXYLabelLocation(){
 	}
 }
 
-function initTextLabelLocation(){
-	for(var i=0;i<otherTLJA.length;i++){
-		var otherTLJO=otherTLJA[i];
-		var name=otherTLJO.name;
-		var rectWidth=20*name.length+20;
-		sceDisCanvasContext.beginPath();
-		
-		sceDisCanvasContext.translate(otherTLJO.x/widthScale-rectWidth/2+fontMarginLeft,otherTLJO.y/heightScale-atSpace);
-		sceDisCanvasContext.rotate(otherTLJO.rotate*(Math.PI/180));
-		
-		
-		sceDisCanvasContext.font="25px bold 黑体";
-		sceDisCanvasContext.fillStyle = "#000";
-		sceDisCanvasContext.fillText(name,0,0);
-		
-		sceDisCanvasContext.stroke();
-
-		sceDisCanvasContext.rotate(-(otherTLJO.rotate*(Math.PI/180)));
-		sceDisCanvasContext.translate(-(otherTLJO.x/widthScale-rectWidth/2+fontMarginLeft),-(otherTLJO.y/heightScale-atSpace));
-	}
-}
-
-function setTextLabelLocation(){
-	var name=textLabel.name;
-	var rectWidth=60*name.length;
-	var x=textLabel.x;
-	var y=textLabel.y;
-	var rotate=textLabel.rotate;
+function initTextLabelLocation(otherTLJO){
+	var name=otherTLJO.name;
+	var rectWidth=20*name.length+20;
+	sceDisCanvasContext.beginPath();
 	
-	sceDisCanvasContext.translate(x/widthScale-rectWidth/2+fontMarginLeft,y/heightScale-atSpace);
-	sceDisCanvasContext.rotate(rotate*(Math.PI/180));
+	sceDisCanvasContext.translate(otherTLJO.x/widthScale-rectWidth/2+fontMarginLeft,otherTLJO.y/heightScale-atSpace);
+	sceDisCanvasContext.rotate(otherTLJO.rotate*(Math.PI/180));
+	
 	
 	sceDisCanvasContext.font="25px bold 黑体";
 	sceDisCanvasContext.fillStyle = "#000";
@@ -325,8 +302,14 @@ function setTextLabelLocation(){
 	
 	sceDisCanvasContext.stroke();
 
-	sceDisCanvasContext.rotate(-(rotate*(Math.PI/180)));
-	sceDisCanvasContext.translate(-(x/widthScale-rectWidth/2+fontMarginLeft),-(y/heightScale-atSpace));
+	sceDisCanvasContext.rotate(-(otherTLJO.rotate*(Math.PI/180)));
+	sceDisCanvasContext.translate(-(otherTLJO.x/widthScale-rectWidth/2+fontMarginLeft),-(otherTLJO.y/heightScale-atSpace));
+}
+
+function resetTextLabel(x,y){
+    var name=$("#name").val();
+    var rotate=$("#rotate").val();
+    textLabel={x:x,y:y,name:name,rotate:rotate};
 }
 
 function initDialogPosition(){
@@ -347,7 +330,7 @@ function initDialogPosition(){
 	etlsdmdDiv.append(etlsdmdws);
 }
 
-function initAddTLSDMapDialogDiv(){
+function initEditTLSDMapDialogDiv(){
 	editTLSDMDialog=$("#edit_tl_sd_map_dialog_div").dialog({
 		title:"景区地图",
 		width:setFitWidthInParent("body","edit_tl_sd_map_dialog_div"),
@@ -405,9 +388,10 @@ function initAddTLSDMapDialogDiv(){
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 	openEditTLSDMDialog(0);
+	resetTextLabel('${requestScope.textLabel.x }',sceDisCanvasMinHeight-parseInt('${requestScope.textLabel.y }'));
 }
 
-function initNewDialog(){
+function initEditDialog(){
 	dialogTop+=20;
 	$("#edit_div").dialog({
 		title:"标签信息",
@@ -480,7 +464,7 @@ function checkEdit(){
 			if(checkRotate()){
 				if(checkX()){
 					if(checkY()){
-						addTextLabel();
+						editTextLabel();
 					}
 				}
 			}
@@ -488,11 +472,11 @@ function checkEdit(){
 	}
 }
 
-function addTextLabel(){
+function editTextLabel(){
 	var formData = new FormData($("#form1")[0]);
 	$.ajax({
 		type:"post",
-		url:roadPath+"addTextLabel",
+		url:roadPath+"editTextLabel",
 		dataType: "json",
 		data:formData,
 		cache: false,
@@ -649,6 +633,7 @@ function setFitWidthInParent(parent,self){
 	
 	<div id="edit_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
+		<input type="hidden" name="id" id="id" value="${requestScope.textLabel.id }" />
 		<table>
 		  <tr>
 			<td class="td1" align="right">

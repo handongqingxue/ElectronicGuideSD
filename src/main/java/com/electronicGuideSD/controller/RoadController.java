@@ -365,5 +365,31 @@ public class RoadController {
 		}
 		return json;
 	}
+	
+	@RequestMapping(value="/editTextLabel",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String editTextLabel(TextLabel textLabel,
+			HttpServletRequest request) {
+
+		String json=null;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=textLabelService.edit(textLabel);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("±à¼­±êÇ©Ê§°Ü£¡");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("±à¼­±êÇ©³É¹¦£¡");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
 
 }
