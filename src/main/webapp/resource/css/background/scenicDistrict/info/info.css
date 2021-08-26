@@ -1,3 +1,45 @@
+.info_sd_canvas_bg_div{
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.45);
+	position: fixed;
+	z-index: 9016;
+	display:none;
+}
+.info_sd_canvas_div{
+	width: 1800px;
+	height: 850px;
+	margin: 50px auto 0;
+	background-color: #fff;
+	border-radius:5px;
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+.info_sd_canvas_div .tjst_div{
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	border-bottom: #eee solid 1px;
+}
+.info_sd_canvas_div .tjst_span{
+	margin-left: 30px;
+}
+.info_sd_canvas_div .close_span{
+	float: right;margin-right: 30px;cursor: pointer;
+}
+.info_sd_canvas_dialog_div{
+	width: 1775px;
+	height: 800px;
+	position: absolute;
+}
+.info_sd_canvas_div .title_div{
+	width: 100%;height: 50px;line-height: 50px;
+}
+.info_sd_canvas_div .title_span{
+	margin-left: 30px;
+}
+
 .jqxx_div{
 	height:570px;
 	margin:20px 0 40px 238px;
