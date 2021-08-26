@@ -1,0 +1,70 @@
+.jqxx_div{
+	height:570px;
+	margin:20px 0 40px 238px;
+	padding-top:40px;
+	padding-left:40px;
+	background-color:#FAFDFE;
+}
+.jqxx_div .title_div{
+	font-size: 20px;color: #373737;font-weight:700;
+}
+.jqxx_div .attr_div{
+	height: 60px;line-height: 60px;
+}
+.jqxx_div .name_div{
+	width: 400px;
+	margin-top: 20px;
+}
+.jqxx_div .address_div,.jqxx_div .mapWidth_div,.jqxx_div .mapHeight_div,
+.jqxx_div .picWidth_div,.jqxx_div .picHeight_div,
+.jqxx_div .createTime_div,.jqxx_div .modifyTime_div{
+	width: 400px;
+}
+.jqxx_div .longitude_div{
+	width: 400px;
+	margin-top: -481px;
+	margin-left: 400px;
+}
+.jqxx_div .latitude_div,.jqxx_div .serverName_div{
+	width: 400px;
+	margin-left: 400px;
+}
+.jqxx_div .introduce_div{
+	width: 400px;
+	height:262px;
+	line-height:25px;
+	margin-top: 20px;
+	margin-left: 400px;
+}
+.jqxx_div .qrcodeUrl_div{
+	width: 400px;
+	height:180px;
+	line-height:180px;
+	margin-top: -460px;
+	margin-left: 850px;
+}
+.jqxx_div .mapUrl_div{
+	width: 650px;
+	height:262px;
+	line-height:262px;
+	margin-top: 20px;
+	margin-left: 850px;
+}
+.jqxx_div .attr_div .key_span{
+	font-size: 15px;color: #373737;font-weight: 700;
+}
+.jqxx_div .introduce_div .key_span,.jqxx_div .qrcodeUrl_div .key_span,.jqxx_div .mapUrl_div .key_span{
+	font-size: 15px;color: #373737;font-weight: 700;
+}
+.jqxx_div .attr_div .value_span{
+	font-size: 15px;
+}
+.jqxx_div .qrcodeUrl_div img{
+	width: 150px;height:150px;
+}
+.jqxx_div .mapUrl_div img{
+	height:260px;
+}
+.jqxx_div .ckdt_span{
+	font-size: 15px;color: #357bb3;margin-left: 15px;cursor: pointer;
+}

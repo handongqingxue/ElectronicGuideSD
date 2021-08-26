@@ -5,7 +5,8 @@
  <mapper namespace="com.electronicGuideSD.dao.ScenicDistrictMapper">
 	<select id="getCount" resultType="java.lang.Integer">
 		select count(*) from scenic_district
-	</select><insert id="add" parameterType="com.electronicGuideSD.entity.ScenicDistrict">
+	</select>
+	<insert id="add" parameterType="com.electronicGuideSD.entity.ScenicDistrict">
  		insert into scenic_district
  		<trim prefix="(" suffix=")" suffixOverrides=",">
  			<if test="name!=null">

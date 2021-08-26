@@ -106,16 +106,6 @@
 							&nbsp;&nbsp;&nbsp;用户信息
 						</a>
 					</li>
-					<shiro:hasRole  name="admin">
-	  				<!--  有权限   -->
-					<div class="line_div"></div>
-					<li class="layui-nav-item">
-						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
-						<a href="<%=basePath%>background/user/all/list">
-							&nbsp;&nbsp;&nbsp;综合查询
-						</a>
-					</li>
-					</shiro:hasRole>
 				</div>
 				<div class="first-level-div">
 					<li class="layui-nav-item first-level">
@@ -126,8 +116,8 @@
 					<div class="line_div"></div>
 					<li class="layui-nav-item">
 						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
-						<a href="<%=basePath%>background/scenicDistrict/scenicDistrict/list">
-							&nbsp;&nbsp;&nbsp;景区查询
+						<a href="<%=basePath%>background/scenicDistrict/info/info">
+							&nbsp;&nbsp;&nbsp;景区信息
 						</a>
 					</li>
 				</div>
