@@ -490,7 +490,7 @@ function setFitWidthInParent(parent,self){
 	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">编辑标签</div>
+	<div class="page_location_div">标签详情</div>
 	
 	<div id="detail_div">
 		<input type="hidden" name="id" id="id" value="${requestScope.textLabel.id }" />
