@@ -159,7 +159,28 @@
 					<li class="layui-nav-item">
 						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
 						<a href="<%=basePath%>background/road/textLabel/list">
-							&nbsp;&nbsp;&nbsp;标签查询
+							&nbsp;&nbsp;&nbsp;路名标签
+						</a>
+					</li>
+				</div>
+				<div class="first-level-div">
+					<li class="layui-nav-item first-level">
+						<a>
+							车辆管理
+						</a>
+					</li>
+					<div class="line_div"></div>
+					<li class="layui-nav-item">
+						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
+						<a href="<%=basePath%>background/bus/busNo/list">
+							&nbsp;&nbsp;&nbsp;车辆查询
+						</a>
+					</li>
+					<div class="line_div"></div>
+					<li class="layui-nav-item">
+						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
+						<a href="<%=basePath%>background/bus/roadStage/list">
+							&nbsp;&nbsp;&nbsp;站点查询
 						</a>
 					</li>
 				</div>

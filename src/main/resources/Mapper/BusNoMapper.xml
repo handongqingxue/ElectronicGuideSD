@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.electronicGuideSD.dao.BusNoMapper">
+ 	<select id="selectForInt" resultType="java.lang.Integer">
+ 		select count(*) from bus_no where 1=1
+		<if test="name!=null&amp;name!=''">
+			and name like'%${name}%'
+		</if>
+ 	</select>
+ 	<select id="selectList" resultType="com.electronicGuideSD.entity.BusNo">
+ 		select * from bus_no where 1=1
+		<if test="name!=null&amp;name!=''">
+			and name like'%${name}%'
+		</if>
+ 		 order by sort limit #{start},#{rows}
+ 	</select>
+ 	<insert id="add" parameterType="com.electronicGuideSD.entity.BusNo">
+ 		insert into bus_no
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				name,
+ 			</if>
+ 			<if test="startTime!=null">
+ 				startTime,
+ 			</if>
+ 			<if test="endTime!=null">
+ 				endTime,
+ 			</if>
+ 				createTime,
+ 			<if test="sort!=null">
+ 				sort,
+ 			</if>
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="name!=null">
+ 				#{name},
+ 			</if>
+ 			<if test="startTime!=null">
+ 				#{startTime},
+ 			</if>
+ 			<if test="endTime!=null">
+ 				#{endTime},
+ 			</if>
+ 				now(),
+ 			<if test="sort!=null">
+ 				#{sort},
+ 			</if>
+ 		</trim>
+ 	</insert>
+ </mapper>
