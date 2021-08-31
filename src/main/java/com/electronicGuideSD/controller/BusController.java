@@ -47,6 +47,16 @@ public class BusController {
 		return MODULE_NAME+"/busNo/list";
 	}
 	
+	@RequestMapping(value="/busNo/detail")
+	public String goBusNoDetail(HttpServletRequest request) {
+		
+		BusNo busNo = busNoService.selectById(request.getParameter("id"));
+		
+		request.setAttribute("busNo", busNo);
+		
+		return MODULE_NAME+"/busNo/detail";
+	}
+	
 	@RequestMapping(value="/selectBusNoList")
 	@ResponseBody
 	public Map<String, Object> selectBusNoList(String name,int page,int rows,String sort,String order) {

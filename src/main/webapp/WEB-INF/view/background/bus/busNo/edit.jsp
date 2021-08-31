@@ -160,7 +160,7 @@ function initDialogPosition(){
 function initEditDialog(){
 	dialogTop+=20;
 	$("#edit_div").dialog({
-		title:"路名信息",
+		title:"车辆信息",
 		width:setFitWidthInParent("body","edit_div"),
 		height:730,
 		top:dialogTop,
@@ -320,7 +320,7 @@ function setFitWidthInParent(parent,self){
 <div class="layui-layout layui-layout-admin">	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">编辑路名</div>
+	<div class="page_location_div">编辑车辆</div>
 	
 	<div id="edit_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
@@ -328,10 +328,10 @@ function setFitWidthInParent(parent,self){
 		<table>
 		  <tr>
 			<td class="td1" align="right">
-				路名
+				车辆名
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" value="${requestScope.busNo.name }" placeholder="请输入路名" onfocus="focusName()" onblur="checkName()"/>
+				<input type="text" class="name_inp" id="name" name="name" value="${requestScope.busNo.name }" placeholder="请输入车辆名" onfocus="focusName()" onblur="checkName()"/>
 			</td>
 			<td class="td1" align="right">
 				排序
