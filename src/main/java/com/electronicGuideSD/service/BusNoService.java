@@ -12,4 +12,8 @@ public interface BusNoService {
 
 	int add(BusNo busNo);
 
+	BusNo selectById(String id);
+
+	int edit(BusNo busNo);
+
 }

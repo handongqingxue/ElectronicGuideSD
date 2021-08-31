@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>添加车辆</title>
+<title>编辑车辆</title>
 <%@include file="../../js.jsp"%>
 <style type="text/css">
 .center_con_div{
@@ -33,16 +33,22 @@ var busPath='<%=basePath%>'+"background/bus/";
 var wechatAppletPath='<%=basePath%>'+"wechatApplet/";
 var dialogTop=10;
 var dialogLeft=20;
-var ndNum=0;
+var edNum=0;
 $(function(){
 	initStartTimeCBB();
 	initEndTimeCBB();
-	initNewDialog();
+	initEditDialog();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 });
 
 function initStartTimeCBB(){
+	var startTime='${requestScope.busNo.startTime }';
+	var startTimeArr=startTime.split(":");
+	var sth=startTimeArr[0];
+	var stm=startTimeArr[1];
+	var sts=startTimeArr[2];
+	
 	var sthData=[];
 	sthData.push({id:"",name:"请选择时"});
 	for(var i=0;i<24;i++){
@@ -53,7 +59,10 @@ function initStartTimeCBB(){
 		width:80,
 		data:sthData,
 		valueField:"id",
-		textField:"name"
+		textField:"name",
+		onLoadSuccess:function(){
+			$(this).combobox("setValue",sth);
+		}
 	});
 	
 	var stmData=[];
@@ -69,17 +78,29 @@ function initStartTimeCBB(){
 		width:80,
 		data:stmData,
 		valueField:"id",
-		textField:"name"
+		textField:"name",
+		onLoadSuccess:function(){
+			$(this).combobox("setValue",stm);
+		}
 	});
 	stsCBB=$("#sts_cbb").combobox({
 		width:80,
 		data:stsData,
 		valueField:"id",
-		textField:"name"
+		textField:"name",
+		onLoadSuccess:function(){
+			$(this).combobox("setValue",sts);
+		}
 	});
 }
 
 function initEndTimeCBB(){
+	var endTime='${requestScope.busNo.endTime }';
+	var endTimeArr=endTime.split(":");
+	var eth=endTimeArr[0];
+	var etm=endTimeArr[1];
+	var ets=endTimeArr[2];
+	
 	var ethData=[];
 	ethData.push({id:"",name:"请选择时"});
 	for(var i=0;i<24;i++){
@@ -90,7 +111,10 @@ function initEndTimeCBB(){
 		width:80,
 		data:ethData,
 		valueField:"id",
-		textField:"name"
+		textField:"name",
+		onLoadSuccess:function(){
+			$(this).combobox("setValue",eth);
+		}
 	});
 	
 	var etmData=[];
@@ -106,87 +130,93 @@ function initEndTimeCBB(){
 		width:80,
 		data:etmData,
 		valueField:"id",
-		textField:"name"
+		textField:"name",
+		onLoadSuccess:function(){
+			$(this).combobox("setValue",etm);
+		}
 	});
 	etsCBB=$("#ets_cbb").combobox({
 		width:80,
 		data:etsData,
 		valueField:"id",
-		textField:"name"
+		textField:"name",
+		onLoadSuccess:function(){
+			$(this).combobox("setValue",ets);
+		}
 	});
 }
 
 function initDialogPosition(){
 	//基本属性组
-	var ndpw=$("body").find(".panel.window").eq(ndNum);
-	var ndws=$("body").find(".window-shadow").eq(ndNum);
+	var edpw=$("body").find(".panel.window").eq(edNum);
+	var edws=$("body").find(".window-shadow").eq(edNum);
 
 	var ccDiv=$("#center_con_div");
-	ccDiv.append(ndpw);
-	ccDiv.append(ndws);
+	ccDiv.append(edpw);
+	ccDiv.append(edws);
 	ccDiv.css("width",setFitWidthInParent("body","center_con_div")+"px");
 }
 
-function initNewDialog(){
+function initEditDialog(){
 	dialogTop+=20;
-	$("#new_div").dialog({
-		title:"车辆信息",
-		width:setFitWidthInParent("body","new_div"),
+	$("#edit_div").dialog({
+		title:"路名信息",
+		width:setFitWidthInParent("body","edit_div"),
 		height:730,
 		top:dialogTop,
 		left:dialogLeft,
 		buttons:[
            {text:"保存",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   checkAdd();
+        	   checkEdit();
            }}
         ]
 	});
 
-	$("#new_div table").css("width",(setFitWidthInParent("body","new_div_table"))+"px");
-	$("#new_div table").css("magin","-100px");
-	$("#new_div table td").css("padding-left","30px");
-	$("#new_div table td").css("padding-right","20px");
-	$("#new_div table td").css("font-size","15px");
-	$("#new_div table .td1").css("width","10%");
-	$("#new_div table .td2").css("width","35%");
-	$("#new_div table tr").css("border-bottom","#CAD9EA solid 1px");
-	$("#new_div table tr").css("height","45px");
+	$("#edit_div table").css("width",(setFitWidthInParent("body","edit_div_table"))+"px");
+	$("#edit_div table").css("magin","-100px");
+	$("#edit_div table td").css("padding-left","30px");
+	$("#edit_div table td").css("padding-right","20px");
+	$("#edit_div table td").css("font-size","15px");
+	$("#edit_div table .td1").css("width","10%");
+	$("#edit_div table .td2").css("width","35%");
+	$("#edit_div table tr").css("border-bottom","#CAD9EA solid 1px");
+	$("#edit_div table tr").css("height","45px");
 
-	$(".panel.window").eq(ndNum).css("margin-top","20px");
-	$(".panel.window .panel-title").eq(ndNum).css("color","#000");
-	$(".panel.window .panel-title").eq(ndNum).css("font-size","15px");
-	$(".panel.window .panel-title").eq(ndNum).css("padding-left","10px");
+	$(".panel.window").eq(edNum).css("margin-top","20px");
+	$(".panel.window .panel-title").eq(edNum).css("color","#000");
+	$(".panel.window .panel-title").eq(edNum).css("font-size","15px");
+	$(".panel.window .panel-title").eq(edNum).css("padding-left","10px");
 	
 	$(".panel-header, .panel-body").css("border-color","#ddd");
 	
 	//以下的是表格下面的面板
-	$(".window-shadow").eq(ndNum).css("margin-top","20px");
-	$(".window,.window .window-body").eq(ndNum).css("border-color","#ddd");
+	$(".window-shadow").eq(edNum).css("margin-top","20px");
+	$(".window,.window .window-body").eq(edNum).css("border-color","#ddd");
 
-	$("#new_div #ok_but").css("left","45%");
-	$("#new_div #ok_but").css("position","absolute");
+	$("#edit_div #ok_but").css("left","45%");
+	$("#edit_div #ok_but").css("position","absolute");
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 }
 
-function checkAdd(){
+function checkEdit(){
 	if(checkName()){
 		if(checkSort()){
 			if(checkStartTime()){
 				if(checkEndTime()){
-					addBusNo();
+					editBusNo();
 				}
 			}
 		}
 	}
 }
 
-function addBusNo(){
+function editBusNo(){
 	var formData = new FormData($("#form1")[0]);
 	$.ajax({
 		type:"post",
-		url:busPath+"addBusNo",
+		url:busPath+"editBusNo",
 		dataType: "json",
 		data:formData,
 		cache: false,
@@ -242,8 +272,8 @@ function checkStartTime(){
 	var sts=stsCBB.combobox("getValue");
 	if(sth==null||sth==""||stm==null||stm==""||sts==null||sts==""){
 		$("#startTime").val("");
-    	alert("请选择首班时间");
-    	return false;
+	  	alert("请选择首班时间");
+	  	return false;
 	}
 	else{
 		$("#startTime").val(sth+":"+stm+":"+sts);
@@ -258,8 +288,8 @@ function checkEndTime(){
 	var ets=etsCBB.combobox("getValue");
 	if(eth==null||eth==""||etm==null||etm==""||ets==null||ets==""){
 		$("#endTime").val("");
-    	alert("请选择末班时间");
-    	return false;
+	  	alert("请选择末班时间");
+	  	return false;
 	}
 	else{
 		$("#endTime").val(eth+":"+etm+":"+ets);
@@ -273,10 +303,10 @@ function setFitWidthInParent(parent,self){
 	case "center_con_div":
 		space=205;
 		break;
-	case "new_div":
+	case "edit_div":
 		space=340;
 		break;
-	case "new_div_table":
+	case "edit_div_table":
 	case "panel_window":
 		space=355;
 		break;
@@ -290,23 +320,24 @@ function setFitWidthInParent(parent,self){
 <div class="layui-layout layui-layout-admin">	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">添加车辆</div>
+	<div class="page_location_div">编辑路名</div>
 	
-	<div id="new_div">
+	<div id="edit_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
+		<input type="hidden" name="id" id="id" value="${requestScope.busNo.id }" />
 		<table>
 		  <tr>
 			<td class="td1" align="right">
-				车辆名
+				路名
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入车辆名" onfocus="focusName()" onblur="checkName()"/>
+				<input type="text" class="name_inp" id="name" name="name" value="${requestScope.busNo.name }" placeholder="请输入路名" onfocus="focusName()" onblur="checkName()"/>
 			</td>
 			<td class="td1" align="right">
 				排序
 			</td>
 			<td class="td2">
-				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
+				<input type="number" class="sort_inp" id="sort" name="sort" value="${requestScope.busNo.sort }" placeholder="请输入排序"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -320,7 +351,7 @@ function setFitWidthInParent(parent,self){
 				</select>:
 				<select id="sts_cbb">
 				</select>
-				<input type="hidden" id="startTime" name="startTime"/>
+				<input type="hidden" id="startTime" name="startTime" value="${requestScope.busNo.startTime }"/>
 			</td>
 			<td class="td1" align="right">
 				末班时间
@@ -332,7 +363,7 @@ function setFitWidthInParent(parent,self){
 				</select>:
 				<select id="ets_cbb">
 				</select>
-				<input type="hidden" id="endTime" name="endTime"/>
+				<input type="hidden" id="endTime" name="endTime" value="${requestScope.busNo.endTime }"/>
 			</td>
 		  </tr>
 		</table>

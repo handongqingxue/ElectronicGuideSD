@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
+import com.electronicGuideSD.util.EntityUtil;
 import com.electronicGuideSD.util.JsonUtil;
 import com.electronicGuideSD.util.PlanResult;
 
@@ -28,6 +29,16 @@ public class BusController {
 	public String goBusNoAdd(HttpServletRequest request) {
 
 		return MODULE_NAME+"/busNo/add";
+	}
+	
+	@RequestMapping(value="/busNo/edit")
+	public String goBusNoEdit(HttpServletRequest request) {
+		
+		String id = request.getParameter("id");
+		BusNo busNo = busNoService.selectById(id);
+		request.setAttribute("busNo", busNo);
+		
+		return MODULE_NAME+"/busNo/edit";
 	}
 	
 	@RequestMapping(value="/busNo/list")
@@ -67,6 +78,32 @@ public class BusController {
 			else {
 				plan.setStatus(1);
 				plan.setMsg("添加车辆成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	@RequestMapping(value="/editBusNo",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String editBusNo(BusNo busNo,
+			HttpServletRequest request) {
+
+		String json=null;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=busNoService.edit(busNo);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("编辑车辆失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("编辑车辆成功！");
 				json=JsonUtil.getJsonFromObject(plan);
 			}
 		} catch (Exception e) {

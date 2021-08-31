@@ -32,4 +32,16 @@ public class BusNoServiceImpl implements BusNoService {
 		// TODO Auto-generated method stub
 		return busNoDao.add(busNo);
 	}
+
+	@Override
+	public BusNo selectById(String id) {
+		// TODO Auto-generated method stub
+		return busNoDao.selectById(id);
+	}
+
+	@Override
+	public int edit(BusNo busNo) {
+		// TODO Auto-generated method stub
+		return busNoDao.edit(busNo);
+	}
 }

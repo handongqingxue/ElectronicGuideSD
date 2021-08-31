@@ -16,6 +16,9 @@
 		</if>
  		 order by sort limit #{start},#{rows}
  	</select>
+ 	<select id="selectById" resultType="com.electronicGuideSD.entity.BusNo">
+ 		select * from bus_no where id=#{id}
+ 	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.BusNo">
  		insert into bus_no
  		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -50,4 +53,23 @@
  			</if>
  		</trim>
  	</insert>
+ 	<update id="edit">
+		update bus_no set
+		<trim suffixOverrides=",">
+			<if test="name!=null">
+				name=#{name},
+			</if>
+			<if test="startTime!=null">
+				startTime=#{startTime},
+			</if>
+			<if test="endTime!=null">
+				endTime=#{endTime},
+			</if>
+				modifyTime=now(),
+			<if test="sort!=null">
+				sort=#{sort},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
  </mapper>

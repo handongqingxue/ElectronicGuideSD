@@ -14,4 +14,8 @@ public interface BusNoMapper {
 
 	int add(BusNo busNo);
 
+	BusNo selectById(@Param("id")String id);
+
+	int edit(BusNo busNo);
+
 }
