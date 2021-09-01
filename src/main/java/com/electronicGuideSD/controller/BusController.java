@@ -23,6 +23,14 @@ public class BusController {
 
 	@Autowired
 	private BusNoService busNoService;
+	@Autowired
+	private BusStopService busStopService;
+	@Autowired
+	private RoadStageService roadStageService;
+	@Autowired
+	private ScenicPlaceService scenicPlaceService;
+	@Autowired
+	private TextLabelService textLabelService;
 	public static final String MODULE_NAME="/background/bus";
 	
 	@RequestMapping(value="/busNo/add")
@@ -55,6 +63,20 @@ public class BusController {
 		request.setAttribute("busNo", busNo);
 		
 		return MODULE_NAME+"/busNo/detail";
+	}
+	
+	@RequestMapping(value="/busStop/add")
+	public String goBusStopAdd(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+
+		return MODULE_NAME+"/busStop/add";
+	}
+	
+	@RequestMapping(value="/busStop/list")
+	public String goBusStopList(HttpServletRequest request) {
+
+		return MODULE_NAME+"/busStop/list";
 	}
 	
 	@RequestMapping(value="/selectBusNoList")
@@ -121,5 +143,63 @@ public class BusController {
 			e.printStackTrace();
 		}
 		return json;
+	}
+	
+	@RequestMapping(value="/selectBusStopList")
+	@ResponseBody
+	public Map<String, Object> selectBusStopList(String name,int page,int rows,String sort,String order) {
+		
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		int count=busStopService.selectForInt(name);
+		List<BusStop> busStopList=busStopService.selectList(name, page, rows, sort, order);
+
+		jsonMap.put("total", count);
+		jsonMap.put("rows", busStopList);
+			
+		return jsonMap;
+	}
+	
+	@RequestMapping(value="/addBusStop",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String addBusStop(BusStop busStop,
+			HttpServletRequest request) {
+
+		String json=null;;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=busStopService.add(busStop);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("添加站点失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("添加站点成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+
+	@RequestMapping(value="/selectBusNoCBBData")
+	@ResponseBody
+	public Map<String, Object> selectBusNoCBBData() {
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<BusNo> busNoList = busNoService.selectCBBData();
+
+		if(busNoList.size()==0) {
+			jsonMap.put("status", "no");
+			jsonMap.put("message", "暂无车辆");
+		}
+		else {
+			jsonMap.put("status", "ok");
+			jsonMap.put("busNoList", busNoList);
+		}
+		return jsonMap;
 	}
 }

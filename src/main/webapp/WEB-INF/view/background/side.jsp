@@ -179,7 +179,7 @@
 					<div class="line_div"></div>
 					<li class="layui-nav-item">
 						<img class="pointer-img" alt="" src="<%=basePath%>resource/image/ico_3.gif" />
-						<a href="<%=basePath%>background/bus/roadStage/list">
+						<a href="<%=basePath%>background/bus/busStop/list">
 							&nbsp;&nbsp;&nbsp;站点查询
 						</a>
 					</li>

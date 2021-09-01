@@ -18,4 +18,6 @@ public interface BusNoMapper {
 
 	int edit(BusNo busNo);
 
+	List<BusNo> selectCBBData();
+
 }

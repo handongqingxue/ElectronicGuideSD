@@ -19,6 +19,9 @@
  	<select id="selectById" resultType="com.electronicGuideSD.entity.BusNo">
  		select * from bus_no where id=#{id}
  	</select>
+ 	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.BusNo">
+ 		select id,name from bus_no order by sort
+ 	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.BusNo">
  		insert into bus_no
  		<trim prefix="(" suffix=")" suffixOverrides=",">

@@ -16,4 +16,6 @@ public interface BusNoService {
 
 	int edit(BusNo busNo);
 
+	List<BusNo> selectCBBData();
+
 }

@@ -44,4 +44,10 @@ public class BusNoServiceImpl implements BusNoService {
 		// TODO Auto-generated method stub
 		return busNoDao.edit(busNo);
 	}
+
+	@Override
+	public List<BusNo> selectCBBData() {
+		// TODO Auto-generated method stub
+		return busNoDao.selectCBBData();
+	}
 }
