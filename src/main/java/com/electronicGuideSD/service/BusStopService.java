@@ -12,4 +12,8 @@ public interface BusStopService {
 
 	int add(BusStop busStop);
 
+	int edit(BusStop busStop);
+
+	BusStop selectById(String id);
+
 }

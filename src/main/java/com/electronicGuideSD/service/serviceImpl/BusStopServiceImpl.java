@@ -32,4 +32,16 @@ public class BusStopServiceImpl implements BusStopService {
 		// TODO Auto-generated method stub
 		return busStopDao.add(busStop);
 	}
+
+	@Override
+	public int edit(BusStop busStop) {
+		// TODO Auto-generated method stub
+		return busStopDao.edit(busStop);
+	}
+
+	@Override
+	public BusStop selectById(String id) {
+		// TODO Auto-generated method stub
+		return busStopDao.selectById(id);
+	}
 }

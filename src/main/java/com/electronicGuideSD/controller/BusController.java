@@ -73,6 +73,18 @@ public class BusController {
 		return MODULE_NAME+"/busStop/add";
 	}
 	
+	@RequestMapping(value="/busStop/edit")
+	public String goBusStopEdit(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		
+		String id = request.getParameter("id");
+		BusStop busStop = busStopService.selectById(id);
+		request.setAttribute("busStop", busStop);
+		
+		return MODULE_NAME+"/busStop/edit";
+	}
+	
 	@RequestMapping(value="/busStop/list")
 	public String goBusStopList(HttpServletRequest request) {
 
@@ -176,6 +188,32 @@ public class BusController {
 			else {
 				plan.setStatus(1);
 				plan.setMsg("添加站点成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	@RequestMapping(value="/editBusStop",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String editBusStop(BusStop busStop,
+			HttpServletRequest request) {
+
+		String json=null;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=busStopService.edit(busStop);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("编辑站点失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("编辑站点成功！");
 				json=JsonUtil.getJsonFromObject(plan);
 			}
 		} catch (Exception e) {

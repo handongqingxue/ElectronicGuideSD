@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>添加站点</title>
+<title>编辑站点</title>
 <%@include file="../../js.jsp"%>
 <style type="text/css">
-.add_bs_canvas_bg_div{
+.edit_bs_canvas_bg_div{
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0,0,0,.45);
@@ -15,7 +15,7 @@
 	z-index: 9016;
 	display:none;
 }
-.add_bs_canvas_div{
+.edit_bs_canvas_div{
 	width: 1800px;
 	height: 850px;
 	margin: 50px auto 0;
@@ -25,27 +25,27 @@
 	left: 0;
 	right: 0;
 }
-.add_bs_canvas_div .tjst_div{
+.edit_bs_canvas_div .tjst_div{
 	width: 100%;
 	height: 50px;
 	line-height: 50px;
 	border-bottom: #eee solid 1px;
 }
-.add_bs_canvas_div .tjst_span{
+.edit_bs_canvas_div .tjst_span{
 	margin-left: 30px;
 }
-.add_bs_canvas_div .close_span{
+.edit_bs_canvas_div .close_span{
 	float: right;margin-right: 30px;cursor: pointer;
 }
-.add_bs_canvas_dialog_div{
+.edit_bs_canvas_dialog_div{
 	width: 1775px;
 	height: 800px;
 	position: absolute;
 }
-.add_bs_canvas_div .title_div{
+.edit_bs_canvas_div .title_div{
 	width: 100%;height: 50px;line-height: 50px;
 }
-.add_bs_canvas_div .title_span{
+.edit_bs_canvas_div .title_span{
 	margin-left: 30px;
 }
 
@@ -91,7 +91,7 @@ var wechatAppletPath='<%=basePath%>'+"wechatApplet/";
 var dialogTop=10;
 var dialogLeft=20;
 var ndNum=0;
-var abssdmdNum=1;
+var ebssdmdNum=1;
 var sceDisCanvas;
 var sceDisCanvasMinWidth;
 var sceDisCanvasMinHeight;
@@ -122,8 +122,8 @@ $(function(){
 	initRoadStageJA();
 	initTextLabelJA();
 	initBusNoIdsCBB();
-	initNewDialog();
-	initAddBsSDMapDialogDiv();
+	initEditDialog();
+	initEditBsSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 	
@@ -147,6 +147,9 @@ function initBusNoIdsCBB(){
 	                multiple:true,
 					valueField:"id",
 					textField:"name",
+					onLoadSuccess:function(){
+						$(this).combobox("setValues",'${requestScope.busStop.busNoIds }'.split(","));
+					},
 					onSelect:function(){
 						var busNoIds=busNoIdsCBB.combobox("getValues").toString();
 						var busNoIdArr=busNoIds.split(",");
@@ -281,10 +284,14 @@ function initSceDisCanvas(reSizeFlag){
 	           busStopX=x;
 	           busStopY=sceDisCanvasMinHeight-y;//将y轴坐标从最初的左上角计算转换为从左下角计算
 	           
-		       busStop={x:x,y:y};
+		       resetBusStop(x,y);
 	           initSceDisCanvas(0);
 	    }
 	}
+}
+
+function resetBusStop(x,y){
+    busStop={x:x,y:y};
 }
 
 function initScenicPlaceLocation(scenicPlaceJO){
@@ -363,36 +370,36 @@ function initDialogPosition(){
 	var ndpw=$("body").find(".panel.window").eq(ndNum);
 	var ndws=$("body").find(".window-shadow").eq(ndNum);
 	
-	var abssdmdpw=$("body").find(".panel.window").eq(abssdmdNum);
-	var abssdmdws=$("body").find(".window-shadow").eq(abssdmdNum);
+	var ebssdmdpw=$("body").find(".panel.window").eq(ebssdmdNum);
+	var ebssdmdws=$("body").find(".window-shadow").eq(ebssdmdNum);
 
 	var ccDiv=$("#center_con_div");
 	ccDiv.append(ndpw);
 	ccDiv.append(ndws);
 	ccDiv.css("width",setFitWidthInParent("body","center_con_div")+"px");
 	
-	var abssdmdDiv=$("#add_bs_canvas_dialog_div");
-	abssdmdDiv.append(abssdmdpw);
-	abssdmdDiv.append(abssdmdws);
+	var ebssdmdDiv=$("#edit_bs_canvas_dialog_div");
+	ebssdmdDiv.append(ebssdmdpw);
+	ebssdmdDiv.append(ebssdmdws);
 }
 
-function initAddBsSDMapDialogDiv(){
-	addBsSdMDialog=$("#add_bs_sd_map_dialog_div").dialog({
+function initEditBsSDMapDialogDiv(){
+	editBsSdMDialog=$("#edit_bs_sd_map_dialog_div").dialog({
 		title:"景区地图",
-		width:setFitWidthInParent("body","add_bs_sd_map_dialog_div"),
+		width:setFitWidthInParent("body","edit_bs_sd_map_dialog_div"),
 		height:730,
 		top:10,
 		left:20,
 		buttons:[
            {text:"取消",id:"cancel_but",iconCls:"icon-cancel",handler:function(){
-        	   openAddBsDialog(0);
+        	   openEditBsDialog(0);
            }},
            {text:"确定",id:"ok_but",iconCls:"icon-ok",handler:function(){
         	   $("#x_span").text(busStopX);
         	   $("#y_span").text(busStopY);
         	   $("#x_inp").val(busStopX);
         	   $("#y_inp").val(busStopY);
-        	   openAddBsDialog(0);
+        	   openEditBsDialog(0);
            }},
            {text:"还原",id:"reset_but",iconCls:"icon-remove",handler:function(){
         	   changeCanvasSize(null,true);
@@ -406,61 +413,62 @@ function initAddBsSDMapDialogDiv(){
         ]
 	});
 
-	$(".panel.window").eq(abssdmdNum).css("margin-top","40px");
-	$(".panel.window .panel-title").eq(abssdmdNum).css("color","#000");
-	$(".panel.window .panel-title").eq(abssdmdNum).css("font-size","15px");
-	$(".panel.window .panel-title").eq(abssdmdNum).css("padding-left","10px");
+	$(".panel.window").eq(ebssdmdNum).css("margin-top","40px");
+	$(".panel.window .panel-title").eq(ebssdmdNum).css("color","#000");
+	$(".panel.window .panel-title").eq(ebssdmdNum).css("font-size","15px");
+	$(".panel.window .panel-title").eq(ebssdmdNum).css("padding-left","10px");
 	
-	$(".panel-header, .panel-body").eq(abssdmdNum).css("border-color","#ddd");
+	$(".panel-header, .panel-body").eq(ebssdmdNum).css("border-color","#ddd");
 	
 	//以下的是表格下面的面板
-	$(".window-shadow").eq(abssdmdNum).css("margin-top","40px");
-	$(".window,.window .window-body").eq(abssdmdNum).css("border-color","#ddd");
+	$(".window-shadow").eq(ebssdmdNum).css("margin-top","40px");
+	$(".window,.window .window-body").eq(ebssdmdNum).css("border-color","#ddd");
 
-	$("#add_bs_sd_map_dialog_div #cancel_but").css("left","20%");
-	$("#add_bs_sd_map_dialog_div #cancel_but").css("position","absolute");
+	$("#edit_bs_sd_map_dialog_div #cancel_but").css("left","20%");
+	$("#edit_bs_sd_map_dialog_div #cancel_but").css("position","absolute");
 
-	$("#add_bs_sd_map_dialog_div #ok_but").css("left","35%");
-	$("#add_bs_sd_map_dialog_div #ok_but").css("position","absolute");
+	$("#edit_bs_sd_map_dialog_div #ok_but").css("left","35%");
+	$("#edit_bs_sd_map_dialog_div #ok_but").css("position","absolute");
 
-	$("#add_bs_sd_map_dialog_div #reset_but").css("left","50%");
-	$("#add_bs_sd_map_dialog_div #reset_but").css("position","absolute");
+	$("#edit_bs_sd_map_dialog_div #reset_but").css("left","50%");
+	$("#edit_bs_sd_map_dialog_div #reset_but").css("position","absolute");
 
-	$("#add_bs_sd_map_dialog_div #big_but").css("left","65%");
-	$("#add_bs_sd_map_dialog_div #big_but").css("position","absolute");
+	$("#edit_bs_sd_map_dialog_div #big_but").css("left","65%");
+	$("#edit_bs_sd_map_dialog_div #big_but").css("position","absolute");
 
-	$("#add_bs_sd_map_dialog_div #small_but").css("left","80%");
-	$("#add_bs_sd_map_dialog_div #small_but").css("position","absolute");
+	$("#edit_bs_sd_map_dialog_div #small_but").css("left","80%");
+	$("#edit_bs_sd_map_dialog_div #small_but").css("position","absolute");
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
-	openAddBsSdMDialog(0);
+	openEditBsSdMDialog(0);
+	resetBusStop('${requestScope.busStop.x }',sceDisCanvasMinHeight-parseInt('${requestScope.busStop.y }'));
 }
 
-function initNewDialog(){
+function initEditDialog(){
 	dialogTop+=20;
-	$("#new_div").dialog({
+	$("#edit_div").dialog({
 		title:"站点信息",
-		width:setFitWidthInParent("body","new_div"),
+		width:setFitWidthInParent("body","edit_div"),
 		height:730,
 		top:dialogTop,
 		left:dialogLeft,
 		buttons:[
            {text:"保存",id:"ok_but",iconCls:"icon-ok",handler:function(){
-        	   checkAdd();
+        	   checkEdit();
            }}
         ]
 	});
 
-	$("#new_div table").css("width",(setFitWidthInParent("body","new_div_table"))+"px");
-	$("#new_div table").css("magin","-100px");
-	$("#new_div table td").css("padding-left","30px");
-	$("#new_div table td").css("padding-right","20px");
-	$("#new_div table td").css("font-size","15px");
-	$("#new_div table .td1").css("width","10%");
-	$("#new_div table .td2").css("width","35%");
-	$("#new_div table tr").css("border-bottom","#CAD9EA solid 1px");
-	$("#new_div table tr").each(function(i){
+	$("#edit_div table").css("width",(setFitWidthInParent("body","edit_div_table"))+"px");
+	$("#edit_div table").css("magin","-100px");
+	$("#edit_div table td").css("padding-left","30px");
+	$("#edit_div table td").css("padding-right","20px");
+	$("#edit_div table td").css("font-size","15px");
+	$("#edit_div table .td1").css("width","10%");
+	$("#edit_div table .td2").css("width","35%");
+	$("#edit_div table tr").css("border-bottom","#CAD9EA solid 1px");
+	$("#edit_div table tr").each(function(i){
 		if(i==2)
 			$(this).css("height","250px");
 		else
@@ -478,39 +486,39 @@ function initNewDialog(){
 	$(".window-shadow").eq(ndNum).css("margin-top","20px");
 	$(".window,.window .window-body").eq(ndNum).css("border-color","#ddd");
 
-	$("#new_div #ok_but").css("left","45%");
-	$("#new_div #ok_but").css("position","absolute");
+	$("#edit_div #ok_but").css("left","45%");
+	$("#edit_div #ok_but").css("position","absolute");
 	
 	$(".dialog-button").css("background-color","#fff");
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 }
 
-function openAddBsDialog(flag){
+function openEditBsDialog(flag){
 	if(flag==1){
-		$("#add_bs_canvas_bg_div").css("display","block");
+		$("#edit_bs_canvas_bg_div").css("display","block");
 	}
 	else{
-		$("#add_bs_canvas_bg_div").css("display","none");
+		$("#edit_bs_canvas_bg_div").css("display","none");
 	}
-	openAddBsSdMDialog(flag);
+	openEditBsSdMDialog(flag);
 }
 
-function openAddBsSdMDialog(flag){
+function openEditBsSdMDialog(flag){
 	if(flag==1){
-		addBsSdMDialog.dialog("open");
+		editBsSdMDialog.dialog("open");
 	}
 	else{
-		addBsSdMDialog.dialog("close");
+		editBsSdMDialog.dialog("close");
 	}
 }
 
-function checkAdd(){
+function checkEdit(){
 	if(checkName()){
 		if(checkSort()){
 			if(checkX()){
 				if(checkY()){
 					if(checkBusNoIds()){
-						addBusStop();
+						editBusStop();
 					}
 				}
 			}
@@ -518,11 +526,11 @@ function checkAdd(){
 	}
 }
 
-function addBusStop(){
+function editBusStop(){
 	var formData = new FormData($("#form1")[0]);
 	$.ajax({
 		type:"post",
-		url:busPath+"addBusStop",
+		url:busPath+"editBusStop",
 		dataType: "json",
 		data:formData,
 		cache: false,
@@ -605,8 +613,8 @@ function checkBusNoIds(){
 }
 
 function loadSceDisCanvas(flag){
-	var bigButDiv=$("#add_bs_sd_map_dialog_div #big_but");
-	var smallButDiv=$("#add_bs_sd_map_dialog_div #small_but");
+	var bigButDiv=$("#edit_bs_sd_map_dialog_div #big_but");
+	var smallButDiv=$("#edit_bs_sd_map_dialog_div #small_but");
 	if(flag){
 		bigButDiv.css("display","none");
 		smallButDiv.css("display","none");
@@ -626,13 +634,13 @@ function setFitWidthInParent(parent,self){
 	case "center_con_div":
 		space=205;
 		break;
-	case "new_div":
+	case "edit_div":
 		space=340;
 		break;
-	case "add_bs_sd_map_dialog_div":
+	case "edit_bs_sd_map_dialog_div":
 		space=170;
 		break;
-	case "new_div_table":
+	case "edit_div_table":
 	case "panel_window":
 		space=355;
 		break;
@@ -644,18 +652,18 @@ function setFitWidthInParent(parent,self){
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">		
-	<div class="add_bs_canvas_bg_div" id="add_bs_canvas_bg_div">
-		<div class="add_bs_canvas_div" id="add_bs_canvas_div">
+	<div class="edit_bs_canvas_bg_div" id="edit_bs_canvas_bg_div">
+		<div class="edit_bs_canvas_div" id="edit_bs_canvas_div">
 			<div class="tjst_div">
 				<span class="tjst_span">添加实体</span>
-				<span class="close_span" onclick="openAddBsDialog(0)">X</span>
+				<span class="close_span" onclick="openEditBsDialog(0)">X</span>
 			</div>
-			<div class="add_bs_canvas_dialog_div" id="add_bs_canvas_dialog_div">
+			<div class="edit_bs_canvas_dialog_div" id="edit_bs_canvas_dialog_div">
 				<div class="title_div">
-					<span class="title_span">车辆管理-站点查询-添加</span>
+					<span class="title_span">车辆管理-站点查询-编辑</span>
 				</div>
 				<input type="hidden" id="id"/>
-				<div id="add_bs_sd_map_dialog_div">
+				<div id="edit_bs_sd_map_dialog_div">
 					<div id="sceDisCanvas_div">
 						<canvas id="sceDisCanvas">
 						</canvas>
@@ -667,23 +675,24 @@ function setFitWidthInParent(parent,self){
 	
 <%@include file="../../side.jsp"%>
 <div class="center_con_div" id="center_con_div">
-	<div class="page_location_div">添加站点</div>
+	<div class="page_location_div">编辑站点</div>
 	
-	<div id="new_div">
+	<div id="edit_div">
 		<form id="form1" name="form1" method="post" action="" enctype="multipart/form-data">
+		<input type="hidden" name="id" id="id" value="${requestScope.busStop.id }" />
 		<table>
 		  <tr>
 			<td class="td1" align="right">
 				站点名
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入站点名" onfocus="focusName()" onblur="checkName()"/>
+				<input type="text" class="name_inp" id="name" name="name" value="${requestScope.busStop.name }" placeholder="请输入站点名" onfocus="focusName()" onblur="checkName()"/>
 			</td>
 			<td class="td1" align="right">
 				排序
 			</td>
 			<td class="td2">
-				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
+				<input type="number" class="sort_inp" id="sort" name="sort" value="${requestScope.busStop.sort }" placeholder="请输入排序"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -691,15 +700,15 @@ function setFitWidthInParent(parent,self){
 				x轴坐标
 			</td>
 			<td class="td2">
-				<span id="x_span"></span>
-				<input type="hidden" id="x_inp" name="x"/>
+				<span id="x_span">${requestScope.busStop.x }</span>
+				<input type="hidden" id="x_inp" name="x" value="${requestScope.busStop.x }"/>
 			</td>
 			<td class="td1" align="right">
 				y轴坐标
 			</td>
 			<td class="td2">
-				<span id="y_span"></span>
-				<input type="hidden" id="y_inp" name="y"/>
+				<span id="y_span">${requestScope.busStop.y }</span>
+				<input type="hidden" id="y_inp" name="y" value="${requestScope.busStop.y }"/>
 			</td>
 		  </tr>
 		  <tr>
@@ -707,7 +716,7 @@ function setFitWidthInParent(parent,self){
 				景区地图
 			</td>
 			<td class="td2">
-				<div class="upBut_div showMapBut_div" onclick="openAddBsDialog(1);">显示地图</div>
+				<div class="upBut_div showMapBut_div" onclick="openEditBsDialog(1);">显示地图</div>
 				<img class="sceDis_img" id="sceDis_img" alt="" src="${sessionScope.user.scenicDistrict.mapUrl }"/>
 			</td>
 			<td class="td1" align="right">
