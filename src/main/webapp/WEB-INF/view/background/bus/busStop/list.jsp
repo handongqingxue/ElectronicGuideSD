@@ -63,6 +63,7 @@ function initTab1(){
 			{field:"name",title:"名称",width:150},
 			{field:"x",title:"x轴坐标",width:100},
 			{field:"y",title:"y轴坐标",width:100},
+			{field:"busNoNames",title:"站点车辆",width:200},
             {field:"createTime",title:"创建时间",width:150},
             {field:"modifyTime",title:"修改时间",width:150},
             {field:"sort",title:"排序",width:80},
@@ -75,7 +76,7 @@ function initTab1(){
         onLoadSuccess:function(data){
 			if(data.total==0){
 				$(this).datagrid("appendRow",{name:"<div style=\"text-align:center;\">暂无信息<div>"});
-				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:7});
+				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:8});
 				data.total=0;
 			}
 			

@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
+import com.electronicGuideSD.util.BusUtil;
 import com.electronicGuideSD.util.EntityUtil;
 import com.electronicGuideSD.util.JsonUtil;
 import com.electronicGuideSD.util.PlanResult;
+import com.electronicGuideSD.util.RoadStageUtil;
 
 @Controller
 @RequestMapping(BusController.MODULE_NAME)
@@ -89,6 +91,24 @@ public class BusController {
 	public String goBusStopList(HttpServletRequest request) {
 
 		return MODULE_NAME+"/busStop/list";
+	}
+	
+	@RequestMapping(value="/busStop/detail")
+	public String goBusStopDetail(HttpServletRequest request) {
+		
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		
+		BusStop busStop = busStopService.selectById(request.getParameter("id"));
+		
+		List<BusNo> allBNList = busNoService.selectCBBData();
+		Map<String, String> bsNameMap = BusUtil.initBSNameMap(allBNList);
+		String busNoIds = busStop.getBusNoIds();
+		String busNoNames = BusUtil.getBSNameFromMapByIds(bsNameMap,busNoIds);
+		busStop.setBusNoNames(busNoNames);
+		
+		request.setAttribute("busStop", busStop);
+		
+		return MODULE_NAME+"/busStop/detail";
 	}
 	
 	@RequestMapping(value="/selectBusNoList")

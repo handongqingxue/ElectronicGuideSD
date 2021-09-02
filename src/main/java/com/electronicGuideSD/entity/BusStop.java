@@ -51,6 +51,12 @@ public class BusStop {
 	public void setBusNoIds(String busNoIds) {
 		this.busNoIds = busNoIds;
 	}
+	public String getBusNoNames() {
+		return busNoNames;
+	}
+	public void setBusNoNames(String busNoNames) {
+		this.busNoNames = busNoNames;
+	}
 	private String name;
 	private Float x;
 	private Float y;
@@ -58,4 +64,5 @@ public class BusStop {
 	private String modifyTime;
 	private Integer sort;
 	private String busNoIds;
+	private String busNoNames;
 }
