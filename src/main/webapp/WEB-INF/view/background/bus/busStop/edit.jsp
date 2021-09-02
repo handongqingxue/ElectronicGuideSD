@@ -113,6 +113,8 @@ var fontMarginLeft=45;
 var atSpace=10;
 var scenicPlaceJA;
 var roadStageJA;
+var textLabelJA;
+var otherBSJA;
 var busStopImageUrl=path+"resource/image/busStop.png";
 var busStopWidth=50;
 var busStopHeight=50;
@@ -121,6 +123,7 @@ $(function(){
 	initScenicPlaceJA();
 	initRoadStageJA();
 	initTextLabelJA();
+	initOtherBSJA();
 	initBusNoIdsCBB();
 	initEditDialog();
 	initEditBsSDMapDialogDiv();
@@ -208,6 +211,14 @@ function initTextLabelJA(){
 	}
 }
 
+function initOtherBSJA(){
+	otherBSJA=JSON.parse('${requestScope.otherBSJAStr}');
+	for(var i=0;i<otherBSJA.length;i++){
+		var otherBSJO=otherBSJA[i];
+		otherBSJO.y=sceDisCanvasMinHeight-otherBSJO.y;
+	}
+}
+
 function changeCanvasSize(bigFlag,resetFlag){
 	loadSceDisCanvas(true);
     var mcw=sceDisCanvasStyleWidth;
@@ -260,11 +271,14 @@ function initSceDisCanvas(reSizeFlag){
 		for(var i=0;i<scenicPlaceJA.length;i++){
 			initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
 		}
-		if(busStop!=undefined)
-			initBusStopLocation(busStop);
 		initRoadStageLocation();
 		initXYLabelLocation();
 		initTextLabelLocation();
+		for(var i=0;i<otherBSJA.length;i++){
+			initBusStopLocation(otherBSJA[i]);
+		}
+		if(busStop!=undefined)
+			initBusStopLocation(busStop);
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);

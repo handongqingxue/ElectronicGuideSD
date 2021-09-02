@@ -20,13 +20,17 @@ public class EntityUtil {
 	public static final String OTHER_SP="otherSP";
 	public static final String TEXT_LABEL="textLabel";
 	public static final String OTHER_TL="otherTL";
+	public static final String BUS_STOP="busStop";
+	public static final String OTHER_BS="otherBS";
 	
 	public static List<Map<String,Object>> initServiceParamList(RoadStageService roadStageService,
 			String roadStageType,
 			ScenicPlaceService scenicPlaceService,
 			String scenicPlaceType,
 			TextLabelService textLabelService,
-			String textLabelType) {
+			String textLabelType,
+			BusStopService busStopService,
+			String busStopType) {
 		List<Map<String,Object>> paramList=new ArrayList<>();
 		Map<String,Object> paramMap=null;
 		if(roadStageService!=null) {
@@ -45,6 +49,12 @@ public class EntityUtil {
 			paramMap=new HashMap<>();
 			paramMap.put("type", textLabelType);
 			paramMap.put("service", textLabelService);
+			paramList.add(paramMap);
+		}
+		if(busStopService!=null) {
+			paramMap=new HashMap<>();
+			paramMap.put("type", busStopType);
+			paramMap.put("service", busStopService);
 			paramList.add(paramMap);
 		}
 		return paramList;
@@ -85,6 +95,17 @@ public class EntityUtil {
     			String id = request.getParameter("id");
     			List<TextLabel> otherTLList = textLabelService.selectOtherList(id);
     			request.setAttribute("otherTLJAStr", JSONArray.fromObject(otherTLList));
+    		}
+    		else if(BUS_STOP.equals(type)) {
+    			BusStopService busStopService=(BusStopService)paramMap.get("service");
+    			List<BusStop> busStopList = busStopService.selectOtherList(null);
+    			request.setAttribute("busStopJAStr", JSONArray.fromObject(busStopList));
+    		}
+    		else if(OTHER_BS.equals(type)) {
+    			BusStopService busStopService=(BusStopService)paramMap.get("service");
+    			String id = request.getParameter("id");
+    			List<BusStop> otherBSList = busStopService.selectOtherList(id);
+    			request.setAttribute("otherBSJAStr", JSONArray.fromObject(otherBSList));
     		}
 		}
 	}

@@ -108,11 +108,16 @@ var atSpace=10;
 var scenicPlaceJA;
 var roadStageJA;
 var otherTLJA;
+var busStopJA;
+var busStopImageUrl=path+"resource/image/busStop.png";
+var busStopWidth=50;
+var busStopHeight=50;
 $(function(){
 	jiSuanScale();
 	initScenicPlaceJA();
 	initRoadStageJA();
 	initOtherTLJA();
+	initBusStopJA();
 	initEditDialog();
 	initEditTLSDMapDialogDiv();
 
@@ -159,6 +164,14 @@ function initOtherTLJA(){
 	for(var i=0;i<otherTLJA.length;i++){
 		var otherTLJO=otherTLJA[i];
 		otherTLJO.y=sceDisCanvasMinHeight-otherTLJO.y;
+	}
+}
+
+function initBusStopJA(){
+	busStopJA=JSON.parse('${requestScope.busStopJAStr}');
+	for(var i=0;i<busStopJA.length;i++){
+		var busStopJO=busStopJA[i];
+		busStopJO.y=sceDisCanvasMinHeight-busStopJO.y;
 	}
 }
 
@@ -222,6 +235,9 @@ function initSceDisCanvas(reSizeFlag){
 		}
 		if(textLabel!=undefined)
 			initTextLabelLocation(textLabel);
+		for(var i=0;i<busStopJA.length;i++){
+			initBusStopLocation(busStopJA[i]);
+		}
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
 		preSceDisCanvas.parentNode.removeChild(preSceDisCanvas);
@@ -304,6 +320,15 @@ function initTextLabelLocation(otherTLJO){
 
 	sceDisCanvasContext.rotate(-(otherTLJO.rotate*(Math.PI/180)));
 	sceDisCanvasContext.translate(-(otherTLJO.x/widthScale-rectWidth/2+fontMarginLeft),-(otherTLJO.y/heightScale-atSpace));
+}
+
+function initBusStopLocation(busStopJO){
+	var entityImg = new Image();
+	entityImg.src=busStopImageUrl;
+	entityImg.onload=function(){
+		//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
+		sceDisCanvasContext.drawImage(entityImg, busStopJO.x/widthScale-busStopWidth/2, busStopJO.y/heightScale-busStopHeight/2, busStopWidth, busStopHeight);
+	}
 }
 
 function resetTextLabel(x,y){

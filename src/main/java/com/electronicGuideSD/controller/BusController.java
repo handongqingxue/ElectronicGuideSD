@@ -70,7 +70,7 @@ public class BusController {
 	@RequestMapping(value="/busStop/add")
 	public String goBusStopAdd(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.BUS_STOP),request);
 
 		return MODULE_NAME+"/busStop/add";
 	}
@@ -78,7 +78,7 @@ public class BusController {
 	@RequestMapping(value="/busStop/edit")
 	public String goBusStopEdit(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.OTHER_BS),request);
 		
 		String id = request.getParameter("id");
 		BusStop busStop = busStopService.selectById(id);
@@ -96,7 +96,7 @@ public class BusController {
 	@RequestMapping(value="/busStop/detail")
 	public String goBusStopDetail(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.OTHER_BS),request);
 		
 		BusStop busStop = busStopService.selectById(request.getParameter("id"));
 		

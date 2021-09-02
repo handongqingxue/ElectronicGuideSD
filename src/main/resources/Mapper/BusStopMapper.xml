@@ -19,6 +19,13 @@
  	<select id="selectById" resultType="com.electronicGuideSD.entity.BusStop">
  		select * from bus_stop where id=#{id}
  	</select>
+ 	<select id="selectOtherList" resultType="com.electronicGuideSD.entity.BusStop">
+ 		select * from bus_stop where 1=1
+		<if test="id!=null&amp;id!=''">
+			and id!=#{id}
+		</if>
+		 order by sort
+ 	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.BusStop">
  		insert into bus_stop
  		<trim prefix="(" suffix=")" suffixOverrides=",">

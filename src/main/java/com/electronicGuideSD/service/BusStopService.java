@@ -16,4 +16,6 @@ public interface BusStopService {
 
 	BusStop selectById(String id);
 
+	List<BusStop> selectOtherList(String id);
+
 }

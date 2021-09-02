@@ -19,12 +19,14 @@ public class ScenicDistrictController {
 	private ScenicPlaceService scenicPlaceService;
 	@Autowired
 	private TextLabelService textLabelService;
+	@Autowired
+	private BusStopService busStopService;
 	public static final String MODULE_NAME="/background/scenicDistrict";
 	
 	@RequestMapping(value="/info/info")
 	public String goInfoInfo(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.BUS_STOP),request);
 
 		return MODULE_NAME+"/info/info";
 	}

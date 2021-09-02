@@ -57,4 +57,10 @@ public class BusStopServiceImpl implements BusStopService {
 		// TODO Auto-generated method stub
 		return busStopDao.selectById(id);
 	}
+
+	@Override
+	public List<BusStop> selectOtherList(String id) {
+		// TODO Auto-generated method stub
+		return busStopDao.selectOtherList(id);
+	}
 }

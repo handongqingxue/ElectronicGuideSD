@@ -34,6 +34,8 @@ public class RoadController {
 	private ScenicPlaceService scenicPlaceService;
 	@Autowired
 	private TextLabelService textLabelService;
+	@Autowired
+	private BusStopService busStopService;
 	public static final String MODULE_NAME="/background/road";
 	
 	@RequestMapping(value="/road/add")
@@ -71,7 +73,7 @@ public class RoadController {
 	@RequestMapping(value="/roadStage/add")
 	public String goRoadStageAdd(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.BUS_STOP),request);
 
 		return MODULE_NAME+"/roadStage/add";
 	}
@@ -83,7 +85,7 @@ public class RoadController {
 		RoadStage roadStage = roadStageService.selectById(id);
 		request.setAttribute("roadStage", roadStage);
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.OTHER_RS,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.OTHER_RS,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.BUS_STOP),request);
 
 		return MODULE_NAME+"/roadStage/edit";
 	}
@@ -115,7 +117,7 @@ public class RoadController {
 		
 		request.setAttribute("roadStage", roadStage);
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.OTHER_RS,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.OTHER_RS,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.BUS_STOP),request);
 
 		return MODULE_NAME+"/roadStage/detail";
 	}
@@ -123,7 +125,7 @@ public class RoadController {
 	@RequestMapping(value="/textLabel/add")
 	public String goTextLabelAdd(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.TEXT_LABEL,busStopService,EntityUtil.BUS_STOP),request);
 
 		return MODULE_NAME+"/textLabel/add";
 	}
@@ -131,7 +133,7 @@ public class RoadController {
 	@RequestMapping(value="/textLabel/edit")
 	public String goTextLabelEdit(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.OTHER_TL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.OTHER_TL,busStopService,EntityUtil.BUS_STOP),request);
 
 		TextLabel textLabel = textLabelService.selectById(request.getParameter("id"));
 		
@@ -149,7 +151,7 @@ public class RoadController {
 	@RequestMapping(value="/textLabel/detail")
 	public String goTextLabelDetail(HttpServletRequest request) {
 		
-		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.OTHER_TL),request);
+		EntityUtil.putJAStrInRequest(EntityUtil.initServiceParamList(roadStageService,EntityUtil.ROAD_STAGE,scenicPlaceService,EntityUtil.SCENIC_PLACE,textLabelService,EntityUtil.OTHER_TL,busStopService,EntityUtil.BUS_STOP),request);
 
 		TextLabel textLabel = textLabelService.selectById(request.getParameter("id"));
 		
