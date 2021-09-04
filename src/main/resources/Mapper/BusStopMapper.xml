@@ -16,6 +16,9 @@
 		</if>
  		 order by sort limit #{start},#{rows}
  	</select>
+ 	<select id="selectWAList" resultType="com.electronicGuideSD.entity.BusStop">
+ 		select * from bus_stop
+ 	</select>
  	<select id="selectById" resultType="com.electronicGuideSD.entity.BusStop">
  		select * from bus_stop where id=#{id}
  	</select>

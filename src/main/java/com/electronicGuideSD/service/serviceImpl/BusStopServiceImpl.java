@@ -41,6 +41,12 @@ public class BusStopServiceImpl implements BusStopService {
 	}
 
 	@Override
+	public List<BusStop> selectList() {
+		// TODO Auto-generated method stub
+		return busStopDao.selectWAList();
+	}
+
+	@Override
 	public int add(BusStop busStop) {
 		// TODO Auto-generated method stub
 		return busStopDao.add(busStop);

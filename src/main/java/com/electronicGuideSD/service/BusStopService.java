@@ -10,6 +10,8 @@ public interface BusStopService {
 
 	List<BusStop> selectList(String name, int page, int rows, String sort, String order);
 
+	List<BusStop> selectList();
+
 	int add(BusStop busStop);
 
 	int edit(BusStop busStop);

@@ -20,9 +20,9 @@ public class WechatAppletController {
 	@Autowired
 	private ScenicPlaceService scenicPlaceService;
 	@Autowired
-	private RoadStageService roadStageService;
+	private BusStopService busStopService;
 	@Autowired
-	private RoadStageService roadDotService;
+	private RoadStageService roadStageService;
 	public static final String MODULE_NAME="/wechatApplet";
 
 	@RequestMapping(value="/selectScenicPlaceList")
@@ -39,6 +39,24 @@ public class WechatAppletController {
 		else {
 			jsonMap.put("status", "ok");
 			jsonMap.put("scenicPlaceList", scenicPlaceList);
+		}
+		return jsonMap;
+	}
+
+	@RequestMapping(value="/selectBusStopList")
+	@ResponseBody
+	public Map<String, Object> selectBusStopList() {
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<BusStop> busStopList = busStopService.selectList();
+
+		if(busStopList.size()==0) {
+			jsonMap.put("status", "no");
+			jsonMap.put("message", "ÔÝÎÞÕ¾µã");
+		}
+		else {
+			jsonMap.put("status", "ok");
+			jsonMap.put("busStopList", busStopList);
 		}
 		return jsonMap;
 	}
@@ -79,7 +97,7 @@ public class WechatAppletController {
 		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		List<RoadStage> destRoadStageList = new ArrayList<>();
-		List<RoadStage> roadStageList = roadDotService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY);
+		List<RoadStage> roadStageList = roadStageService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY);
 		
 		jsonMap.put("roadStageList", roadStageList);
 		return jsonMap;

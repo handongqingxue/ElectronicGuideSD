@@ -75,13 +75,13 @@ public class RoadStageUtil {
 		for (Map<String,Object> allNavMap : allNavList) {
 			Boolean getSPFlag = Boolean.valueOf(allNavMap.get("getSPFlag").toString());
 			System.out.println("getSPFlag="+getSPFlag);
-			if(getSPFlag) {
+			//if(getSPFlag) {
 				Float navLong = Float.valueOf(allNavMap.get("navLong").toString());
 				if(navLong<shortDistance) {
 					shortDistance=navLong;
 					shortNavMap=allNavMap;
 				}
-			}
+			//}
 		}
 		
 		if(shortNavMap==null) {
