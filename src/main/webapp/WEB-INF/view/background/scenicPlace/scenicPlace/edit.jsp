@@ -48,6 +48,15 @@
 .edit_sp_canvas_div .title_span{
 	margin-left: 30px;
 }
+.edit_sp_sd_map_dialog_div .toolbar{
+	height:32px;
+}
+.edit_sp_sd_map_dialog_div .toolbar .row_div{
+	margin-top: 5px;
+}
+.edit_sp_sd_map_dialog_div .toolbar .xsbq_span{
+	margin-left: 13px;
+}
 
 .center_con_div{
 	height: 90vh;
@@ -223,20 +232,6 @@ function initEntityTypesCBB(){
 			initSceDisCanvas();
 		}
 	,"json");
-}
-
-function showEntityLabelByType(labelType){
-	var flag=false;
-	var entityTypes=$(this).combobox("getValues").toString();
-	var entityTypeArr=entityTypes.split(",");
-	for (var i = 0; i < entityTypeArr.length; i++) {
-		var type=entityTypeArr[i];
-		if(type==labelType){
-			flag=true;
-			break;
-		}
-	}
-	return flag;
 }
 
 function changeCanvasSize(bigFlag,resetFlag){
@@ -895,10 +890,10 @@ function setFitWidthInParent(parent,self){
 					<span class="title_span">景点管理-景点查询-修改</span>
 				</div>
 				<input type="hidden" id="id"/>
-				<div id="edit_sp_sd_map_dialog_div">
-					<div id="toolbar" style="height:32px;">
-						<div style="margin-top: 5px;">
-							<span style="margin-left: 13px;">显示标签</span>&nbsp;&nbsp;&nbsp;
+				<div class="edit_sp_sd_map_dialog_div" id="edit_sp_sd_map_dialog_div">
+					<div class="toolbar" id="toolbar">
+						<div class="row_div">
+							<span class="xsbq_span">显示标签</span>&nbsp;&nbsp;&nbsp;
 							<select id="entityTypes_cbb"></select>
 						</div>
 					</div>
