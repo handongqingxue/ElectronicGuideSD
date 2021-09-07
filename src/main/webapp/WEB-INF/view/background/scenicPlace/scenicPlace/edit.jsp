@@ -98,6 +98,7 @@
 </style>
 <script type="text/javascript">
 var path='<%=basePath %>';
+var sceDisPath='<%=basePath%>'+"background/scenicDistrict/";
 var scenicPlacePath='<%=basePath%>'+"background/scenicPlace/";
 var dialogTop=10;
 var dialogLeft=20;
@@ -135,12 +136,11 @@ $(function(){
 	initRoadStageJA();
 	initTextLabelJA();
 	initBusStopJA();
+	initEntityTypesCBB();
 	initEditDialog();
 	initEditSpSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
-	
-	initSceDisCanvas();
 });
 
 function jiSuanScale(){
@@ -189,6 +189,54 @@ function initBusStopJA(){
 		var busStopJO=busStopJA[i];
 		busStopJO.y=sceDisCanvasMinHeight-busStopJO.y;
 	}
+}
+
+function initEntityTypesCBB(){
+	var data=[];
+	data.push({type:"",name:"请选择"});
+	$.post(sceDisPath+"selectEntityTypeCBBData",
+		function(result){
+			if(result.status=="ok"){
+				var entityTypeList=result.entityTypeList;
+				for(var i=0;i<entityTypeList.length;i++){
+					var entityType=entityTypeList[i];
+					data.push({type:entityType.type,name:entityType.name});
+				}
+				entityTypesCBB=$("#entityTypes_cbb").combobox({
+					width:120,
+					data:data,
+	                multiple:true,
+					valueField:"type",
+					textField:"name",
+					onLoadSuccess:function(){
+						var types=""
+						for (var i = 1; i < data.length; i++){
+							types+=","+data[i].type;
+						}
+						$(this).combobox("setValues",types.substring(1).split(","));
+					},
+					onChange:function(){
+						initSceDisCanvas(0);
+					}
+				});
+			}
+			initSceDisCanvas();
+		}
+	,"json");
+}
+
+function showEntityLabelByType(labelType){
+	var flag=false;
+	var entityTypes=$(this).combobox("getValues").toString();
+	var entityTypeArr=entityTypes.split(",");
+	for (var i = 0; i < entityTypeArr.length; i++) {
+		var type=entityTypeArr[i];
+		if(type==labelType){
+			flag=true;
+			break;
+		}
+	}
+	return flag;
 }
 
 function changeCanvasSize(bigFlag,resetFlag){
@@ -241,16 +289,24 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
 
-		for(var i=0;i<otherSPJA.length;i++){
-			initScenicPlaceLocation(otherSPJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+		var entityTypes=entityTypesCBB.combobox("getValues").toString();
+		if(entityTypes.indexOf("scenicPlace")!=-1){
+			for(var i=0;i<otherSPJA.length;i++){
+				initScenicPlaceLocation(otherSPJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+			}
 		}
 		if(scenicPlace!=undefined)
 			initScenicPlaceLocation(scenicPlace);
-		initRoadStageLocation();
-		initXYLabelLocation();
-		initTextLabelLocation();
-		for(var i=0;i<busStopJA.length;i++){
-			initBusStopLocation(busStopJA[i]);
+		if(entityTypes.indexOf("road")!=-1)
+			initRoadStageLocation();
+		if(entityTypes.indexOf("xy")!=-1)
+			initXYLabelLocation();
+		if(entityTypes.indexOf("textLabel")!=-1)
+			initTextLabelLocation();
+		if(entityTypes.indexOf("busStop")!=-1){
+			for(var i=0;i<busStopJA.length;i++){
+				initBusStopLocation(busStopJA[i]);
+			}
 		}
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
@@ -377,6 +433,7 @@ function initEditSpSDMapDialogDiv(){
 	editSpSdMDialog=$("#edit_sp_sd_map_dialog_div").dialog({
 		title:"景区地图",
 		width:setFitWidthInParent("body","edit_sp_sd_map_dialog_div"),
+		toolbar:"#edit_sp_sd_map_dialog_div #toolbar",
 		height:730,
 		top:10,
 		left:20,
@@ -839,6 +896,12 @@ function setFitWidthInParent(parent,self){
 				</div>
 				<input type="hidden" id="id"/>
 				<div id="edit_sp_sd_map_dialog_div">
+					<div id="toolbar" style="height:32px;">
+						<div style="margin-top: 5px;">
+							<span style="margin-left: 13px;">显示标签</span>&nbsp;&nbsp;&nbsp;
+							<select id="entityTypes_cbb"></select>
+						</div>
+					</div>
 					<div id="sceDisCanvas_div">
 						<canvas id="sceDisCanvas">
 						</canvas>

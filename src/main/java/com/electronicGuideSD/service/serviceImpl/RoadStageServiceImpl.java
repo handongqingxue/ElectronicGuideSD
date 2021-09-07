@@ -45,7 +45,6 @@ public class RoadStageServiceImpl implements RoadStageService {
 		Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
 		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRoadStageMap,mtrNearRSMap,spToRoadMap,meX,meY,scenicPlaceX,scenicPlaceY);
 		List<RoadStage> shortNavLine=RoadStageUtil.initGetSPShortNavLine(allNavList);
-		//System.out.println("size1==="+((List<RoadStage>)allNavList.get(3).get("navLine")).size());
 		if(shortNavLine!=null)
 			System.out.println("size1==="+shortNavLine.size());
 		return shortNavLine;
