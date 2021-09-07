@@ -48,6 +48,22 @@
 .add_rs_canvas_div .title_span{
 	margin-left: 30px;
 }
+.add_rs_sd_map_dialog_div .toolbar{
+	height:32px;
+}
+.add_rs_sd_map_dialog_div .toolbar .row_div{
+	margin-top: 5px;
+}
+.add_rs_sd_map_dialog_div .toolbar .xsbq_span{
+	margin-left: 13px;
+}
+.add_rs_sd_map_dialog_div .toolbar .startXY_rad,.add_rs_sd_map_dialog_div .toolbar .endXY_rad{
+	margin-top: 5px;
+	margin-left: 20px;
+}
+.add_rs_sd_map_dialog_div .toolbar .startXY_span,.add_rs_sd_map_dialog_div .toolbar .endXY_span{
+	margin-left: 5px;
+}
 
 .center_con_div{
 	height: 90vh;
@@ -84,6 +100,7 @@
 </style>
 <script type="text/javascript">
 var path='<%=basePath %>';
+var sceDisPath='<%=basePath%>'+"background/scenicDistrict/";
 var roadPath='<%=basePath%>'+"background/road/";
 var dialogTop=10;
 var dialogLeft=20;
@@ -125,6 +142,7 @@ $(function(){
 	initRoadStageJA();
 	initTextLabelJA();
 	initBusStopJA();
+	initEntityTypesCBB();
 	initRoadCBB();
 	initBackThroughCBB();
 	initFrontThroughCBB();
@@ -136,8 +154,6 @@ $(function(){
 	initAddRsSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
-	
-	initSceDisCanvas();
 });
 
 function initRoadCBB(){
@@ -339,6 +355,40 @@ function initBusStopJA(){
 	}
 }
 
+function initEntityTypesCBB(){
+	var data=[];
+	data.push({type:"",name:"请选择"});
+	$.post(sceDisPath+"selectEntityTypeCBBData",
+		function(result){
+			if(result.status=="ok"){
+				var entityTypeList=result.entityTypeList;
+				for(var i=0;i<entityTypeList.length;i++){
+					var entityType=entityTypeList[i];
+					data.push({type:entityType.type,name:entityType.name});
+				}
+				entityTypesCBB=$("#entityTypes_cbb").combobox({
+					width:120,
+					data:data,
+	                multiple:true,
+					valueField:"type",
+					textField:"name",
+					onLoadSuccess:function(){
+						var types=""
+						for (var i = 1; i < data.length; i++){
+							types+=","+data[i].type;
+						}
+						$(this).combobox("setValues",types.substring(1).split(","));
+					},
+					onChange:function(){
+						initSceDisCanvas(0);
+					}
+				});
+			}
+			initSceDisCanvas();
+		}
+	,"json");
+}
+
 function changeCanvasSize(bigFlag,resetFlag){
 	loadSceDisCanvas(true);
     var mcw=sceDisCanvasStyleWidth;
@@ -389,14 +439,22 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
 
-		for(var i=0;i<scenicPlaceJA.length;i++){
-			initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+		var entityTypes=entityTypesCBB.combobox("getValues").toString();
+		if(entityTypes.indexOf("scenicPlace")!=-1){
+			for(var i=0;i<scenicPlaceJA.length;i++){
+				initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+			}
 		}
-		initRoadStageLocation();
-		initXYLabelLocation();
-		initTextLabelLocation();
-		for(var i=0;i<busStopJA.length;i++){
-			initBusStopLocation(busStopJA[i]);
+		if(entityTypes.indexOf("road")!=-1)
+			initRoadStageLocation();
+		if(entityTypes.indexOf("xy")!=-1)
+			initXYLabelLocation();
+		if(entityTypes.indexOf("textLabel")!=-1)
+			initTextLabelLocation();
+		if(entityTypes.indexOf("busStop")!=-1){
+			for(var i=0;i<busStopJA.length;i++){
+				initBusStopLocation(busStopJA[i]);
+			}
 		}
 		
 		var preSceDisCanvas=document.getElementById("sceDisCanvas");
@@ -604,6 +662,7 @@ function initAddRsSDMapDialogDiv(){
 	addRsSdMDialog=$("#add_rs_sd_map_dialog_div").dialog({
 		title:"景区地图",
 		width:setFitWidthInParent("body","add_rs_sd_map_dialog_div"),
+		toolbar:"#add_rs_sd_map_dialog_div #toolbar",
 		height:730,
 		top:10,
 		left:20,
@@ -1014,14 +1073,20 @@ function setFitWidthInParent(parent,self){
 					<span class="title_span">道路管理-路段查询-添加</span>
 				</div>
 				<input type="hidden" id="id"/>
-				<div id="add_rs_sd_map_dialog_div">
+				<div class="add_rs_sd_map_dialog_div" id="add_rs_sd_map_dialog_div">
+					<div class="toolbar" id="toolbar">
+						<div class="row_div">
+							<span class="xsbq_span">显示标签</span>&nbsp;&nbsp;&nbsp;
+							<select id="entityTypes_cbb"></select>
+							<input type="radio" class="startXY_rad" id="startXY_rad" name="xy_radio"/>
+							<span class="startXY_span">开始点</span>
+							<input type="radio" class="endXY_rad" id="endXY_rad" name="xy_radio"/>
+							<span class="endXY_span">结束点</span>
+						</div>
+					</div>
 					<div id="sceDisCanvas_div">
 						<canvas id="sceDisCanvas">
 						</canvas>
-					</div>
-					<div>
-						<input type="radio" id="startXY_rad" name="xy_radio"/>开始点
-						<input type="radio" id="endXY_rad" name="xy_radio"/>结束点
 					</div>
 				</div>
 			</div>
