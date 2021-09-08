@@ -234,7 +234,29 @@ public class RoadController {
 		String json=null;;
 		try {
 			PlanResult plan=new PlanResult();
-			int count=roadStageService.add(roadStage);
+			int count=0;
+			JSONObject a=new JSONObject();
+			a.put("x", roadStage.getBackX());
+			a.put("y", roadStage.getBackY());
+			JSONObject b=new JSONObject();
+			b.put("x", roadStage.getFrontX());
+			b.put("y", roadStage.getFrontY());
+			List<RoadStage> pprsList = RoadStageUtil.selectPublicPointRSList(roadStageService,a,b);
+			int pprsListSize=pprsList.size();
+			if(pprsListSize==0)
+				count=1;//roadStageService.add(roadStage);
+			else {
+				for (int i = 0; i < pprsListSize; i++) {
+					RoadStage pprs = pprsList.get(i);
+					System.out.println("pprs:backX="+pprs.getBackX()+",backY="+pprs.getBackY()+",id="+pprs.getId()+",roadId="+pprs.getRoadId());
+					org.json.JSONObject dividePPRSJO = RoadStageUtil.dividePPRoadStage(pprs);
+					RoadStage prePPRS = (RoadStage)(dividePPRSJO.get("preRS"));
+					RoadStage sufPPRS = (RoadStage)(dividePPRSJO.get("sufRS"));
+					System.out.println("prePPRS:backX="+prePPRS.getBackX()+",backY="+prePPRS.getBackY()+",frontX="+prePPRS.getFrontX()+",frontY="+prePPRS.getFrontY()+",id="+pprs.getId());
+					System.out.println("sufPPRS:backX="+sufPPRS.getBackX()+",backY="+sufPPRS.getBackY()+",frontX="+sufPPRS.getFrontX()+",frontY="+sufPPRS.getFrontY()+",id="+pprs.getId());
+				}
+			}
+			
 			if(count==0) {
 				plan.setStatus(0);
 				plan.setMsg("Ìí¼ÓÂ·¶ÎÃûÊ§°Ü£¡");

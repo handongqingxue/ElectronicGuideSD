@@ -94,8 +94,6 @@
 }
 .showMapBut_div{
 	width: 90px;
-	margin-top: -33px;
-	margin-left: 173px;
 }
 </style>
 <script type="text/javascript">
@@ -144,12 +142,6 @@ $(function(){
 	initBusStopJA();
 	initEntityTypesCBB();
 	initRoadCBB();
-	initBackThroughCBB();
-	initFrontThroughCBB();
-	initBackIsCrossCBB();
-	initBackCrossRSIdsCBB();
-	initFrontIsCrossCBB();
-	initFrontCrossRSIdsCBB();
 	initNewDialog();
 	initAddRsSDMapDialogDiv();
 
@@ -177,132 +169,6 @@ function initRoadCBB(){
 					$("#roadId").val(roadCBB.combobox("getValue"));
 				}
 			});
-		}
-	,"json");
-}
-
-function initBackThroughCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
-	backThroughCBB=$("#backThrough_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#backThrough").val(backThroughCBB.combobox("getValue"));
-		}
-	});
-}
-
-function initFrontThroughCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
-	frontThroughCBB=$("#frontThrough_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#frontThrough").val(frontThroughCBB.combobox("getValue"));
-		}
-	});
-}
-
-function initBackIsCrossCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
-	backIsCrossCBB=$("#backIsCross_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#backIsCross").val(backIsCrossCBB.combobox("getValue"));
-		}
-	});
-}
-
-function initBackCrossRSIdsCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"});
-	$.post(roadPath+"selectRoadStageCBBData",
-		function(result){
-			if(result.status=="ok"){
-				var roadStageList=result.roadStageList;
-				for(var i=0;i<roadStageList.length;i++){
-					var roadStage=roadStageList[i];
-					data.push({id:roadStage.id,name:roadStage.name});
-				}
-				backCrossRSIdsCBB=$("#backCrossRSIds_cbb").combobox({
-					width:150,
-					data:data,
-	                multiple:true,
-					valueField:"id",
-					textField:"name",
-					onSelect:function(){
-						var backCrossRSIds=backCrossRSIdsCBB.combobox("getValues").toString();
-						var backCrossRSIdArr=backCrossRSIds.split(",");
-						var bcrsIds="";
-						for (var i = 0; i < backCrossRSIdArr.length; i++) {
-							var backCrossRSId=backCrossRSIdArr[i];
-							if(backCrossRSId=="")
-								continue;
-							bcrsIds+=","+backCrossRSId;
-						}
-						$("#backCrossRSIds").val(bcrsIds.substring(1));
-					}
-				});
-			}
-		}
-	,"json");
-}
-
-function initFrontIsCrossCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
-	frontIsCrossCBB=$("#frontIsCross_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#frontIsCross").val(frontIsCrossCBB.combobox("getValue"));
-		}
-	});
-}
-
-function initFrontCrossRSIdsCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"});
-	$.post(roadPath+"selectRoadStageCBBData",
-		function(result){
-			if(result.status=="ok"){
-				var roadStageList=result.roadStageList;
-				for(var i=0;i<roadStageList.length;i++){
-					var roadStage=roadStageList[i];
-					data.push({id:roadStage.id,name:roadStage.name});
-				}
-				frontCrossRSIdsCBB=$("#frontCrossRSIds_cbb").combobox({
-					width:150,
-					data:data,
-	                multiple:true,
-					valueField:"id",
-					textField:"name",
-					onSelect:function(){
-						var frontCrossRSIds=frontCrossRSIdsCBB.combobox("getValues").toString();
-						var frontCrossRSIdArr=frontCrossRSIds.split(",");
-						var fcrsIds="";
-						for (var i = 0; i < frontCrossRSIdArr.length; i++) {
-							var frontCrossRSId=frontCrossRSIdArr[i];
-							if(frontCrossRSId=="")
-								continue;
-							fcrsIds+=","+frontCrossRSId;
-						}
-						$("#frontCrossRSIds").val(fcrsIds.substring(1));
-					}
-				});
-			}
 		}
 	,"json");
 }
@@ -795,28 +661,12 @@ function openAddRsSdMDialog(flag){
 }
 
 function checkAdd(){
-	if(checkName()){
-		if(checkRoadId()){
-			if(checkBackX()){
-				if(checkBackY()){
-					if(checkFrontX()){
-						if(checkFrontY()){
-							if(checkBackThrough()){
-								if(checkFrontThrough()){
-									if(checkBackIsCross()){
-										if(checkBackCrossRSIds()){
-											if(checkFrontIsCross()){
-												if(checkFrontCrossRSIds()){
-													if(checkSort()){
-														addRoadStage();
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
+	if(checkRoadId()){
+		if(checkBackX()){
+			if(checkBackY()){
+				if(checkFrontX()){
+					if(checkFrontY()){
+						addRoadStage();
 					}
 				}
 			}
@@ -855,26 +705,6 @@ function addRoadStage(){
 			}
 		}
 	});
-}
-
-function focusName(){
-	var name = $("#name").val();
-	if(name=="路段名不能为空"){
-		$("#name").val("");
-		$("#name").css("color", "#555555");
-	}
-}
-
-//验证路段名
-function checkName(){
-	var name = $("#name").val();
-	if(name==null||name==""||name=="路段名不能为空"){
-		$("#name").css("color","#E15748");
-    	$("#name").val("路段名不能为空");
-    	return false;
-	}
-	else
-		return true;
 }
 
 //验证选择路名
@@ -926,89 +756,6 @@ function checkFrontY(){
 	var frontY = $("#frontY").val();
 	if(frontY==null||frontY==""){
 	  	alert("请输入前方y轴坐标");
-	  	return false;
-	}
-	else
-		return true;
-}
-
-//验证后方是否相通
-function checkBackThrough(){
-	var backThrough=backThroughCBB.combobox("getValue");
-	if(backThrough==null||backThrough==""){
-	  	alert("请选择后方是否相通");
-	  	return false;
-	}
-	else
-		return true;
-}
-
-//验证前方是否相通
-function checkFrontThrough(){
-	var frontThrough=frontThroughCBB.combobox("getValue");
-	if(frontThrough==null||frontThrough==""){
-	  	alert("请选择前方是否相通");
-	  	return false;
-	}
-	else
-		return true;
-}
-
-//验证后方是否是交叉点
-function checkBackIsCross(){
-	var backIsCross=backIsCrossCBB.combobox("getValue");
-	if(backIsCross==null||backIsCross==""){
-	  	alert("请选择后方是否是交叉点");
-	  	return false;
-	}
-	else
-		return true;
-}
-
-//验证后方交叉点路段名
-function checkBackCrossRSIds(){
-	var backIsCross=backIsCrossCBB.combobox("getValue");
-	if(!convertStringToBoolean(backIsCross))
-		return true;
-	var backCrossRSIds=backCrossRSIdsCBB.combobox("getValue");
-	if(backCrossRSIds==null||backCrossRSIds==""){
-	  	alert("请选择后方交叉点路段名");
-	  	return false;
-	}
-	else
-		return true;
-}
-
-//验证前方是否是交叉点
-function checkFrontIsCross(){
-	var frontIsCross=frontIsCrossCBB.combobox("getValue");
-	if(frontIsCross==null||frontIsCross==""){
-	  	alert("请选择前方是否是交叉点");
-	  	return false;
-	}
-	else
-		return true;
-}
-
-//验证前方交叉点路段名
-function checkFrontCrossRSIds(){
-	var frontIsCross=frontIsCrossCBB.combobox("getValue");
-	if(!convertStringToBoolean(frontIsCross))
-		return true;
-	var frontCrossRSIds=frontCrossRSIdsCBB.combobox("getValue");
-	if(frontCrossRSIds==null||frontCrossRSIds==""){
-	  	alert("请选择前方交叉点路段名");
-	  	return false;
-	}
-	else
-		return true;
-}
-
-//验证排序
-function checkSort(){
-	var sort = $("#sort").val();
-	if(sort==null||sort==""){
-	  	alert("请输入排序");
 	  	return false;
 	}
 	else
@@ -1102,10 +849,9 @@ function setFitWidthInParent(parent,self){
 		<table>
 		  <tr>
 			<td class="td1" align="right">
-				路段名
+				景区地图
 			</td>
 			<td class="td2">
-				<input type="text" class="name_inp" id="name" name="name" placeholder="请输入路段名" onfocus="focusName()" onblur="checkName()"/>
 				<div class="upBut_div showMapBut_div" onclick="putXYFromInpToVar();">地图打点</div>
 			</td>
 			<td class="td1" align="right">
@@ -1142,66 +888,6 @@ function setFitWidthInParent(parent,self){
 			</td>
 			<td class="td2">
 				<input type="number" class="frontY_inp" id="frontY" name="frontY" placeholder="请输入前方y轴坐标"/>
-			</td>
-		  </tr>
-		  <tr>
-			<td class="td1" align="right">
-				后方是否相通
-			</td>
-			<td class="td2">
-				<select id="backThrough_cbb"></select>
-				<input type="hidden" id="backThrough" name="backThrough"/>
-			</td>
-			<td class="td1" align="right">
-				前方是否相通
-			</td>
-			<td class="td2">
-				<select id="frontThrough_cbb"></select>
-				<input type="hidden" id="frontThrough" name="frontThrough"/>
-			</td>
-		  </tr>
-		  <tr>
-			<td class="td1" align="right">
-				后方是否是交叉点
-			</td>
-			<td class="td2">
-				<select id="backIsCross_cbb"></select>
-				<input type="hidden" id="backIsCross" name="backIsCross"/>
-			</td>
-			<td class="td1" align="right">
-				后方交叉点路段名
-			</td>
-			<td class="td2">
-				<select id="backCrossRSIds_cbb"></select>
-				<input type="hidden" id="backCrossRSIds" name="backCrossRSIds"/>
-			</td>
-		  </tr>
-		  <tr>
-			<td class="td1" align="right">
-				前方是否是交叉点
-			</td>
-			<td class="td2">
-				<select id="frontIsCross_cbb"></select>
-				<input type="hidden" id="frontIsCross" name="frontIsCross"/>
-			</td>
-			<td class="td1" align="right">
-				前方交叉点路段名
-			</td>
-			<td class="td2">
-				<select id="frontCrossRSIds_cbb"></select>
-				<input type="hidden" id="frontCrossRSIds" name="frontCrossRSIds"/>
-			</td>
-		  </tr>
-		  <tr>
-			<td class="td1" align="right">
-				排序
-			</td>
-			<td class="td2">
-				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
-			</td>
-			<td class="td1" align="right">
-			</td>
-			<td class="td2">
 			</td>
 		  </tr>
 		</table>

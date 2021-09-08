@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.electronicGuideSD.entity.RoadStage;
+import com.electronicGuideSD.service.RoadStageService;
 
 import net.sf.json.JSONObject;
 
@@ -505,6 +506,53 @@ public class RoadStageUtil {
 	    float dy= t*(bY - aY);
 	    return new org.json.JSONObject("{\"x\":"+(aX+dx)+",\"y\":"+(aY+dy)+"}");
 	    //return { x: a.x + dx , y: a.y + dy };  
+	}
+	
+	public static List<RoadStage> selectPublicPointRSList(RoadStageService roadStageService, JSONObject a, JSONObject b) {
+		List<RoadStage> ppRSList = new ArrayList<>();
+		List<RoadStage> rsList = roadStageService.selectOtherList(null);
+		for (int i = 0; i < rsList.size(); i++) {
+			RoadStage rs = rsList.get(i);
+			JSONObject c=new JSONObject();
+			c.put("x", rs.getBackX());
+			c.put("y", rs.getBackY());
+			JSONObject d=new JSONObject();
+			d.put("x", rs.getFrontX());
+			d.put("y", rs.getFrontY());
+			org.json.JSONObject jo = RoadStageUtil.getPublicPointJO(a,b,c,d);
+			if(jo!=null) {
+				rs.setCrossX(Float.valueOf(jo.get("x").toString()));
+				rs.setCrossY(Float.valueOf(jo.get("y").toString()));
+				ppRSList.add(rs);
+			}
+		}
+		return ppRSList;
+	}
+	
+	public static org.json.JSONObject dividePPRoadStage(RoadStage pprs) {
+		org.json.JSONObject dividePPRSJO=new org.json.JSONObject();
+
+		float crossX = pprs.getCrossX();
+		float crossY = pprs.getCrossY();
+		RoadStage preRS = new RoadStage();
+		float rsBackX = pprs.getBackX();
+		float rsBackY = pprs.getBackY();
+		preRS.setBackX(rsBackX);
+		preRS.setBackY(rsBackY);
+		preRS.setFrontX(crossX);
+		preRS.setFrontY(crossY);
+		dividePPRSJO.put("preRS", preRS);
+		
+		RoadStage sufRS = new RoadStage();
+		Float rsFrontX = pprs.getFrontX();
+		Float rsFrontY = pprs.getFrontY();
+		sufRS.setBackX(crossX);
+		sufRS.setBackY(crossY);
+		sufRS.setFrontX(rsFrontX);
+		sufRS.setFrontY(rsFrontY);
+		dividePPRSJO.put("sufRS", sufRS);
+		
+		return dividePPRSJO;
 	}
 	
 	/**

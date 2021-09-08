@@ -41,6 +41,18 @@ public class RoadStage {
 	public void setBackY(Float backY) {
 		this.backY = backY;
 	}
+	public Float getCrossX() {
+		return crossX;
+	}
+	public void setCrossX(Float crossX) {
+		this.crossX = crossX;
+	}
+	public Float getCrossY() {
+		return crossY;
+	}
+	public void setCrossY(Float crossY) {
+		this.crossY = crossY;
+	}
 	public Float getDistance() {
 		return distance;
 	}
@@ -142,6 +154,8 @@ public class RoadStage {
 	private Float frontY;
 	private Float backX;
 	private Float backY;
+	private Float crossX;//除两端之外的交点x坐标
+	private Float crossY;//除两端之外的交点y坐标
 	private Float distance;
 	private Boolean frontThrough;//前方是否通
 	private Boolean backThrough;//后方是否通
