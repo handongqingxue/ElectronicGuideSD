@@ -8,6 +8,8 @@ import java.util.Set;
 
 import com.electronicGuideSD.entity.RoadStage;
 
+import net.sf.json.JSONObject;
+
 public class RoadStageUtil {
 	
 	public static Map<String, Object> initAllRoadMap(List<RoadStage> roadStageList) {
@@ -319,12 +321,6 @@ public class RoadStageUtil {
 		return distance;
 	}
 	
-	/*
-	public static void main(String[] args) {
-		System.out.println("==="+RoadStageUtil.jiSuanDistance((float)600.00,(float)730.00,(float)300.00,(float)300.00));
-	}
-	*/
-	
 	public static boolean checkRoadMapIdExist(int roadId, Map<String, Object> roadMap) {
 		// TODO Auto-generated method stub
 		boolean flag=false;
@@ -470,5 +466,98 @@ public class RoadStageUtil {
 			rsNames+=","+rsName;
 		}
 		return rsNames.substring(1);
+	}
+	
+	public static org.json.JSONObject getPublicPointJO(JSONObject a,JSONObject b,JSONObject c,JSONObject d) {
+		float aX = Float.valueOf(a.getString("x"));
+		float aY = Float.valueOf(a.getString("y"));
+		float bX = Float.valueOf(b.getString("x"));
+		float bY = Float.valueOf(b.getString("y"));
+		float cX = Float.valueOf(c.getString("x"));
+		float cY = Float.valueOf(c.getString("y"));
+		float dX = Float.valueOf(d.getString("x"));
+		float dY = Float.valueOf(d.getString("y"));
+		// 三角形abc 面积的2倍  
+	    float area_abc = (aX - cX) * (bY - cY) - (aY - cY) * (bX - cX);  
+	  
+	    // 三角形abd 面积的2倍  
+	    float area_abd = (aX - dX) * (bY - dY) - (aY - dY) * (bX - dX);
+	  
+	    // 面积符号相同则两点在线段同侧,不相交 (对点在线段上的情况,本例当作不相交处理);  
+	    if ( area_abc*area_abd>=0 ) {  
+	    	System.out.println("false");
+	        return null;  
+	    }  
+	  
+	    // 三角形cda 面积的2倍  
+	    float area_cda = (cX - aX) * (dY - aY) - (cY - aY) * (dX - aX);  
+	    // 三角形cdb 面积的2倍  
+	    // 注意: 这里有一个小优化.不需要再用公式计算面积,而是通过已知的三个面积加减得出.  
+	    float area_cdb = area_cda + area_abc - area_abd ;  
+	    if (  area_cda * area_cdb >= 0 ) {  
+	    	System.out.println("false");
+	        return null;
+	    }  
+	  
+	    //计算交点坐标  
+	    float t = area_cda / ( area_abd- area_abc );
+	    float dx= t*(bX - aX);
+	    float dy= t*(bY - aY);
+	    return new org.json.JSONObject("{\"x\":"+(aX+dx)+",\"y\":"+(aY+dy)+"}");
+	    //return { x: a.x + dx , y: a.y + dy };  
+	}
+	
+	/**
+	 * 验证公共点是不是两端之外的交点
+	 * @param startPoint
+	 * @param endPoint
+	 * @param publicPoint
+	 * @return
+	 */
+	/*
+	public static boolean checkIfCrossOverPoint(JSONObject startPoint,JSONObject endPoint,org.json.JSONObject publicPoint) {
+		boolean flag=true;
+		float startPointX = Float.valueOf(startPoint.get("x").toString());
+		float startPointY = Float.valueOf(startPoint.get("y").toString());
+		float endPointX = Float.valueOf(endPoint.get("x").toString());
+		float endPointY = Float.valueOf(endPoint.get("y").toString());
+		float publicPointX = Float.valueOf(publicPoint.get("x").toString());
+		float publicPointY = Float.valueOf(publicPoint.get("y").toString());
+		if(publicPointX==startPointX&&publicPointY==startPointY)
+			flag=false;
+		else if(publicPointX==endPointX&&publicPointY==endPointY)
+			flag=false;
+		return flag;
+	}
+	*/
+	
+	public static void main(String[] args) {
+		JSONObject a=new JSONObject();
+		a.put("x", (float)100);
+		a.put("y", (float)100);
+		
+		JSONObject b=new JSONObject();
+		b.put("x", (float)500);
+		b.put("y", (float)600);
+		
+		JSONObject c=new JSONObject();
+		c.put("x", (float)100);
+		c.put("y", (float)600);
+
+		JSONObject d=new JSONObject();
+		d.put("x", (float)500);
+		d.put("y", (float)600);
+		
+		org.json.JSONObject pointJO = RoadStageUtil.getPublicPointJO(a,b,c,d);
+		System.out.println("x="+pointJO.get("x").toString()+",y="+pointJO.get("y").toString());
+		
+		List<RoadStage> rsList=new ArrayList<>();
+		RoadStage rs=new RoadStage();
+		rsList.add(rs);
+		RoadStage rs1=new RoadStage();
+		rsList.add(rs1);
+		RoadStage rs2=new RoadStage();
+		int index = rsList.indexOf(rs);
+		System.out.println("index="+index);
 	}
 }
