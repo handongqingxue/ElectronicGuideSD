@@ -269,7 +269,9 @@ public class RoadController {
 				for(int i = 0; i < pprsRoadIdList.size(); i++) {
 					int pprsRoadId=pprsRoadIdList.get(i);
 					List<RoadStage> connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);
-					//这里写更新数据库该道路下的每个路段的排序
+					//这里写更新数据库该道路下的每个路段
+					RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
+					System.out.println("connectRSList="+connectRSList);
 				}
 			}
 			

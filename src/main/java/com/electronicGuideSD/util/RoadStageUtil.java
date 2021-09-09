@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.electronicGuideSD.entity.RoadStage;
 import com.electronicGuideSD.service.RoadStageService;
 
@@ -714,6 +716,70 @@ public class RoadStageUtil {
 			}
 		}
 		return connectRSList;
+	}
+	
+	public static void updateRoadStageInRoad(List<RoadStage> roadStageList, List<RoadStage> allRSList) {
+		for(int i=0;i<roadStageList.size();i++) {
+			RoadStage roadStage = roadStageList.get(i);
+			roadStage.setSort(i);
+			for(int j=0;j<allRSList.size();j++) {
+				RoadStage rs = allRSList.get(j);
+				if(roadStage.getId()==rs.getId())
+					continue;
+				float roadStageBackX = roadStage.getBackX();
+				float roadStageBackY = roadStage.getBackY();
+				float roadStageFrontX = roadStage.getFrontX();
+				float roadStageFrontY = roadStage.getFrontY();
+				int roadStageRoadId = roadStage.getRoadId();
+				
+				float rsBackX = rs.getBackX();
+				float rsBackY = rs.getBackY();
+				float rsFrontX = rs.getFrontX();
+				float rsFrontY = rs.getFrontY();
+				int rsRoadId = rs.getRoadId();
+				if(roadStageBackX==rsBackX&&roadStageBackY==rsBackY||roadStageBackX==rsFrontX&&roadStageBackY==rsFrontY) {
+					roadStage.setBackThrough(true);
+					if(roadStageRoadId!=rsRoadId) {
+						roadStage.setBackIsCross(true);
+						String backCrossRSIds = roadStage.getBackCrossRSIds();
+						if(StringUtils.isEmpty(backCrossRSIds))
+							roadStage.setBackCrossRSIds(rs.getId().toString());
+						else {
+							backCrossRSIds = roadStage.getBackCrossRSIds();
+							if(!(backCrossRSIds+",").contains(rs.getId()+",")) {
+								roadStage.setBackCrossRSIds(backCrossRSIds+","+rs.getId().toString());
+							}
+						}
+					}
+					else {
+						roadStage.setBackIsCross(false);
+						roadStage.setBackCrossRSIds(null);
+					}
+				}
+				if(roadStageFrontX==rsBackX&&roadStageFrontY==rsBackY||roadStageFrontX==rsFrontX&&roadStageFrontY==rsFrontY) {
+					if(i==3)
+						System.out.println("11111111");
+					roadStage.setFrontThrough(true);
+					if(roadStageRoadId!=rsRoadId) {
+						roadStage.setFrontIsCross(true);
+						String frontCrossRSIds = roadStage.getFrontCrossRSIds();
+						if(StringUtils.isEmpty(frontCrossRSIds)) {
+							roadStage.setFrontCrossRSIds(rs.getId().toString());
+						}
+						else {
+							frontCrossRSIds = roadStage.getFrontCrossRSIds();
+							if(!(frontCrossRSIds+",").contains(rs.getId()+","))
+								roadStage.setFrontCrossRSIds(frontCrossRSIds+","+rs.getId().toString());
+						}
+						
+					}
+					else {
+						roadStage.setFrontIsCross(false);
+						roadStage.setFrontCrossRSIds(null);
+					}
+				}
+			}
+		}
 	}
 	
 	/**
