@@ -1,6 +1,8 @@
 package com.electronicGuideSD.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,9 @@ import com.electronicGuideSD.service.RoadStageService;
 import net.sf.json.JSONObject;
 
 public class RoadStageUtil {
+	
+	public static final String ASC="asc";
+	public static final String DESC="desc";
 	
 	public static Map<String, Object> initAllRoadMap(List<RoadStage> roadStageList) {
 		// TODO Auto-generated method stub
@@ -486,7 +491,6 @@ public class RoadStageUtil {
 	  
 	    // 面积符号相同则两点在线段同侧,不相交 (对点在线段上的情况,本例当作不相交处理);  
 	    if ( area_abc*area_abd>=0 ) {  
-	    	System.out.println("false");
 	        return null;  
 	    }  
 	  
@@ -496,7 +500,6 @@ public class RoadStageUtil {
 	    // 注意: 这里有一个小优化.不需要再用公式计算面积,而是通过已知的三个面积加减得出.  
 	    float area_cdb = area_cda + area_abc - area_abd ;  
 	    if (  area_cda * area_cdb >= 0 ) {  
-	    	System.out.println("false");
 	        return null;
 	    }  
 	  
@@ -529,7 +532,7 @@ public class RoadStageUtil {
 		return ppRSList;
 	}
 	
-	public static org.json.JSONObject dividePPRoadStage(RoadStage pprs) {
+	public static org.json.JSONObject dividePPRoadStage(RoadStage roadStage, RoadStage pprs) {
 		org.json.JSONObject dividePPRSJO=new org.json.JSONObject();
 
 		float crossX = pprs.getCrossX();
@@ -541,6 +544,12 @@ public class RoadStageUtil {
 		preRS.setBackY(rsBackY);
 		preRS.setFrontX(crossX);
 		preRS.setFrontY(crossY);
+		preRS.setBackThrough(pprs.getBackThrough());
+		preRS.setFrontThrough(true);
+		preRS.setBackIsCross(pprs.getBackIsCross());
+		preRS.setBackCrossRSIds(pprs.getBackCrossRSIds());
+		preRS.setFrontIsCross(true);
+		//preRS.setFrontCrossRSIds(roadStage.getId().toString());
 		dividePPRSJO.put("preRS", preRS);
 		
 		RoadStage sufRS = new RoadStage();
@@ -550,10 +559,74 @@ public class RoadStageUtil {
 		sufRS.setBackY(crossY);
 		sufRS.setFrontX(rsFrontX);
 		sufRS.setFrontY(rsFrontY);
+		sufRS.setBackThrough(true);
+		sufRS.setFrontThrough(pprs.getFrontThrough());
+		sufRS.setBackIsCross(true);
+		//sufRS.setBackCrossRSIds(roadStage.getId().toString());
+		sufRS.setFrontIsCross(pprs.getFrontIsCross());
+		sufRS.setFrontCrossRSIds(pprs.getFrontCrossRSIds());
 		dividePPRSJO.put("sufRS", sufRS);
 		
 		return dividePPRSJO;
 	}
+	
+	/**
+	 * 排序参考链接:https://blog.csdn.net/qq_40618664/article/details/110110718
+	 * @param roadStage
+	 * @param pprsList
+	 */
+	public static void divideRoadStage(RoadStage roadStage, List<RoadStage> pprsList) {
+		for (int i = 0; i < pprsList.size(); i++) {
+			RoadStage pprs = pprsList.get(i);
+			if(i==0)
+				pprs.setDistance((float)5);
+			else if(i==1)
+				pprs.setDistance((float)2);
+			else if(i==2)
+				pprs.setDistance((float)1);
+		}
+		sortByDistance(pprsList,ASC);
+		System.out.println("pprsList==="+pprsList);
+	}
+	
+	public static void sortByDistance(List<RoadStage> pprsList, String sortFlag) {
+		if(ASC.equals(sortFlag)) {
+			Collections.sort(pprsList, new comparatorAsc());
+		}
+		else if(DESC.equals(sortFlag)) {
+			Collections.sort(pprsList, new comparatorDesc());
+		}
+	}
+	
+	/**
+     * 降序
+     */
+	public static class comparatorDesc implements Comparator<RoadStage> {
+        @Override
+        public int compare(RoadStage roadStage1, RoadStage roadStage2) {
+            Float distance1 = roadStage1.getDistance();
+            Float distance2 = roadStage2.getDistance();
+            if (distance2 != null) {
+                return distance2.compareTo(distance1);
+            }
+            return 0;
+        }
+    }
+
+    /**
+     * 升序
+     */
+	public static class comparatorAsc implements Comparator<RoadStage> {
+        @Override
+        public int compare(RoadStage roadStage1, RoadStage roadStage2) {
+            Float distance1 = roadStage1.getDistance();
+            Float distance2 = roadStage2.getDistance();
+            if (distance1 != null) {
+                return distance1.compareTo(distance2);
+            }
+            return 0;
+        }
+    }
 	
 	/**
 	 * 验证公共点是不是两端之外的交点
@@ -580,6 +653,7 @@ public class RoadStageUtil {
 	*/
 	
 	public static void main(String[] args) {
+		/*
 		JSONObject a=new JSONObject();
 		a.put("x", (float)100);
 		a.put("y", (float)100);
@@ -598,14 +672,18 @@ public class RoadStageUtil {
 		
 		org.json.JSONObject pointJO = RoadStageUtil.getPublicPointJO(a,b,c,d);
 		System.out.println("x="+pointJO.get("x").toString()+",y="+pointJO.get("y").toString());
+		*/
 		
 		List<RoadStage> rsList=new ArrayList<>();
 		RoadStage rs=new RoadStage();
+		rs.setBackX((float)100);
 		rsList.add(rs);
 		RoadStage rs1=new RoadStage();
+		rs1.setBackX((float)200);
 		rsList.add(rs1);
 		RoadStage rs2=new RoadStage();
-		int index = rsList.indexOf(rs);
-		System.out.println("index="+index);
+		rs2.setBackX((float)300);
+		rsList.add(0, rs2);
+		System.out.println("1==="+rsList.get(0).getBackX());
 	}
 }

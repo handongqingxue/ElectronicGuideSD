@@ -248,12 +248,15 @@ public class RoadController {
 			else {
 				for (int i = 0; i < pprsListSize; i++) {
 					RoadStage pprs = pprsList.get(i);
-					System.out.println("pprs:backX="+pprs.getBackX()+",backY="+pprs.getBackY()+",id="+pprs.getId()+",roadId="+pprs.getRoadId());
-					org.json.JSONObject dividePPRSJO = RoadStageUtil.dividePPRoadStage(pprs);
+					System.out.println("pprs:backX="+pprs.getBackX()+",backY="+pprs.getBackY()+",crossX="+pprs.getCrossX()+",crossY="+pprs.getCrossY()+",id="+pprs.getId()+",roadId="+pprs.getRoadId());
+					org.json.JSONObject dividePPRSJO = RoadStageUtil.dividePPRoadStage(roadStage,pprs);
 					RoadStage prePPRS = (RoadStage)(dividePPRSJO.get("preRS"));
 					RoadStage sufPPRS = (RoadStage)(dividePPRSJO.get("sufRS"));
 					System.out.println("prePPRS:backX="+prePPRS.getBackX()+",backY="+prePPRS.getBackY()+",frontX="+prePPRS.getFrontX()+",frontY="+prePPRS.getFrontY()+",id="+pprs.getId());
 					System.out.println("sufPPRS:backX="+sufPPRS.getBackX()+",backY="+sufPPRS.getBackY()+",frontX="+sufPPRS.getFrontX()+",frontY="+sufPPRS.getFrontY()+",id="+pprs.getId());
+					//这里写删除原来未分割之前的路段代码
+					//这里写添加分割后的两端路段代码
+					RoadStageUtil.divideRoadStage(roadStage,pprsList);
 				}
 			}
 			
