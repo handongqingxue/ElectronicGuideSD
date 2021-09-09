@@ -246,8 +246,11 @@ public class RoadController {
 			if(pprsListSize==0)
 				count=1;//roadStageService.add(roadStage);
 			else {
+				List<Integer> pprsRoadIdList=new ArrayList<>();
 				for (int i = 0; i < pprsListSize; i++) {
 					RoadStage pprs = pprsList.get(i);
+					if(!pprsRoadIdList.contains(pprs.getRoadId()))
+						pprsRoadIdList.add(pprs.getRoadId());
 					System.out.println("pprs:backX="+pprs.getBackX()+",backY="+pprs.getBackY()+",crossX="+pprs.getCrossX()+",crossY="+pprs.getCrossY()+",id="+pprs.getId()+",roadId="+pprs.getRoadId());
 					org.json.JSONObject dividePPRSJO = RoadStageUtil.dividePPRoadStage(roadStage,pprs);
 					RoadStage prePPRS = (RoadStage)(dividePPRSJO.get("preRS"));
@@ -259,6 +262,15 @@ public class RoadController {
 				}
 				List<RoadStage> divideRSList=RoadStageUtil.divideRoadStage(roadStage,pprsList);
 				System.out.println("divideRSList="+divideRSList);
+				System.out.println("pprsRoadIdList="+pprsRoadIdList);
+				//这里写把分割后的路段插入数据库
+				List<RoadStage> roadStageList = roadStageService.selectOtherList(null);
+				Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
+				for(int i = 0; i < pprsRoadIdList.size(); i++) {
+					int pprsRoadId=pprsRoadIdList.get(i);
+					List<RoadStage> connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);
+					//这里写更新数据库该道路下的每个路段的排序
+				}
 			}
 			
 			if(count==0) {

@@ -667,6 +667,55 @@ public class RoadStageUtil {
         }
     }
 	
+	public static List<RoadStage> connectRoadStageInRoad(Map<String, Object> allRoadStageMap, int roadId) {
+		List<RoadStage> connectRSList = new ArrayList<>();
+		List<RoadStage> roadStageList = (List<RoadStage>)allRoadStageMap.get("roadStage"+roadId);
+		RoadStage roadStage = roadStageList.get(0);
+		connectRSList.add(roadStage);
+		for(int i=1;i<roadStageList.size();i++) {
+			roadStage = roadStageList.get(i);
+			int connectRSListSize = connectRSList.size();
+			if(connectRSListSize==1) {
+				RoadStage connectRS = connectRSList.get(0);
+				float backX = connectRS.getBackX();
+				float backY = connectRS.getBackY();
+				float frontX = connectRS.getFrontX();
+				float frontY = connectRS.getFrontY();
+				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()) {
+					System.out.println("1backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
+					connectRSList.add(0, roadStage);
+				}
+				else if(frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
+					System.out.println("2backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
+					connectRSList.add(roadStage);
+				}
+			}
+			else {
+				RoadStage connectRS = connectRSList.get(0);
+				float backX = connectRS.getBackX();
+				float backY = connectRS.getBackY();
+				float frontX = connectRS.getFrontX();
+				float frontY = connectRS.getFrontY();
+				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
+				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
+					System.out.println("backX="+backX+",backY="+backY);
+					connectRSList.add(0, roadStage);
+				}
+				connectRS = connectRSList.get(connectRSList.size()-1);
+				backX = connectRS.getBackX();
+				backY = connectRS.getBackY();
+				frontX = connectRS.getFrontX();
+				frontY = connectRS.getFrontY();
+				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
+				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
+					System.out.println("frontX="+frontX+",frontY="+frontY);
+					connectRSList.add(roadStage);
+				}
+			}
+		}
+		return connectRSList;
+	}
+	
 	/**
 	 * 验证公共点是不是两端之外的交点
 	 * @param startPoint
