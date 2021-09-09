@@ -575,18 +575,57 @@ public class RoadStageUtil {
 	 * @param roadStage
 	 * @param pprsList
 	 */
-	public static void divideRoadStage(RoadStage roadStage, List<RoadStage> pprsList) {
+	public static List<RoadStage> divideRoadStage(RoadStage roadStage, List<RoadStage> pprsList) {
+		float backX = roadStage.getBackX();
+		float backY = roadStage.getBackY();
 		for (int i = 0; i < pprsList.size(); i++) {
 			RoadStage pprs = pprsList.get(i);
+			float crossX = pprs.getCrossX();
+			float crossY = pprs.getCrossY();
+			float distance = jiSuanDistance(backX,backY,crossX,crossY);
+			pprs.setDistance(distance);
+			/*
 			if(i==0)
 				pprs.setDistance((float)5);
 			else if(i==1)
 				pprs.setDistance((float)2);
 			else if(i==2)
 				pprs.setDistance((float)1);
+			*/
 		}
 		sortByDistance(pprsList,ASC);
 		System.out.println("pprsList==="+pprsList);
+		List<RoadStage> divideRSList=new ArrayList<>();
+		RoadStage divideRS=new RoadStage();
+		divideRS.setBackX(roadStage.getBackX());
+		divideRS.setBackY(roadStage.getBackY());
+		divideRS.setFrontX(pprsList.get(0).getCrossX());
+		divideRS.setFrontY(pprsList.get(0).getCrossY());
+		divideRS.setFrontThrough(true);
+		divideRS.setRoadId(roadStage.getRoadId());
+		divideRSList.add(divideRS);
+		for (int i = 0; i < pprsList.size()-1; i++) {
+			RoadStage currentPPRS = pprsList.get(i);
+			RoadStage nextPPRS = pprsList.get(i+1);
+			divideRS=new RoadStage();
+			divideRS.setBackX(currentPPRS.getCrossX());
+			divideRS.setBackY(currentPPRS.getCrossY());
+			divideRS.setFrontX(nextPPRS.getCrossX());
+			divideRS.setFrontY(nextPPRS.getCrossY());
+			divideRS.setBackThrough(true);
+			divideRS.setFrontThrough(true);
+			divideRS.setRoadId(roadStage.getRoadId());
+			divideRSList.add(divideRS);
+		}
+		divideRS=new RoadStage();
+		divideRS.setBackX(pprsList.get(pprsList.size()-1).getCrossX());
+		divideRS.setBackY(pprsList.get(pprsList.size()-1).getCrossY());
+		divideRS.setFrontX(roadStage.getFrontX());
+		divideRS.setFrontY(roadStage.getFrontY());
+		divideRS.setBackThrough(true);
+		divideRS.setRoadId(roadStage.getRoadId());
+		divideRSList.add(divideRS);
+		return divideRSList;
 	}
 	
 	public static void sortByDistance(List<RoadStage> pprsList, String sortFlag) {

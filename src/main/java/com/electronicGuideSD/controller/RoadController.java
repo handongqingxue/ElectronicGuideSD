@@ -256,8 +256,9 @@ public class RoadController {
 					System.out.println("sufPPRS:backX="+sufPPRS.getBackX()+",backY="+sufPPRS.getBackY()+",frontX="+sufPPRS.getFrontX()+",frontY="+sufPPRS.getFrontY()+",id="+pprs.getId());
 					//这里写删除原来未分割之前的路段代码
 					//这里写添加分割后的两端路段代码
-					RoadStageUtil.divideRoadStage(roadStage,pprsList);
 				}
+				List<RoadStage> divideRSList=RoadStageUtil.divideRoadStage(roadStage,pprsList);
+				System.out.println("divideRSList="+divideRSList);
 			}
 			
 			if(count==0) {
