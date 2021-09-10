@@ -236,55 +236,57 @@ public class RoadController {
 			PlanResult plan=new PlanResult();
 			int count=0;
 			JSONObject a=new JSONObject();
-			a.put("x", roadStage.getBackX());
-			a.put("y", roadStage.getBackY());
+			a.put("x", roadStage.getBackX());//设置待添加的路段后方的x坐标
+			a.put("y", roadStage.getBackY());//设置待添加的路段后方的y坐标
 			JSONObject b=new JSONObject();
-			b.put("x", roadStage.getFrontX());
-			b.put("y", roadStage.getFrontY());
+			b.put("x", roadStage.getFrontX());//设置待添加的路段前方的x坐标
+			b.put("y", roadStage.getFrontY());//设置待添加的路段前方的y坐标
 			List<RoadStage> pprsList = RoadStageUtil.selectPublicPointRSList(roadStageService,a,b);
 			int pprsListSize=pprsList.size();
-			if(pprsListSize==0)
+			if(pprsListSize==0)//若没有与待添加路段有交点的路段，那么就直接添加待添加路段
 				count=roadStageService.add(roadStage);
-			else {
+			else {//若有的话则执行下面代码块
 				List<Integer> pprsRoadIdList=new ArrayList<>();
 				String deleteIds="";
 				for (int i = 0; i < pprsListSize; i++) {
 					RoadStage pprs = pprsList.get(i);
 					if(!pprsRoadIdList.contains(pprs.getRoadId()))
-						pprsRoadIdList.add(pprs.getRoadId());
+						pprsRoadIdList.add(pprs.getRoadId());//搜集有交点的路段集合的所属道路id
 					System.out.println("pprs:backX="+pprs.getBackX()+",backY="+pprs.getBackY()+",crossX="+pprs.getCrossX()+",crossY="+pprs.getCrossY()+",id="+pprs.getId()+",roadId="+pprs.getRoadId());
-					org.json.JSONObject dividePPRSJO = RoadStageUtil.dividePPRoadStage(roadStage,pprs);
+					org.json.JSONObject dividePPRSJO = RoadStageUtil.dividePPRoadStage(roadStage,pprs);//根据交点分割路段为两段
 					RoadStage prePPRS = (RoadStage)(dividePPRSJO.get("preRS"));
 					RoadStage sufPPRS = (RoadStage)(dividePPRSJO.get("sufRS"));
 					System.out.println("prePPRS:backX="+prePPRS.getBackX()+",backY="+prePPRS.getBackY()+",frontX="+prePPRS.getFrontX()+",frontY="+prePPRS.getFrontY()+",id="+pprs.getId());
 					System.out.println("sufPPRS:backX="+sufPPRS.getBackX()+",backY="+sufPPRS.getBackY()+",frontX="+sufPPRS.getFrontX()+",frontY="+sufPPRS.getFrontY()+",id="+pprs.getId());
-					//这里拼接需要删除的路段的id
+					//拼接需要删除的路段的id
 					deleteIds+=","+pprs.getId();
-					//这里写添加分割后的两端路段代码
-					roadStageService.add(prePPRS);
-					roadStageService.add(sufPPRS);
+					//添加分割后的两端路段
+					roadStageService.add(prePPRS);//将分割后生成的前段路段添加到数据库表
+					roadStageService.add(sufPPRS);//将分割后生成的后段路段添加到数据库表
 				}
-				//这里写删除原来未分割之前的路段代码
+				//删除原来未分割之前的路段（现在被分割成新路段，旧路段没用了）
 				roadStageService.deleteByIds(deleteIds);
-				List<RoadStage> divideRSList=RoadStageUtil.divideRoadStage(roadStage,pprsList);
+				List<RoadStage> divideRSList=RoadStageUtil.divideRoadStage(roadStage,pprsList);//用所有交点分割待添加路段，生成若干段新路段
 				System.out.println("divideRSList="+divideRSList);
 				System.out.println("pprsRoadIdList="+pprsRoadIdList);
-				//这里写把分割后的路段插入数据库
+				//通过遍历把分割后的新路段插入数据库表
 				for (RoadStage divideRS : divideRSList) {
 					roadStageService.add(divideRS);
 				}
 				
-				List<RoadStage> roadStageList = roadStageService.selectOtherList(null);
-				Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
+				List<RoadStage> roadStageList = roadStageService.selectOtherList(null);//查询所有路段
+				Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);//根据道路id，将所有路段分组存放
 				List<RoadStage> connectRSList = null;
+				//拼接、更新其他相交路段
 				for(int i = 0; i < pprsRoadIdList.size(); i++) {
 					int pprsRoadId=pprsRoadIdList.get(i);
-					connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);
-					//这里写更新数据库该道路下的每个路段
+					connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);//将不同道路里的路段按前后坐标拼接起来
+					//根据拼接好的前后路段和其他路段的走向情况，更新该道路下的每个路段属性
 					RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
 					System.out.println("connectRSList="+connectRSList);
-					roadStageService.updateAttrInRoad(connectRSList);
+					roadStageService.updateAttrInRoad(connectRSList);//将更新后的每条道路下的路段同步到数据库表
 				}
+				//拼接、更新刚才添加的新路段
 				connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,roadStage.getRoadId());
 				RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
 				System.out.println("connectRSList="+connectRSList);

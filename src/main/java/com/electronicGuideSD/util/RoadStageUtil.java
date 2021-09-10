@@ -516,6 +516,13 @@ public class RoadStageUtil {
 	    //return { x: a.x + dx , y: a.y + dy };  
 	}
 	
+	/**
+	 * 查询所有与该路段有两端除外的交点的路段集合
+	 * @param roadStageService
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public static List<RoadStage> selectPublicPointRSList(RoadStageService roadStageService, JSONObject a, JSONObject b) {
 		List<RoadStage> ppRSList = new ArrayList<>();
 		List<RoadStage> rsList = roadStageService.selectOtherList(null);
