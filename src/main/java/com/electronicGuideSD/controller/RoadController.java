@@ -266,13 +266,17 @@ public class RoadController {
 				//这里写把分割后的路段插入数据库
 				List<RoadStage> roadStageList = roadStageService.selectOtherList(null);
 				Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
+				List<RoadStage> connectRSList = null;
 				for(int i = 0; i < pprsRoadIdList.size(); i++) {
 					int pprsRoadId=pprsRoadIdList.get(i);
-					List<RoadStage> connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);
+					connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);
 					//这里写更新数据库该道路下的每个路段
 					RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
 					System.out.println("connectRSList="+connectRSList);
 				}
+				connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,roadStage.getRoadId());
+				RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
+				System.out.println("connectRSList="+connectRSList);
 			}
 			
 			if(count==0) {
