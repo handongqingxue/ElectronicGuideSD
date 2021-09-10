@@ -19,7 +19,10 @@ public class RoadStageUtil {
 	
 	public static final String ASC="asc";
 	public static final String DESC="desc";
+	public static final String FIRST="first";
+	public static final String LAST="last";
 	
+	@SuppressWarnings("unchecked")
 	public static Map<String, Object> initAllRoadMap(List<RoadStage> roadStageList) {
 		// TODO Auto-generated method stub
 		Map<String, Object> roadMap=new HashMap<>();
@@ -673,7 +676,7 @@ public class RoadStageUtil {
 		List<RoadStage> connectRSList = new ArrayList<>();
 		List<RoadStage> roadStageList = (List<RoadStage>)allRoadStageMap.get("roadStage"+roadId);
 		RoadStage roadStage = roadStageList.get(0);
-		connectRSList.add(roadStage);
+		addRSInList(roadStage,connectRSList,LAST,true);
 		for(int i=1;i<roadStageList.size();i++) {
 			roadStage = roadStageList.get(i);
 			int connectRSListSize = connectRSList.size();
@@ -685,11 +688,11 @@ public class RoadStageUtil {
 				float frontY = connectRS.getFrontY();
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()) {
 					System.out.println("1backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
-					connectRSList.add(0, roadStage);
+					addRSInList(roadStage,connectRSList,FIRST,true);
 				}
 				else if(frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
 					System.out.println("2backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
-					connectRSList.add(roadStage);
+					addRSInList(roadStage,connectRSList,LAST,true);
 				}
 			}
 			else {
@@ -701,7 +704,7 @@ public class RoadStageUtil {
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
 				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
 					System.out.println("backX="+backX+",backY="+backY);
-					connectRSList.add(0, roadStage);
+					addRSInList(roadStage,connectRSList,FIRST,true);
 				}
 				connectRS = connectRSList.get(connectRSList.size()-1);
 				backX = connectRS.getBackX();
@@ -711,11 +714,27 @@ public class RoadStageUtil {
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
 				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
 					System.out.println("frontX="+frontX+",frontY="+frontY);
-					connectRSList.add(roadStage);
+					addRSInList(roadStage,connectRSList,LAST,true);
 				}
 			}
 		}
 		return connectRSList;
+	}
+	
+	public static void addRSInList(RoadStage roadStage,List<RoadStage> roadStageList,String localFlag,boolean restAttrFlag) {
+		if(restAttrFlag) {
+			roadStage.setBackThrough(false);
+			roadStage.setFrontThrough(false);
+			roadStage.setBackIsCross(false);
+			roadStage.setBackCrossRSIds(null);
+			roadStage.setFrontIsCross(false);
+			roadStage.setFrontCrossRSIds(null);
+		}
+		
+		if(FIRST.equals(localFlag))
+			roadStageList.add(0, roadStage);
+		if(LAST.equals(localFlag))
+			roadStageList.add(roadStage);
 	}
 	
 	public static void updateRoadStageInRoad(List<RoadStage> roadStageList, List<RoadStage> allRSList) {
