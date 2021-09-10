@@ -1,6 +1,7 @@
 package com.electronicGuideSD.service.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.electronicGuideSD.dao.*;
 import com.electronicGuideSD.entity.*;
 import com.electronicGuideSD.service.*;
-import com.electronicGuideSD.util.RoadStageUtil;
+import com.electronicGuideSD.util.*;
 
 @Service
 public class RoadStageServiceImpl implements RoadStageService {
@@ -105,5 +106,22 @@ public class RoadStageServiceImpl implements RoadStageService {
 	public List<RoadStage> selectOtherList(String id) {
 		// TODO Auto-generated method stub
 		return roadStageDao.selectOtherList(id);
+	}
+
+	@Override
+	public int deleteByIds(String ids) {
+		// TODO Auto-generated method stub
+		List<String> idList = Arrays.asList(ids.split(","));
+		return roadStageDao.deleteByIds(idList);
+	}
+
+	@Override
+	public int updateAttrInRoad(List<RoadStage> road) {
+		// TODO Auto-generated method stub
+		int count=0;
+		for (RoadStage roadStage : road) {
+			count+=roadStageDao.updateAttr(roadStage);
+		}
+		return count;
 	}
 }

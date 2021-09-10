@@ -27,4 +27,8 @@ public interface RoadStageMapper {
 
 	List<RoadStage> selectOtherList(@Param("id")String id);
 
+	int deleteByIds(List<String> idList);
+
+	int updateAttr(RoadStage roadStage);
+
 }

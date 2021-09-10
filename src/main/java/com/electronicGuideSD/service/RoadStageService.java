@@ -23,4 +23,8 @@ public interface RoadStageService {
 
 	List<RoadStage> selectOtherList(String id);
 
+	int deleteByIds(String ids);
+
+	int updateAttrInRoad(List<RoadStage> road);
+
 }

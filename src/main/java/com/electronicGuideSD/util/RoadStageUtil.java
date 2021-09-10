@@ -555,6 +555,7 @@ public class RoadStageUtil {
 		preRS.setBackCrossRSIds(pprs.getBackCrossRSIds());
 		preRS.setFrontIsCross(true);
 		//preRS.setFrontCrossRSIds(roadStage.getId().toString());
+		preRS.setRoadId(pprs.getRoadId());
 		dividePPRSJO.put("preRS", preRS);
 		
 		RoadStage sufRS = new RoadStage();
@@ -570,6 +571,7 @@ public class RoadStageUtil {
 		//sufRS.setBackCrossRSIds(roadStage.getId().toString());
 		sufRS.setFrontIsCross(pprs.getFrontIsCross());
 		sufRS.setFrontCrossRSIds(pprs.getFrontCrossRSIds());
+		sufRS.setRoadId(pprs.getRoadId());
 		dividePPRSJO.put("sufRS", sufRS);
 		
 		return dividePPRSJO;
@@ -770,14 +772,8 @@ public class RoadStageUtil {
 							}
 						}
 					}
-					else {
-						roadStage.setBackIsCross(false);
-						roadStage.setBackCrossRSIds(null);
-					}
 				}
 				if(roadStageFrontX==rsBackX&&roadStageFrontY==rsBackY||roadStageFrontX==rsFrontX&&roadStageFrontY==rsFrontY) {
-					if(i==3)
-						System.out.println("11111111");
 					roadStage.setFrontThrough(true);
 					if(roadStageRoadId!=rsRoadId) {
 						roadStage.setFrontIsCross(true);
@@ -791,10 +787,6 @@ public class RoadStageUtil {
 								roadStage.setFrontCrossRSIds(frontCrossRSIds+","+rs.getId().toString());
 						}
 						
-					}
-					else {
-						roadStage.setFrontIsCross(false);
-						roadStage.setFrontCrossRSIds(null);
 					}
 				}
 			}

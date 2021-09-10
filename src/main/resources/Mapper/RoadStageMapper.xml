@@ -45,6 +45,12 @@
  	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.RoadStage">
  		select id,name from road_stage order by sort
  	</select>
+	<delete id="deleteByIds">
+		delete from road_stage where 1=1
+		<foreach collection="list" item="id" open=" and cast(id as char) in (" separator="," close=")">
+		#{id}
+		</foreach>
+	</delete>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.RoadStage">
  		insert into road_stage
  		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -176,6 +182,34 @@
  			<if test="roadId!=null">
  				roadId=#{roadId},
  			</if>
+		</trim>
+		where id=#{id}
+	</update>
+	<update id="updateAttr">
+		update road_stage set
+		<trim suffixOverrides=",">
+			<if test="backThrough!=null">
+				backThrough=#{backThrough},
+			</if>
+			<if test="frontThrough!=null">
+				frontThrough=#{frontThrough},
+			</if>
+ 			<if test="backIsCross!=null">
+ 				backIsCross=#{backIsCross},
+ 			</if>
+ 			<if test="backCrossRSIds!=null">
+ 				backCrossRSIds=#{backCrossRSIds},
+ 			</if>
+ 			<if test="frontIsCross!=null">
+ 				frontIsCross=#{frontIsCross},
+ 			</if>
+ 			<if test="frontCrossRSIds!=null">
+ 				frontCrossRSIds=#{frontCrossRSIds},
+ 			</if>
+				modifyTime=now(),
+			<if test="sort!=null">
+				sort=#{sort},
+			</if>
 		</trim>
 		where id=#{id}
 	</update>
