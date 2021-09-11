@@ -36,11 +36,11 @@
  		select rs.*,r.name roadName from road_stage rs,road r where rs.roadId=r.id and rs.id=#{id}
  	</select>
  	<select id="selectOtherList" resultType="com.electronicGuideSD.entity.RoadStage">
- 		select * from road_stage where 1=1
+ 		select rs.*,r.name roadName from road_stage rs,road r where rs.roadId=r.id
 		<if test="id!=null&amp;id!=''">
-			and id!=#{id}
+			and rs.id!=#{id}
 		</if>
-		 order by roadId,sort
+		 order by rs.roadId,rs.sort
  	</select>
  	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.RoadStage">
  		select id,name from road_stage order by sort
@@ -188,6 +188,9 @@
 	<update id="updateAttr">
 		update road_stage set
 		<trim suffixOverrides=",">
+			<if test="name!=null">
+				name=#{name},
+			</if>
 			<if test="backThrough!=null">
 				backThrough=#{backThrough},
 			</if>

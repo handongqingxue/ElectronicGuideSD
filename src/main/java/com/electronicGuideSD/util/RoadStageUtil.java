@@ -521,13 +521,18 @@ public class RoadStageUtil {
 	 * @param roadStageService
 	 * @param a
 	 * @param b
+	 * @param currentRSId 
 	 * @return
 	 */
-	public static List<RoadStage> selectPublicPointRSList(RoadStageService roadStageService, JSONObject a, JSONObject b) {
+	public static List<RoadStage> selectPublicPointRSList(RoadStageService roadStageService, JSONObject a, JSONObject b, Integer currentRSId) {
 		List<RoadStage> ppRSList = new ArrayList<>();
 		List<RoadStage> rsList = roadStageService.selectOtherList(null);
 		for (int i = 0; i < rsList.size(); i++) {
 			RoadStage rs = rsList.get(i);
+			if(currentRSId!=null) {
+				if(rs.getId()==currentRSId)
+					continue;
+			}
 			JSONObject c=new JSONObject();
 			c.put("x", rs.getBackX());
 			c.put("y", rs.getBackY());
@@ -686,8 +691,14 @@ public class RoadStageUtil {
 		List<RoadStage> roadStageList = (List<RoadStage>)allRoadStageMap.get("roadStage"+roadId);
 		RoadStage roadStage = roadStageList.get(0);
 		addRSInList(roadStage,connectRSList,LAST,true);
-		for(int i=1;i<roadStageList.size();i++) {
-			roadStage = roadStageList.get(i);
+		roadStageList.remove(roadStage);
+		addConnectRoadStageInList(roadStageList,connectRSList);
+		return connectRSList;
+	}
+	
+	public static void addConnectRoadStageInList(List<RoadStage> roadStageList,List<RoadStage> connectRSList) {
+		for(int i=0;i<roadStageList.size();i++) {
+			RoadStage roadStage = roadStageList.get(i);
 			int connectRSListSize = connectRSList.size();
 			if(connectRSListSize==1) {
 				RoadStage connectRS = connectRSList.get(0);
@@ -698,10 +709,14 @@ public class RoadStageUtil {
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()) {
 					System.out.println("1backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
 					addRSInList(roadStage,connectRSList,FIRST,true);
+					roadStageList.remove(roadStage);
+					addConnectRoadStageInList(roadStageList,connectRSList);
 				}
 				else if(frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
 					System.out.println("2backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
 					addRSInList(roadStage,connectRSList,LAST,true);
+					roadStageList.remove(roadStage);
+					addConnectRoadStageInList(roadStageList,connectRSList);
 				}
 			}
 			else {
@@ -712,8 +727,10 @@ public class RoadStageUtil {
 				float frontY = connectRS.getFrontY();
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
 				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
-					System.out.println("backX="+backX+",backY="+backY);
+					System.out.println("backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
 					addRSInList(roadStage,connectRSList,FIRST,true);
+					roadStageList.remove(roadStage);
+					addConnectRoadStageInList(roadStageList,connectRSList);
 				}
 				connectRS = connectRSList.get(connectRSList.size()-1);
 				backX = connectRS.getBackX();
@@ -722,12 +739,13 @@ public class RoadStageUtil {
 				frontY = connectRS.getFrontY();
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
 				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
-					System.out.println("frontX="+frontX+",frontY="+frontY);
+					System.out.println("backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
 					addRSInList(roadStage,connectRSList,LAST,true);
+					roadStageList.remove(roadStage);
+					addConnectRoadStageInList(roadStageList,connectRSList);
 				}
 			}
 		}
-		return connectRSList;
 	}
 	
 	public static void addRSInList(RoadStage roadStage,List<RoadStage> roadStageList,String localFlag,boolean restAttrFlag) {
@@ -750,6 +768,7 @@ public class RoadStageUtil {
 		for(int i=0;i<roadStageList.size();i++) {
 			RoadStage roadStage = roadStageList.get(i);
 			roadStage.setSort(i);
+			roadStage.setName(roadStage.getRoadName()+(i+1));
 			for(int j=0;j<allRSList.size();j++) {
 				RoadStage rs = allRSList.get(j);
 				if(roadStage.getId()==rs.getId())

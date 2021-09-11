@@ -241,7 +241,7 @@ public class RoadController {
 			JSONObject b=new JSONObject();
 			b.put("x", roadStage.getFrontX());//设置待添加的路段前方的x坐标
 			b.put("y", roadStage.getFrontY());//设置待添加的路段前方的y坐标
-			List<RoadStage> pprsList = RoadStageUtil.selectPublicPointRSList(roadStageService,a,b);
+			List<RoadStage> pprsList = RoadStageUtil.selectPublicPointRSList(roadStageService,a,b,null);
 			int pprsListSize=pprsList.size();
 			if(pprsListSize==0)//若没有与待添加路段有交点的路段，那么就直接添加待添加路段
 				count=roadStageService.add(roadStage);
@@ -319,7 +319,6 @@ public class RoadController {
 		try {
 			PlanResult plan=new PlanResult();
 			int count=0;
-			roadStageService.deleteByIds(roadStage.getId().toString());
 
 			List<RoadStage> roadStageList = null;
 			Map<String, Object> allRoadStageMap = null;
@@ -331,11 +330,16 @@ public class RoadController {
 			JSONObject b=new JSONObject();
 			b.put("x", roadStage.getFrontX());//设置待添加的路段前方的x坐标
 			b.put("y", roadStage.getFrontY());//设置待添加的路段前方的y坐标
-			List<RoadStage> pprsList = RoadStageUtil.selectPublicPointRSList(roadStageService,a,b);
+			List<RoadStage> pprsList = RoadStageUtil.selectPublicPointRSList(roadStageService,a,b,roadStage.getId());
 			int pprsListSize=pprsList.size();
-			if(pprsListSize==0)//若没有与待添加路段有交点的路段，那么就直接添加待添加路段
+			if(pprsListSize==0) {//若没有与待添加路段有交点的路段，那么就直接添加待添加路段
 				count=roadStageService.edit(roadStage);
+				
+				roadStageList = roadStageService.selectOtherList(null);//查询所有路段
+				allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);//根据道路id，将所有路段分组存放
+			}
 			else {//若有的话则执行下面代码块
+				roadStageService.deleteByIds(roadStage.getId().toString());
 				List<Integer> pprsRoadIdList=new ArrayList<>();
 				String deleteIds="";
 				for (int i = 0; i < pprsListSize; i++) {
