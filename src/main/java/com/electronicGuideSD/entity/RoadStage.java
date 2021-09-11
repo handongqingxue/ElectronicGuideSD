@@ -137,6 +137,12 @@ public class RoadStage {
 	public void setRoadName(String roadName) {
 		this.roadName = roadName;
 	}
+	public Integer getOldRoadId() {
+		return oldRoadId;
+	}
+	public void setOldRoadId(Integer oldRoadId) {
+		this.oldRoadId = oldRoadId;
+	}
 	public String getPreBfFlag() {
 		return preBfFlag;
 	}
@@ -170,6 +176,7 @@ public class RoadStage {
 	private Integer sort;
 	private Integer roadId;
 	private String roadName;
+	private Integer oldRoadId;
 	private String preBfFlag;//上一个路段与该路段的交点位置
 	private String nextBfFlag;//下一个路段与该路段的交点位置
 }

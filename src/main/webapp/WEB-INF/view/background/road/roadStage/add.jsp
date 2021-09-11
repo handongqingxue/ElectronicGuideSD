@@ -76,7 +76,7 @@
 	margin-left: 20px;
 	font-size: 18px;
 }
-.name_inp,.backX_inp,.backY_inp,.frontX_inp,.frontY_inp{
+.backX_inp,.backY_inp,.frontX_inp,.frontY_inp{
 	width: 150px;
 	height:30px;
 }
