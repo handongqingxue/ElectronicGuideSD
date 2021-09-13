@@ -61,12 +61,6 @@ function initTab1(){
 		pageSize:10,
 		columns:[[
 			{field:"name",title:"路名",width:150},
-			{field:"backThrough",title:"后方是否相通",width:120,formatter:function(value,row){
-				return value?"是":"否";
-			}},
-			{field:"frontThrough",title:"前方是否相通",width:120,formatter:function(value,row){
-				return value?"是":"否";
-			}},
             {field:"createTime",title:"创建时间",width:150},
             {field:"modifyTime",title:"修改时间",width:150},
             {field:"sort",title:"排序",width:80},
@@ -79,7 +73,7 @@ function initTab1(){
         onLoadSuccess:function(data){
 			if(data.total==0){
 				$(this).datagrid("appendRow",{name:"<div style=\"text-align:center;\">暂无信息<div>"});
-				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:7});
+				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:5});
 				data.total=0;
 			}
 			
@@ -103,8 +97,8 @@ function setFitWidthInParent(o){
 	<%@include file="../../side.jsp"%>
 	<div class="tab1_div" id="tab1_div">
 		<div class="toolbar" id="toolbar">
-			<span class="name_span">景点名称：</span>
-			<input type="text" class="name_inp" id="name" placeholder="请输入景点名称"/>
+			<span class="name_span">路名：</span>
+			<input type="text" class="name_inp" id="name" placeholder="请输入路名"/>
 			<a class="search_but" id="search_but">查询</a>
 			<a id="add_but">添加</a>
 		</div>

@@ -121,26 +121,6 @@ function setFitWidthInParent(parent,self){
 				<span>${requestScope.road.sort }</span>
 			</td>
 		  </tr>
-		  <tr>
-			<td class="td1" align="right">
-				后方是否相通
-			</td>
-			<td class="td2">
-				<c:choose>
-					<c:when test="${requestScope.road.backThrough }">是</c:when>
-					<c:otherwise>否</c:otherwise>
-				</c:choose>
-			</td>
-			<td class="td1" align="right">
-				前方是否相通
-			</td>
-			<td class="td2">
-				<c:choose>
-					<c:when test="${requestScope.road.frontThrough }">是</c:when>
-					<c:otherwise>否</c:otherwise>
-				</c:choose>
-			</td>
-		  </tr>
 		</table>
 		</form>
 	</div>

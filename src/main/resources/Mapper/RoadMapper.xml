@@ -28,12 +28,6 @@
  			<if test="name!=null">
  				name,
  			</if>
- 			<if test="frontThrough!=null">
- 				frontThrough,
- 			</if>
- 			<if test="backThrough!=null">
- 				backThrough,
- 			</if>
  				createTime,
  			<if test="sort!=null">
  				sort,
@@ -43,12 +37,6 @@
  		<trim prefix="(" suffix=")" suffixOverrides=",">
  			<if test="name!=null">
  				#{name},
- 			</if>
- 			<if test="frontThrough!=null">
- 				#{frontThrough},
- 			</if>
- 			<if test="backThrough!=null">
- 				#{backThrough},
  			</if>
  				now(),
  			<if test="sort!=null">
@@ -61,12 +49,6 @@
 		<trim suffixOverrides=",">
 			<if test="name!=null">
 				name=#{name},
-			</if>
-			<if test="backThrough!=null">
-				backThrough=#{backThrough},
-			</if>
-			<if test="frontThrough!=null">
-				frontThrough=#{frontThrough},
 			</if>
 				modifyTime=now(),
 			<if test="sort!=null">

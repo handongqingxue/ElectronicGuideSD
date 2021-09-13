@@ -35,40 +35,10 @@ var dialogTop=10;
 var dialogLeft=20;
 var ndNum=0;
 $(function(){
-	initBackThroughCBB();
-	initFrontThroughCBB();
 	initNewDialog();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 });
-
-function initBackThroughCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
-	backThroughCBB=$("#backThrough_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#backThrough").val(backThroughCBB.combobox("getValue"));
-		}
-	});
-}
-
-function initFrontThroughCBB(){
-	var data=[];
-	data.push({id:"",name:"请选择"},{id:"true",name:"是"},{id:"false",name:"否"});
-	frontThroughCBB=$("#frontThrough_cbb").combobox({
-		width:150,
-		data:data,
-		valueField:"id",
-		textField:"name",
-		onSelect:function(){
-			$("#frontThrough").val(frontThroughCBB.combobox("getValue"));
-		}
-	});
-}
 
 function initDialogPosition(){
 	//基本属性组
@@ -127,11 +97,7 @@ function initNewDialog(){
 function checkAdd(){
 	if(checkName()){
 		if(checkSort()){
-			if(checkBackThrough()){
-				if(checkFrontThrough()){
-					addRoad();
-				}
-			}
+			addRoad();
 		}
 	}
 }
@@ -189,28 +155,6 @@ function checkSort(){
 		return true;
 }
 
-//验证后方是否相通
-function checkBackThrough(){
-	var backThrough=backThroughCBB.combobox("getValue");
-	if(backThrough==null||backThrough==""){
-    	alert("请选择是否相通");
-    	return false;
-	}
-	else
-		return true;
-}
-
-//验证前方是否相通
-function checkFrontThrough(){
-	var frontThrough=backThroughCBB.combobox("getValue");
-	if(backThrough==null||backThrough==""){
-	  	alert("请选择是否相通");
-	  	return false;
-	}
-	else
-		return true;
-}
-
 function setFitWidthInParent(parent,self){
 	var space=0;
 	switch (self) {
@@ -251,22 +195,6 @@ function setFitWidthInParent(parent,self){
 			</td>
 			<td class="td2">
 				<input type="number" class="sort_inp" id="sort" name="sort" placeholder="请输入排序"/>
-			</td>
-		  </tr>
-		  <tr>
-			<td class="td1" align="right">
-				后方是否相通
-			</td>
-			<td class="td2">
-				<select id="backThrough_cbb"></select>
-				<input type="hidden" id="backThrough" name="backThrough"/>
-			</td>
-			<td class="td1" align="right">
-				前方是否相通
-			</td>
-			<td class="td2">
-				<select id="frontThrough_cbb"></select>
-				<input type="hidden" id="frontThrough" name="frontThrough"/>
 			</td>
 		  </tr>
 		</table>
