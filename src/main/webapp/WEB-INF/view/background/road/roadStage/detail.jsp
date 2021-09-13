@@ -57,13 +57,6 @@
 .detail_rs_sd_map_dialog_div .toolbar .xsbq_span{
 	margin-left: 13px;
 }
-.detail_rs_sd_map_dialog_div .toolbar .startXY_rad,.detail_rs_sd_map_dialog_div .toolbar .endXY_rad{
-	margin-top: 5px;
-	margin-left: 20px;
-}
-.detail_rs_sd_map_dialog_div .toolbar .startXY_span,.detail_rs_sd_map_dialog_div .toolbar .endXY_span{
-	margin-left: 5px;
-}
 
 .center_con_div{
 	height: 90vh;
@@ -141,14 +134,17 @@ $(function(){
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 	
+	/*
 	var a={x:100,y:100};
 	var b={x:500,y:600};
 	var c={x:100,y:600};
 	var d={x:500,y:100};
 	var obj=segmentsIntr(a,b,c,d);
 	alert(JSON.stringify(obj));
+	*/
 });
 
+/*
 function segmentsIntr(a, b, c, d){  
     // 三角形abc 面积的2倍  
     var area_abc = (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);  
@@ -176,6 +172,7 @@ function segmentsIntr(a, b, c, d){
         dy= t*(b.y - a.y);  
     return { x: a.x + dx , y: a.y + dy };  
 }  
+*/
 
 function jiSuanScale(){
 	sceDisCanvasMinWidth=parseFloat('${sessionScope.user.scenicDistrict.mapWidth}');
@@ -621,10 +618,6 @@ function setFitWidthInParent(parent,self){
 						<div class="row_div">
 							<span class="xsbq_span">显示标签</span>&nbsp;&nbsp;&nbsp;
 							<select id="entityTypes_cbb"></select>
-							<input type="radio" class="startXY_rad" id="startXY_rad" name="xy_radio"/>
-							<span class="startXY_span">开始点</span>
-							<input type="radio" class="endXY_rad" id="endXY_rad" name="xy_radio"/>
-							<span class="endXY_span">结束点</span>
 						</div>
 					</div>
 					<div id="sceDisCanvas_div">
@@ -650,7 +643,7 @@ function setFitWidthInParent(parent,self){
 			</td>
 			<td class="td2">
 				<span>${requestScope.roadStage.name }</span>
-				<div class="upBut_div showMapBut_div" onclick="openDetailRsDialog(1);">地图打点</div>
+				<div class="upBut_div showMapBut_div" onclick="openDetailRsDialog(1);">查看地图</div>
 			</td>
 			<td class="td1" align="right">
 				所属道路

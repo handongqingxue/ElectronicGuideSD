@@ -235,6 +235,10 @@ public class RoadController {
 		try {
 			PlanResult plan=new PlanResult();
 			int count=0;
+			
+			List<RoadStage> roadStageList = null;
+			Map<String, Object> allRoadStageMap = null;
+			
 			JSONObject a=new JSONObject();
 			a.put("x", roadStage.getBackX());//设置待添加的路段后方的x坐标
 			a.put("y", roadStage.getBackY());//设置待添加的路段后方的y坐标
@@ -243,8 +247,12 @@ public class RoadController {
 			b.put("y", roadStage.getFrontY());//设置待添加的路段前方的y坐标
 			List<RoadStage> pprsList = RoadStageUtil.selectPublicPointRSList(roadStageService,a,b,null);
 			int pprsListSize=pprsList.size();
-			if(pprsListSize==0)//若没有与待添加路段有交点的路段，那么就直接添加待添加路段
-				count=roadStageService.add(roadStage);
+			if(pprsListSize==0) {//若没有与待添加路段有交点的路段，那么就直接添加待添加路段
+				roadStageService.add(roadStage);
+				
+				roadStageList = roadStageService.selectOtherList(null);//查询所有路段
+				allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);//根据道路id，将所有路段分组存放
+			}
 			else {//若有的话则执行下面代码块
 				List<Integer> pprsRoadIdList=new ArrayList<>();
 				String deleteIds="";
@@ -274,24 +282,18 @@ public class RoadController {
 					roadStageService.add(divideRS);
 				}
 				
-				List<RoadStage> roadStageList = roadStageService.selectOtherList(null);//查询所有路段
-				Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);//根据道路id，将所有路段分组存放
-				List<RoadStage> connectRSList = null;
+				roadStageList = roadStageService.selectOtherList(null);//查询所有路段
+				allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);//根据道路id，将所有路段分组存放
+				
 				//拼接、更新其他相交路段
 				for(int i = 0; i < pprsRoadIdList.size(); i++) {
 					int pprsRoadId=pprsRoadIdList.get(i);
-					connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);//将不同道路里的路段按前后坐标拼接起来
-					//根据拼接好的前后路段和其他路段的走向情况，更新该道路下的每个路段属性
-					RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
-					System.out.println("connectRSList="+connectRSList);
-					roadStageService.updateAttrInRoad(connectRSList);//将更新后的每条道路下的路段同步到数据库表
+					RoadStageUtil.updateAttrInRoad(roadStageService, allRoadStageMap, pprsRoadId, roadStageList);
 				}
-				//拼接、更新刚才添加的新路段
-				connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,roadStage.getRoadId());
-				RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
-				System.out.println("connectRSList="+connectRSList);
-				count=roadStageService.updateAttrInRoad(connectRSList);
 			}
+			
+			//拼接、更新刚才添加的新路段
+			count=RoadStageUtil.updateAttrInRoad(roadStageService, allRoadStageMap, roadStage.getRoadId(), roadStageList);
 			
 			if(count==0) {
 				plan.setStatus(0);
@@ -322,7 +324,6 @@ public class RoadController {
 
 			List<RoadStage> roadStageList = null;
 			Map<String, Object> allRoadStageMap = null;
-			List<RoadStage> connectRSList = null;
 			
 			JSONObject a=new JSONObject();
 			a.put("x", roadStage.getBackX());//设置待添加的路段后方的x坐标
@@ -374,27 +375,17 @@ public class RoadController {
 				//拼接、更新其他相交路段
 				for(int i = 0; i < pprsRoadIdList.size(); i++) {
 					int pprsRoadId=pprsRoadIdList.get(i);
-					connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,pprsRoadId);//将不同道路里的路段按前后坐标拼接起来
-					//根据拼接好的前后路段和其他路段的走向情况，更新该道路下的每个路段属性
-					RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
-					System.out.println("connectRSList="+connectRSList);
-					roadStageService.updateAttrInRoad(connectRSList);//将更新后的每条道路下的路段同步到数据库表
+					RoadStageUtil.updateAttrInRoad(roadStageService,allRoadStageMap,pprsRoadId,roadStageList);
 				}
 			}
 			
 			System.out.println("oldRoadId==="+roadStage.getOldRoadId());
 			System.out.println("roadId==="+roadStage.getRoadId());
 			
-			connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,roadStage.getOldRoadId());
-			RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
-			System.out.println("connectRSList="+connectRSList);
-			count=roadStageService.updateAttrInRoad(connectRSList);
+			count=RoadStageUtil.updateAttrInRoad(roadStageService,allRoadStageMap,roadStage.getOldRoadId(),roadStageList);
 			
 			if(roadStage.getRoadId()!=roadStage.getOldRoadId()) {
-				connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,roadStage.getRoadId());
-				RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
-				System.out.println("connectRSList="+connectRSList);
-				count=roadStageService.updateAttrInRoad(connectRSList);
+				count=RoadStageUtil.updateAttrInRoad(roadStageService,allRoadStageMap,roadStage.getRoadId(),roadStageList);
 			}
 			
 			if(count==0) {

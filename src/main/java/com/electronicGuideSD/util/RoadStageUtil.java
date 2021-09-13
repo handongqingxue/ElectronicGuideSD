@@ -690,9 +690,7 @@ public class RoadStageUtil {
 		List<RoadStage> connectRSList = new ArrayList<>();
 		List<RoadStage> roadStageList = (List<RoadStage>)allRoadStageMap.get("roadStage"+roadId);
 		RoadStage roadStage = roadStageList.get(0);
-		addRSInList(roadStage,connectRSList,LAST,true);
-		roadStageList.remove(roadStage);
-		addConnectRoadStageInList(roadStageList,connectRSList);
+		addRSInList(roadStage,connectRSList,roadStageList,LAST,true);
 		return connectRSList;
 	}
 	
@@ -708,15 +706,11 @@ public class RoadStageUtil {
 				float frontY = connectRS.getFrontY();
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()) {
 					System.out.println("1backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
-					addRSInList(roadStage,connectRSList,FIRST,true);
-					roadStageList.remove(roadStage);
-					addConnectRoadStageInList(roadStageList,connectRSList);
+					addRSInList(roadStage,connectRSList,roadStageList,FIRST,true);
 				}
 				else if(frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
 					System.out.println("2backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
-					addRSInList(roadStage,connectRSList,LAST,true);
-					roadStageList.remove(roadStage);
-					addConnectRoadStageInList(roadStageList,connectRSList);
+					addRSInList(roadStage,connectRSList,roadStageList,LAST,true);
 				}
 			}
 			else {
@@ -728,9 +722,7 @@ public class RoadStageUtil {
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
 				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
 					System.out.println("backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
-					addRSInList(roadStage,connectRSList,FIRST,true);
-					roadStageList.remove(roadStage);
-					addConnectRoadStageInList(roadStageList,connectRSList);
+					addRSInList(roadStage,connectRSList,roadStageList,FIRST,true);
 				}
 				connectRS = connectRSList.get(connectRSList.size()-1);
 				backX = connectRS.getBackX();
@@ -740,15 +732,13 @@ public class RoadStageUtil {
 				if(backX==roadStage.getBackX()&&backY==roadStage.getBackY()||backX==roadStage.getFrontX()&&backY==roadStage.getFrontY()||
 				   frontX==roadStage.getBackX()&&frontY==roadStage.getBackY()||frontX==roadStage.getFrontX()&&frontY==roadStage.getFrontY()) {
 					System.out.println("backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
-					addRSInList(roadStage,connectRSList,LAST,true);
-					roadStageList.remove(roadStage);
-					addConnectRoadStageInList(roadStageList,connectRSList);
+					addRSInList(roadStage,connectRSList,roadStageList,LAST,true);
 				}
 			}
 		}
 	}
 	
-	public static void addRSInList(RoadStage roadStage,List<RoadStage> roadStageList,String localFlag,boolean restAttrFlag) {
+	public static void addRSInList(RoadStage roadStage,List<RoadStage> connectRSList,List<RoadStage> roadStageList,String localFlag,boolean restAttrFlag) {
 		if(restAttrFlag) {
 			roadStage.setBackThrough(false);
 			roadStage.setFrontThrough(false);
@@ -759,9 +749,12 @@ public class RoadStageUtil {
 		}
 		
 		if(FIRST.equals(localFlag))
-			roadStageList.add(0, roadStage);
+			connectRSList.add(0, roadStage);
 		if(LAST.equals(localFlag))
-			roadStageList.add(roadStage);
+			connectRSList.add(roadStage);
+		
+		roadStageList.remove(roadStage);
+		addConnectRoadStageInList(roadStageList,connectRSList);
 	}
 	
 	public static void updateRoadStageInRoad(List<RoadStage> roadStageList, List<RoadStage> allRSList) {
@@ -817,6 +810,14 @@ public class RoadStageUtil {
 				}
 			}
 		}
+	}
+	
+	public static int updateAttrInRoad(RoadStageService roadStageService, Map<String, Object> allRoadStageMap, int roadId, List<RoadStage> roadStageList) {
+		List<RoadStage>  connectRSList = RoadStageUtil.connectRoadStageInRoad(allRoadStageMap,roadId);//将不同道路里的路段按前后坐标拼接起来
+		//根据拼接好的前后路段和其他路段的走向情况，更新该道路下的每个路段属性
+		RoadStageUtil.updateRoadStageInRoad(connectRSList,roadStageList);
+		System.out.println("connectRSList="+connectRSList);
+		return roadStageService.updateAttrInRoad(connectRSList);//将更新后的每条道路下的路段同步到数据库表
 	}
 	
 	/**
