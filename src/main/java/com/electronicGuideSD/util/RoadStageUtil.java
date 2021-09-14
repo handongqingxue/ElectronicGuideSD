@@ -286,18 +286,18 @@ public class RoadStageUtil {
 			}
 			else {
 				String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
-				System.out.println("pwcBfFlag="+pwcBfFlag);
-				
-				if(currentRS.getBackIsCross()) {
-					String rsIds = currentRS.getBackCrossRSIds();
-					System.out.println("这里有交叉口="+rsIds);
-					String[] rsIdArr = rsIds.split(",");
-					for (String rsId : rsIdArr) {
-						List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+rsId);
-						int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getBackX(),currentRS.getBackY());
-						System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
-						//fenZhiRsList.get(0)
-						//initNavLineFromItemIndex(roadStageMap,backChildNavList,currentRS,fenZhiRsList,roadToSpRoadStage,currentRS.getPreBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList,distance);
+				if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
+					if(currentRS.getBackIsCross()) {
+						String rsIds = currentRS.getBackCrossRSIds();
+						List<Map<String,Integer>> roadList=getCrossRoadListByRsIds(allRSList,rsIds);
+						for (Map<String,Integer> roadMap : roadList) {
+							List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadMap.get("id").toString());
+							//int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getBackX(),currentRS.getBackY());
+							int fenZhiItemIndex=getListItemIndexById(fenZhiRsList,Integer.valueOf(roadMap.get("crossRSId").toString()));
+							System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
+							//fenZhiRsList.get(0)
+							//initNavLineFromItemIndex(roadStageMap,backChildNavList,currentRS,fenZhiRsList,roadToSpRoadStage,currentRS.getPreBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList,distance);
+						}
 					}
 				}
 				RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
@@ -319,33 +319,34 @@ public class RoadStageUtil {
 						break;
 					}
 					else {
-						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
 						String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
 						if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getBackIsCross()) {
 								String rsIds = currentRS.getBackCrossRSIds();
-								String[] roadIdArr = getRoadIdsByRsIds(allRSList,rsIds);
-								for (String roadId : roadIdArr) {
-									List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadId);
+								List<Map<String,Integer>> roadList=getCrossRoadListByRsIds(allRSList,rsIds);
+								for (Map<String,Integer> roadMap : roadList) {
+									List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadMap.get("id").toString());
 									int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getBackX(),currentRS.getBackY());
 									System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
-									//fenZhiRsList.get(0)
-									//initNavLineFromItemIndex(roadStageMap,backChildNavList,currentRS,fenZhiRsList,rtspRoadStage,currentRS.getPreBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList,distance);
+									initNavLineFromItemIndex(allRSList,allRoadMap,backChildNavList,preRS,fenZhiRsList,roadToSpRoadStage,fenZhiItemIndex,roadToSpBackX,roadToSpBackY,allNavList,distance);
 								}
 							}
 						}
 						else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getFrontIsCross()) {
 								String rsIds = currentRS.getFrontCrossRSIds();
-								String[] roadIdArr = getRoadIdsByRsIds(allRSList,rsIds);
-								for (String roadId : roadIdArr) {
-									List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadId);
+								List<Map<String,Integer>> roadList=getCrossRoadListByRsIds(allRSList,rsIds);
+								for (Map<String,Integer> roadMap : roadList) {
+									List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadMap.get("id").toString());
 									System.out.println("fenZhiRsList="+fenZhiRsList);
-									int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getFrontX(),currentRS.getFrontY());
+									//int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getFrontX(),currentRS.getFrontY());
+									int fenZhiItemIndex=getListItemIndexById(fenZhiRsList,Integer.valueOf(roadMap.get("crossRSId").toString()));
 									System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
+									initNavLineFromItemIndex(allRSList,allRoadMap,backChildNavList,preRS,fenZhiRsList,roadToSpRoadStage,fenZhiItemIndex,roadToSpBackX,roadToSpBackY,allNavList,distance);
 								}
 							}
 						}
+						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
 					}
 				}
 				else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {
@@ -355,16 +356,32 @@ public class RoadStageUtil {
 						break;
 					}
 					else {
-						if(currentRS.getBackIsCross()) {
-							String rsIds = currentRS.getBackCrossRSIds();
-							System.out.println("这里有交叉口="+rsIds);
-							String[] rsIdArr = rsIds.split(",");
-							for (String rsId : rsIdArr) {
-								List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+rsId);
-								int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getBackX(),currentRS.getBackY());
-								System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
-								//fenZhiRsList.get(0)
-								//initNavLineFromItemIndex(roadStageMap,backChildNavList,currentRS,fenZhiRsList,rtspRoadStage,currentRS.getPreBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList,distance);
+						String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
+						if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
+							if(currentRS.getBackIsCross()) {
+								String rsIds = currentRS.getBackCrossRSIds();
+								List<Map<String,Integer>> roadList=getCrossRoadListByRsIds(allRSList,rsIds);
+								for (Map<String,Integer> roadMap : roadList) {
+									List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadMap.get("id").toString());
+									//int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getBackX(),currentRS.getBackY());
+									int fenZhiItemIndex=getListItemIndexById(fenZhiRsList,Integer.valueOf(roadMap.get("crossRSId").toString()));
+									System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
+									//fenZhiRsList.get(0)
+									initNavLineFromItemIndex(allRSList,allRoadMap,backChildNavList,preRS,fenZhiRsList,roadToSpRoadStage,fenZhiItemIndex,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
+							}
+						}
+						else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
+							if(currentRS.getFrontIsCross()) {
+								String rsIds = currentRS.getFrontCrossRSIds();
+								List<Map<String,Integer>> roadList=getCrossRoadListByRsIds(allRSList,rsIds);
+								for (Map<String,Integer> roadMap : roadList) {
+									List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadMap.get("id").toString());
+									System.out.println("fenZhiRsList="+fenZhiRsList);
+									//int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getFrontX(),currentRS.getFrontY());
+									int fenZhiItemIndex=getListItemIndexById(fenZhiRsList,Integer.valueOf(roadMap.get("crossRSId").toString()));
+									System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
+								}
 							}
 						}
 						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
@@ -428,6 +445,20 @@ public class RoadStageUtil {
 		return index;
 	}
 	
+	public static int getListItemIndexById(List<RoadStage> rsList, Integer id) {
+		// TODO Auto-generated method stub
+		int index=-1;
+		for(int i=0;i<rsList.size();i++) {
+			RoadStage rs = rsList.get(i);
+			if(id==rs.getId()) {
+				System.out.println("i==="+i);
+				index=i;
+				break;
+			}
+		}
+		return index;
+	}
+	
 	public static int getListItemIndexByLocation(List<RoadStage> rsList, Float x, Float y) {
 		int index=-1;
 		for(int i=0;i<rsList.size();i++) {
@@ -444,35 +475,36 @@ public class RoadStageUtil {
 		return index;
 	}
 	
-	public static String[] getRoadIdsByRsIds(List<RoadStage> allRSList,String rsIds) {
+	public static List<Map<String,Integer>> getCrossRoadListByRsIds(List<RoadStage> allRSList,String rsIds) {
 		System.out.println("这里有交叉口="+rsIds);
-		List<String> roadIdList=new ArrayList<>();
+		List<Map<String,Integer>> roadList=new ArrayList<>();
 		String[] rsIdArr = rsIds.split(",");
 		for (int i = 0; i < allRSList.size(); i++) {
 			RoadStage rs = allRSList.get(i);
 			boolean addFlag=false;
 			boolean exist=false;
-			String roadId=null;
+			Map<String,Integer> roadMap=null;
 			for(int j = 0; j < rsIdArr.length; j++) {
 				if(rsIdArr[j].equals(rs.getId().toString())) {
-					for (int k = 0; k < roadIdList.size(); k++) {
-						if(roadIdList.get(k).equals(rs.getRoadId().toString())) {
+					for (int k = 0; k < roadList.size(); k++) {
+						if(roadList.get(k).get("id")==rs.getRoadId()) {
 							exist=true;
 							break;
 						}
 					}
 					if(!exist) {
 						addFlag=true;
-						roadId=rs.getRoadId().toString();
+						roadMap=new HashMap<>();
+						roadMap.put("id", rs.getRoadId());
+						roadMap.put("crossRSId", rs.getId());
 						break;
 					}
 				}
 			}
 			if(addFlag)
-				roadIdList.add(roadId);
+				roadList.add(roadMap);
 		}
-		String[] roadIdStrs = new String[roadIdList.size()];
-		return roadIdList.toArray(roadIdStrs);
+		return roadList;
 	}
 	
 	/**
