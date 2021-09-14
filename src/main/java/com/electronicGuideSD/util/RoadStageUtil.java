@@ -267,14 +267,40 @@ public class RoadStageUtil {
 		List<RoadStage> backChildNavList=new ArrayList<>();
 		backChildNavList.addAll(childNavList);//将待遍历的集合添加到向后遍历的集合里
 
-		if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {
-			getSPFlag=true;
-			backChildNavList.add(roadToSpRoadStage);
+		Map<String, String> bfFlagMap = RoadStageUtil.checkConnectBackOrFront(preRS,currentRS);
+		String cwpBfFlag = bfFlagMap.get("cwpBfFlag").toString();
+		if(RoadStage.BACK_FLAG.equals(cwpBfFlag)) {
+			if(roadToSpBackX.equals(preRS.getBackX())&&roadToSpBackY.equals(preRS.getBackY())) {
+				getSPFlag=true;
+				backChildNavList.add(roadToSpRoadStage);
+			}
+			else {
+				//顺着入口段的路段往后遍历，先把本路段加进去，为了方便下面的遍历
+				RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
+			}
 		}
-		else {
-			//顺着入口段的路段往后遍历，先把本路段加进去，为了方便下面的遍历
-			Map<String, String> bfFlagMap = RoadStageUtil.checkConnectBackOrFront(preRS,currentRS);
-			RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
+		else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {
+			if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {
+				getSPFlag=true;
+				backChildNavList.add(roadToSpRoadStage);
+			}
+			else {
+				/*
+				if(currentRS.getBackIsCross()) {
+					String rsIds = currentRS.getBackCrossRSIds();
+					System.out.println("这里有交叉口="+rsIds);
+					String[] rsIdArr = rsIds.split(",");
+					for (String rsId : rsIdArr) {
+						List<RoadStage> fenZhiRsList = (List<RoadStage>)roadStageMap.get("roadStage"+rsId);
+						int fenZhiItemIndex=getListItemIndexByLocation(fenZhiRsList,currentRS.getBackX(),currentRS.getBackY(),RoadStage.BACK_FLAG);
+						System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
+						//fenZhiRsList.get(0)
+						initNavLineFromItemIndex(roadStageMap,backChildNavList,currentRS,fenZhiRsList,rtspRoadStage,currentRS.getPreBfFlag(),fenZhiItemIndex,rtspBackX,rtspBackY,allNavList,distance);
+					}
+				}
+				*/
+				RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
+			}
 		}
 		
 		if(!getSPFlag) {
@@ -282,11 +308,11 @@ public class RoadStageUtil {
 				System.out.println("i下2==="+i);
 				preRS = currentRoad.get(i+1);
 				currentRS = currentRoad.get(i);
-				Map<String, String> bfFlagMap = RoadStageUtil.checkConnectBackOrFront(preRS,currentRS);
+				bfFlagMap = RoadStageUtil.checkConnectBackOrFront(preRS,currentRS);
 				
-				String cwpBfFlag = bfFlagMap.get("cwpBfFlag").toString();
+				cwpBfFlag = bfFlagMap.get("cwpBfFlag").toString();
 				if(RoadStage.BACK_FLAG.equals(cwpBfFlag)) {
-					if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {
+					if(roadToSpBackX.equals(preRS.getBackX())&&roadToSpBackY.equals(preRS.getBackY())) {
 						getSPFlag=true;
 						backChildNavList.add(roadToSpRoadStage);
 						break;
@@ -295,7 +321,7 @@ public class RoadStageUtil {
 						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
 				}
 				else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {
-					if(roadToSpBackX.equals(preRS.getBackX())&&roadToSpBackY.equals(preRS.getBackY())) {
+					if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {
 						getSPFlag=true;
 						backChildNavList.add(roadToSpRoadStage);
 						break;
@@ -400,6 +426,13 @@ public class RoadStageUtil {
 		return index;
 	}
 	
+	/**
+	 * 根据当前路段与上一路段连接点位置，生成新的路段导航，添加到导航线里
+	 * @param preRS
+	 * @param currentRS
+	 * @param navList
+	 * @param bfFlagMap
+	 */
 	public static void addRSNavInList(RoadStage preRS,RoadStage currentRS,List<RoadStage> navList,Map<String, String> bfFlagMap) {
 		System.out.println("preRSBackX="+preRS.getBackX()+",preRSBackY="+preRS.getBackY());
 		RoadStage roadStage=new RoadStage();
@@ -486,6 +519,12 @@ public class RoadStageUtil {
 	}
 	*/
 	
+	/**
+	 * 验证当前路段与上一路段连接点位置
+	 * @param preRS
+	 * @param currentRS
+	 * @return
+	 */
 	public static Map<String,String> checkConnectBackOrFront(RoadStage preRS,RoadStage currentRS) {
 		String pwcBfFlag=null;
 		String cwpBfFlag=null;
