@@ -27,7 +27,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 		// TODO Auto-generated method stub
 		System.out.println("scenicPlaceX==="+scenicPlaceX);
 		System.out.println("scenicPlaceY==="+scenicPlaceY);
-		Map<String,Object> mtrNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);
+		Map<String,Object> meToRoadNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);
 		/*
 		System.out.println("meRoadId="+Integer.valueOf(mtrNearRSMap.get("roadId").toString()));
 		System.out.println("meFrontThrough="+Boolean.valueOf(mtrNearRSMap.get("frontThrough").toString()));
@@ -35,7 +35,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 		System.out.println("meBfFlag="+mtrNearRSMap.get("bfFlag").toString());
 		*/
 		
-		Map<String,Object> spToRoadMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
+		Map<String,Object> roadToSpMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
 		/*
 		System.out.println("spRoadId="+Integer.valueOf(spToRoadMap.get("roadId").toString()));
 		System.out.println("spFrontThrough="+Boolean.valueOf(spToRoadMap.get("frontThrough").toString()));
@@ -44,7 +44,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 
 		List<RoadStage> roadStageList = roadStageDao.select();
 		Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
-		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRoadStageMap,mtrNearRSMap,spToRoadMap,meX,meY,scenicPlaceX,scenicPlaceY);
+		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRoadStageMap,meToRoadNearRSMap,roadToSpMap,meX,meY,scenicPlaceX,scenicPlaceY);
 		List<RoadStage> shortNavLine=RoadStageUtil.initGetSPShortNavLine(allNavList);
 		if(shortNavLine!=null)
 			System.out.println("size1==="+shortNavLine.size());

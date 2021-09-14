@@ -143,17 +143,17 @@ public class RoadStage {
 	public void setOldRoadId(Integer oldRoadId) {
 		this.oldRoadId = oldRoadId;
 	}
-	public String getPreBfFlag() {
-		return preBfFlag;
+	public String getPwcBfFlag() {
+		return pwcBfFlag;
 	}
-	public void setPreBfFlag(String preBfFlag) {
-		this.preBfFlag = preBfFlag;
+	public void setPwcBfFlag(String pwcBfFlag) {
+		this.pwcBfFlag = pwcBfFlag;
 	}
-	public String getNextBfFlag() {
-		return nextBfFlag;
+	public String getCwpBfFlag() {
+		return cwpBfFlag;
 	}
-	public void setNextBfFlag(String nextBfFlag) {
-		this.nextBfFlag = nextBfFlag;
+	public void setCwpBfFlag(String cwpBfFlag) {
+		this.cwpBfFlag = cwpBfFlag;
 	}
 	private String name;
 	private Float frontX;
@@ -177,6 +177,6 @@ public class RoadStage {
 	private Integer roadId;
 	private String roadName;
 	private Integer oldRoadId;
-	private String preBfFlag;//上一个路段与该路段的交点位置
-	private String nextBfFlag;//下一个路段与该路段的交点位置
+	private String pwcBfFlag;//上一个路段与该路段的交点位置(该路段的后方或前方)
+	private String cwpBfFlag;//该路段与上一个路段的交点位置(上一个路段的后方或前方)
 }
