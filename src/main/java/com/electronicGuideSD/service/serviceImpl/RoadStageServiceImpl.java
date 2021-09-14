@@ -42,9 +42,9 @@ public class RoadStageServiceImpl implements RoadStageService {
 		System.out.println("spBackThrough="+Boolean.valueOf(spToRoadMap.get("backThrough").toString()));
 		*/
 
-		List<RoadStage> roadStageList = roadStageDao.select();
-		Map<String, Object> allRoadStageMap = RoadStageUtil.initAllRoadMap(roadStageList);
-		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRoadStageMap,meToRoadNearRSMap,roadToSpMap,meX,meY,scenicPlaceX,scenicPlaceY);
+		List<RoadStage> allRSList = roadStageDao.select();
+		Map<String, Object> allRoadMap = RoadStageUtil.initAllRoadMap(allRSList);
+		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRSList,allRoadMap,meToRoadNearRSMap,roadToSpMap,meX,meY,scenicPlaceX,scenicPlaceY);
 		List<RoadStage> shortNavLine=RoadStageUtil.initGetSPShortNavLine(allNavList);
 		if(shortNavLine!=null)
 			System.out.println("size1==="+shortNavLine.size());
