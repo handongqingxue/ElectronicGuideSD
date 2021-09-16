@@ -85,15 +85,15 @@ public class RoadStageUtil {
 		Float shortDistance=(float) 9999999;
 		Map<String,Object> shortNavMap=null;
 		for (Map<String,Object> allNavMap : allNavList) {
-			Boolean getSPFlag = Boolean.valueOf(allNavMap.get("getSPFlag").toString());
-			System.out.println("getSPFlag="+getSPFlag);
-			if(getSPFlag) {
+			//Boolean getSPFlag = Boolean.valueOf(allNavMap.get("getSPFlag").toString());
+			//System.out.println("getSPFlag="+getSPFlag);
+			//if(getSPFlag) {
 				Float navLong = Float.valueOf(allNavMap.get("navLong").toString());
 				if(navLong<shortDistance) {
 					shortDistance=navLong;
 					shortNavMap=allNavMap;
 				}
-			}
+			//}
 		}
 		
 		if(shortNavMap==null) {
@@ -112,10 +112,10 @@ public class RoadStageUtil {
 		
 		//Map<String,Object> frontNavLineMap = initFrontNavLine(allRoadStageMap,childNavList,meToRoadStage,currentRoad,itemIndexRS,roadToSpRoadStage,currentPreBfFlag,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
 
-		Map<String,Object> backNavLineMap = initBackNavLine(allRSList,allRoadMap,childNavList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
+		initBackNavLine(allRSList,allRoadMap,childNavList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
 		
 		//allNavList.add(frontNavLineMap);
-		allNavList.add(backNavLineMap);
+		//allNavList.add(backNavLineMap);
 		//}
 	}
 	
@@ -261,7 +261,7 @@ public class RoadStageUtil {
 	}
 	*/
 	
-	public static Map<String,Object> initBackNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initBackNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
 		boolean getSPFlag=false;
 		float distance=preDistance;
 		List<RoadStage> backChildNavList=new ArrayList<>();
@@ -347,6 +347,23 @@ public class RoadStageUtil {
 							}
 						}
 						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
+
+						if(i==0) {
+							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
+								if(roadToSpBackX.equals(currentRS.getFrontX())&&roadToSpBackY.equals(currentRS.getFrontY())) {
+									getSPFlag=true;
+									backChildNavList.add(roadToSpRoadStage);
+									break;
+								}
+							}
+							else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
+								if(roadToSpBackX.equals(currentRS.getBackX())&&roadToSpBackY.equals(currentRS.getBackY())) {
+									getSPFlag=true;
+									backChildNavList.add(roadToSpRoadStage);
+									break;
+								}
+							}
+						}
 					}
 				}
 				else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {
@@ -391,11 +408,14 @@ public class RoadStageUtil {
 			}
 		}
 
-		Map<String,Object> navLineMap=new HashMap<>();
-		navLineMap.put("navLine", backChildNavList);
-		navLineMap.put("getSPFlag", getSPFlag);//当前道路是否到达目的地
-		navLineMap.put("navLong", jiSuanNavLineDistance(backChildNavList));
-		return navLineMap;
+		if(getSPFlag) {
+			Map<String,Object> navLineMap=new HashMap<>();
+			navLineMap.put("navLine", backChildNavList);
+			//navLineMap.put("getSPFlag", getSPFlag);//当前道路是否到达目的地
+			navLineMap.put("navLong", jiSuanNavLineDistance(backChildNavList));
+			allNavList.add(navLineMap);
+		}
+		//return navLineMap;
 	}
 	
 	public static float jiSuanDistance(Float backX, Float backY, Float frontX, Float frontY) {

@@ -45,6 +45,23 @@ public class RoadStageServiceImpl implements RoadStageService {
 		List<RoadStage> allRSList = roadStageDao.select();
 		Map<String, Object> allRoadMap = RoadStageUtil.initAllRoadMap(allRSList);
 		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRSList,allRoadMap,meToRoadNearRSMap,roadToSpMap,meX,meY,scenicPlaceX,scenicPlaceY);
+		
+		for (int i = 0; i < allNavList.size(); i++) {
+			Map<String, Object> allNav = allNavList.get(i);
+			String navLong = allNav.get("navLong").toString();
+			System.out.println("navLong"+i+"="+navLong);
+			List<RoadStage> navRoad = (List<RoadStage>)allNav.get("navLine");
+			for (int j = 0; j < navRoad.size(); j++) {
+				RoadStage roadStage = navRoad.get(j);
+				float backX = roadStage.getBackX();
+				float backY = roadStage.getBackY();
+				float frontX = roadStage.getFrontX();
+				float frontY = roadStage.getFrontY();
+				System.out.println("backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
+			}
+			System.out.println("");
+		}
+		
 		List<RoadStage> shortNavLine=RoadStageUtil.initGetSPShortNavLine(allNavList);
 		if(shortNavLine!=null)
 			System.out.println("size1==="+shortNavLine.size());
