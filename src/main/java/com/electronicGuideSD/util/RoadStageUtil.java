@@ -56,6 +56,7 @@ public class RoadStageUtil {
 			Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
 		List<Map<String,Object>> allNavList=new ArrayList<>();
 		List<RoadStage> childNavList=new ArrayList<>();
+		List<Integer> childCheckedRSIdList=new ArrayList<>();
 		List<RoadStage> startRSList=null;
 		float distance=0;
 		Integer startRoadId = Integer.valueOf(meToRoadNearRSMap.get("roadId").toString());//游客到最近路段的路线所在道路id
@@ -75,7 +76,7 @@ public class RoadStageUtil {
 			startRSList=(List<RoadStage>)allRoadMap.get("road"+startRoadId);//获取离游客最近的路段所在道路
 			int itemIndex = RoadStageUtil.getListItemIndexBySort(startRSList,sort);//获取离游客最近的路段在所在道路里的序号
 			
-			initNavLineFromItemIndex(allRSList,allRoadMap,childNavList,meToRoadStage,startRSList,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,distance);
+			initNavLineFromItemIndex(allRSList,allRoadMap,childNavList,childCheckedRSIdList,meToRoadStage,startRSList,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,distance);
 		}
 		
 		return allNavList;
@@ -105,22 +106,18 @@ public class RoadStageUtil {
 		}
 	}
 	
-	public static boolean compareWithOtherNavDistance(List<RoadStage> currNavList,List<Map<String,Object>> allNavList) {
-		float currNavDistance=(float)0.0;
-		for (RoadStage currNav : currNavList) {
-			currNavDistance+=currNav.getDistance();
+	public static boolean checkRSIdExistInCheckedNavList(int rsId,List<Integer> checkedRSIdList) {
+		boolean exist=false;
+		for (int checkedRSId : checkedRSIdList) {
+			if(rsId==checkedRSId) {
+				exist=true;
+				break;
+			}
 		}
 		
-		float minNavLong=(float)9999999999.0;
-		for (Map<String, Object> otherNav : allNavList) {
-			float navLong = Float.valueOf(otherNav.get("navLong").toString());
-			if(navLong<minNavLong)
-				minNavLong=navLong;
-		}
-		if(currNavDistance<minNavLong)
-			return true;
-		else
-			return false;
+		if(!exist)
+			checkedRSIdList.add(rsId);
+		return exist;
 	}
 	
 	public static String crossRSExistInNavList(List<RoadStage> navList, String crossRSIds) {
@@ -141,24 +138,24 @@ public class RoadStageUtil {
 		return crossRSIdList.toString().substring(1, crossRSIdList.toString().length()-1);
 	}
 	
-	public static void initNavLineFromCrossRSIds(String crossRSIds,List<RoadStage> allRSList,Map<String, Object> allRoadMap,List<RoadStage> childNavList,RoadStage preRS,RoadStage roadToSpRoadStage,Float roadToSpBackX,Float roadToSpBackY,List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initNavLineFromCrossRSIds(String crossRSIds,List<RoadStage> allRSList,Map<String, Object> allRoadMap,List<RoadStage> childNavList,List<Integer> childCheckedRSIdList,RoadStage preRS,RoadStage roadToSpRoadStage,Float roadToSpBackX,Float roadToSpBackY,List<Map<String,Object>> allNavList,float preDistance) {
 		List<Map<String,Integer>> roadList=getCrossRoadListByRsIds(allRSList,crossRSIds);
 		for (Map<String,Integer> roadMap : roadList) {
 			List<RoadStage> fenZhiRsList = (List<RoadStage>)allRoadMap.get("road"+roadMap.get("id").toString());
 			int fenZhiItemIndex=getListItemIndexById(fenZhiRsList,Integer.valueOf(roadMap.get("crossRSId").toString()));
 			System.out.println("fenZhiItemIndex="+fenZhiItemIndex);
-			initNavLineFromItemIndex(allRSList,allRoadMap,childNavList,preRS,fenZhiRsList,roadToSpRoadStage,fenZhiItemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
+			initNavLineFromItemIndex(allRSList,allRoadMap,childNavList,childCheckedRSIdList,preRS,fenZhiRsList,roadToSpRoadStage,fenZhiItemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
 		}
 	}
 	
-	public static void initNavLineFromItemIndex(List<RoadStage> allRSList,Map<String, Object> allRoadMap,List<RoadStage> childNavList,RoadStage preRS,List<RoadStage> currentRoad,RoadStage roadToSpRoadStage,int itemIndex,Float roadToSpBackX,Float roadToSpBackY,List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initNavLineFromItemIndex(List<RoadStage> allRSList,Map<String, Object> allRoadMap,List<RoadStage> childNavList,List<Integer> childCheckedRSIdList,RoadStage preRS,List<RoadStage> currentRoad,RoadStage roadToSpRoadStage,int itemIndex,Float roadToSpBackX,Float roadToSpBackY,List<Map<String,Object>> allNavList,float preDistance) {
 		//if(rs.getBackThrough()) {//上面的查询条件里已经规定后方有路，这里就没必要判断了
 		
 		RoadStage itemIndexRS = currentRoad.get(itemIndex);//获取游客进入导航线的第一个路段
 		
-		initFrontNavLine(allRSList,allRoadMap,childNavList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
+		initFrontNavLine(allRSList,allRoadMap,childNavList,childCheckedRSIdList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
 
-		initBackNavLine(allRSList,allRoadMap,childNavList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
+		initBackNavLine(allRSList,allRoadMap,childNavList,childCheckedRSIdList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
 		
 		//allNavList.add(frontNavLineMap);
 		//allNavList.add(backNavLineMap);
@@ -232,12 +229,14 @@ public class RoadStageUtil {
 		////
 	}
 	
-	public static void initFrontNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initFrontNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, List<Integer> childCheckedRSIdList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
 		boolean getSPFlag=false;
 		boolean addNavFlag=true;
 		float distance=preDistance;
 		List<RoadStage> frontChildNavList=new ArrayList<>();
 		frontChildNavList.addAll(childNavList);//将待遍历的集合添加到向前遍历的集合里
+		List<Integer> frontChildCheckedRSIdList=new ArrayList<>();
+		frontChildCheckedRSIdList.addAll(childCheckedRSIdList);
 
 		Map<String, String> bfFlagMap = RoadStageUtil.checkConnectBackOrFront(preRS,currentRS);
 		String cwpBfFlag = bfFlagMap.get("cwpBfFlag").toString();
@@ -248,7 +247,7 @@ public class RoadStageUtil {
 			}
 			else {
 				//顺着入口段的路段往后遍历，先把本路段加进去，为了方便下面的遍历
-				RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,bfFlagMap);//若上一路段的坐标不等于到景点的路段的坐标，则需要添加当前路段到导航线上
+				RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,frontChildCheckedRSIdList,bfFlagMap);//若上一路段的坐标不等于到景点的路段的坐标，则需要添加当前路段到导航线上
 			}
 		}
 		else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {//若当前路段与上一路段前方相交
@@ -260,19 +259,19 @@ public class RoadStageUtil {
 				String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
 				if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 					if(currentRS.getBackIsCross()) {
-						if(compareWithOtherNavDistance(frontChildNavList, allNavList)) {
+						if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+							addNavFlag=false;
+						}
+						else {
 							String crossRSIds = currentRS.getBackCrossRSIds();
 							crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 							System.out.println("crossRSIds1="+crossRSIds);
-							if(!StringUtils.isEmpty(crossRSIds))
-								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
-						}
-						else {
-							addNavFlag=false;
+							if(!StringUtils.isEmpty(crossRSIds)) 
+								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 						}
 					}
 				}
-				RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,bfFlagMap);
+				RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,frontChildCheckedRSIdList,bfFlagMap);
 			}
 		}
 		
@@ -294,21 +293,33 @@ public class RoadStageUtil {
 						String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
 						if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getBackIsCross()) {
-								String crossRSIds = currentRS.getBackCrossRSIds();
-								crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getBackCrossRSIds();
+									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
 						else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getFrontIsCross()) {
-								String crossRSIds = currentRS.getFrontCrossRSIds();
-								crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getFrontCrossRSIds();
+									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
-						RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,bfFlagMap);
+						RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,frontChildCheckedRSIdList,bfFlagMap);
 
 						if(i==currentRoad.size()-1) {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
@@ -319,10 +330,16 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getFrontIsCross()) {
-										String crossRSIds = currentRS.getFrontCrossRSIds();
-										crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
-										if(!StringUtils.isEmpty(crossRSIds))
-											initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
+											String crossRSIds = currentRS.getFrontCrossRSIds();
+											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
+											if(!StringUtils.isEmpty(crossRSIds))
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										}
 									}
 								}
 							}
@@ -334,15 +351,15 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getBackIsCross()) {
-										if(compareWithOtherNavDistance(frontChildNavList,allNavList)) {
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
 											String crossRSIds = currentRS.getBackCrossRSIds();
 											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
-										}
-										else {
-											addNavFlag=false;
-											break;
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 										}
 									}
 								}
@@ -360,22 +377,34 @@ public class RoadStageUtil {
 						String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
 						if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getBackIsCross()) {
-								String crossRSIds = currentRS.getBackCrossRSIds();
-								crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
-								System.out.println("crossRSIds="+crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getBackCrossRSIds();
+									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
+									System.out.println("crossRSIds="+crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
 						else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getFrontIsCross()) {
-								String crossRSIds = currentRS.getFrontCrossRSIds();
-								crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getFrontCrossRSIds();
+									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
-						RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,bfFlagMap);
+						RoadStageUtil.addRSNavInList(preRS,currentRS,frontChildNavList,frontChildCheckedRSIdList,bfFlagMap);
 
 						if(i==currentRoad.size()-1) {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
@@ -386,10 +415,16 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getFrontIsCross()) {
-										String crossRSIds = currentRS.getFrontCrossRSIds();
-										crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
-										if(!StringUtils.isEmpty(crossRSIds))
-											initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
+											String crossRSIds = currentRS.getFrontCrossRSIds();
+											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
+											if(!StringUtils.isEmpty(crossRSIds))
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										}
 									}
 								}
 							}
@@ -401,10 +436,16 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getBackIsCross()) {
-										String crossRSIds = currentRS.getBackCrossRSIds();
-										crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
-										if(!StringUtils.isEmpty(crossRSIds))
-											initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), frontChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
+											String crossRSIds = currentRS.getBackCrossRSIds();
+											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
+											if(!StringUtils.isEmpty(crossRSIds))
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										}
 									}
 								}
 							}
@@ -414,37 +455,6 @@ public class RoadStageUtil {
 				System.out.println("bcnlSize="+frontChildNavList.size());
 			}
 		}
-		
-		/*
-		for(int i=itemIndex+1;i<rsList.size();i++) {
-			System.out.println("i上==="+i);
-			RoadStage preRS = rsList.get(i-1);
-			currentRS = rsList.get(i);
-			//System.out.println("xx=="+preRS.getBackX()+",yy=="+preRS.getBackY()+",xxx=="+preRS.getFrontX());
-			//String preBfFlag = preRS.getPreBfFlag();
-			if(RoadStage.BACK_FLAG.equals(preBfFlag)) {
-				preBfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getFrontX(),preRS.getFrontY(),currentRS);
-				if(rtspBackX.equals(preRS.getFrontX())&&rtspBackY.equals(preRS.getFrontY())) {
-					getSPFlag=true;
-					frontChildNavList.add(rtspRoadStage);
-					break;
-				}
-				else
-					RoadStageUtil.addRSNavInList(preRS.getFrontX(),preRS.getFrontY(),currentRS,frontChildNavList,preBfFlag);
-			}
-			else if(RoadStage.FRONT_FLAG.equals(preBfFlag)) {
-				preBfFlag = RoadStageUtil.checkConnectBackOrFront(preRS.getBackX(),preRS.getBackY(),currentRS);
-				if(rtspBackX.equals(preRS.getBackX())&&rtspBackY.equals(preRS.getBackY())) {
-					getSPFlag=true;
-					frontChildNavList.add(rtspRoadStage);
-					break;
-				}
-				else
-					RoadStageUtil.addRSNavInList(preRS.getBackX(),preRS.getBackY(),currentRS,frontChildNavList,preBfFlag);
-			}
-			System.out.println("fcnlSize="+frontChildNavList.size());
-		}
-		*/
 		
 		if(getSPFlag) {
 			Map<String,Object> navLineMap=new HashMap<>();
@@ -470,12 +480,14 @@ public class RoadStageUtil {
 	 * @param allNavList
 	 * @param preDistance
 	 */
-	public static void initBackNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initBackNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, List<Integer> childCheckedRSIdList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
 		boolean getSPFlag=false;
 		boolean addNavFlag=true;
 		float distance=preDistance;
 		List<RoadStage> backChildNavList=new ArrayList<>();
 		backChildNavList.addAll(childNavList);//将待遍历的集合添加到向后遍历的集合里
+		List<Integer> backChildCheckedRSIdList=new ArrayList<>();
+		backChildCheckedRSIdList.addAll(childCheckedRSIdList);
 
 		Map<String, String> bfFlagMap = RoadStageUtil.checkConnectBackOrFront(preRS,currentRS);
 		String cwpBfFlag = bfFlagMap.get("cwpBfFlag").toString();
@@ -486,7 +498,7 @@ public class RoadStageUtil {
 			}
 			else {
 				//顺着入口段的路段往后遍历，先把本路段加进去，为了方便下面的遍历
-				RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);//若上一路段的坐标不等于到景点的路段的坐标，则需要添加当前路段到导航线上
+				RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,backChildCheckedRSIdList,bfFlagMap);//若上一路段的坐标不等于到景点的路段的坐标，则需要添加当前路段到导航线上
 			}
 		}
 		else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {//若当前路段与上一路段前方相交
@@ -498,18 +510,18 @@ public class RoadStageUtil {
 				String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
 				if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 					if(currentRS.getBackIsCross()) {
-						if(compareWithOtherNavDistance(backChildNavList, allNavList)) {
+						if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+							addNavFlag=false;
+						}
+						else {
 							String crossRSIds = currentRS.getBackCrossRSIds();
 							crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 							if(!StringUtils.isEmpty(crossRSIds))
-								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
-						}
-						else {
-							addNavFlag=false;
+								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 						}
 					}
 				}
-				RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
+				RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,backChildCheckedRSIdList,bfFlagMap);
 			}
 		}
 		
@@ -531,21 +543,33 @@ public class RoadStageUtil {
 						String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
 						if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getBackIsCross()) {
-								String crossRSIds = currentRS.getBackCrossRSIds();
-								crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getBackCrossRSIds();
+									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
 						else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getFrontIsCross()) {
-								String crossRSIds = currentRS.getFrontCrossRSIds();
-								crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getFrontCrossRSIds();
+									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
-						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
+						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,backChildCheckedRSIdList,bfFlagMap);
 
 						if(i==0) {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
@@ -556,10 +580,16 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getFrontIsCross()) {
-										String crossRSIds = currentRS.getFrontCrossRSIds();
-										crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-										if(!StringUtils.isEmpty(crossRSIds))
-											initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
+											String crossRSIds = currentRS.getFrontCrossRSIds();
+											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+											if(!StringUtils.isEmpty(crossRSIds))
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										}
 									}
 								}
 							}
@@ -571,10 +601,16 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getBackIsCross()) {
-										String crossRSIds = currentRS.getBackCrossRSIds();
-										crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-										if(!StringUtils.isEmpty(crossRSIds))
-											initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
+											String crossRSIds = currentRS.getBackCrossRSIds();
+											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+											if(!StringUtils.isEmpty(crossRSIds))
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										}
 									}
 								}
 							}
@@ -591,21 +627,33 @@ public class RoadStageUtil {
 						String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
 						if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getBackIsCross()) {
-								String crossRSIds = currentRS.getBackCrossRSIds();
-								crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getBackCrossRSIds();
+									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
 						else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
 							if(currentRS.getFrontIsCross()) {
-								String crossRSIds = currentRS.getFrontCrossRSIds();
-								crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-								if(!StringUtils.isEmpty(crossRSIds))
-									initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+									addNavFlag=false;
+									break;
+								}
+								else {
+									String crossRSIds = currentRS.getFrontCrossRSIds();
+									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+									if(!StringUtils.isEmpty(crossRSIds))
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								}
 							}
 						}
-						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,bfFlagMap);
+						RoadStageUtil.addRSNavInList(preRS,currentRS,backChildNavList,backChildCheckedRSIdList,bfFlagMap);
 
 						if(i==0) {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
@@ -616,10 +664,16 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getFrontIsCross()) {
-										String crossRSIds = currentRS.getFrontCrossRSIds();
-										crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-										if(!StringUtils.isEmpty(crossRSIds))
-											initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
+											String crossRSIds = currentRS.getFrontCrossRSIds();
+											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+											if(!StringUtils.isEmpty(crossRSIds))
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										}
 									}
 								}
 							}
@@ -631,10 +685,16 @@ public class RoadStageUtil {
 								}
 								else {
 									if(currentRS.getBackIsCross()) {
-										String crossRSIds = currentRS.getBackCrossRSIds();
-										crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
-										if(!StringUtils.isEmpty(crossRSIds))
-											initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										if(checkRSIdExistInCheckedNavList(currentRS.getId(), backChildCheckedRSIdList)){
+											addNavFlag=false;
+											break;
+										}
+										else {
+											String crossRSIds = currentRS.getBackCrossRSIds();
+											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
+											if(!StringUtils.isEmpty(crossRSIds))
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										}
 									}
 								}
 							}
@@ -771,7 +831,7 @@ public class RoadStageUtil {
 	 * @param navList
 	 * @param bfFlagMap
 	 */
-	public static void addRSNavInList(RoadStage preRS,RoadStage currentRS,List<RoadStage> navList,Map<String, String> bfFlagMap) {
+	public static void addRSNavInList(RoadStage preRS,RoadStage currentRS,List<RoadStage> navList,List<Integer> checkedRSIdList,Map<String, String> bfFlagMap) {
 		System.out.println("preRSBackX="+preRS.getBackX()+",preRSBackY="+preRS.getBackY());
 		RoadStage roadStage=new RoadStage();
 		roadStage.setId(currentRS.getId());
@@ -805,6 +865,7 @@ public class RoadStageUtil {
 				roadStage.setFrontY(currentFrontY);
 				roadStage.setDistance(RoadStageUtil.jiSuanDistance(currentBackX,currentBackY,currentFrontX,currentFrontY));
 				navList.add(roadStage);
+				checkedRSIdList.add(roadStage.getId());
 			}
 		}
 		else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
@@ -833,6 +894,7 @@ public class RoadStageUtil {
 				roadStage.setFrontY(currentFrontY);
 				roadStage.setDistance(RoadStageUtil.jiSuanDistance(currentBackX,currentBackY,currentFrontX,currentFrontY));
 				navList.add(roadStage);
+				checkedRSIdList.add(roadStage.getId());
 			}
 		}
 	}
