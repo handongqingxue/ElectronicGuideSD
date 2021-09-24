@@ -33,9 +33,9 @@ public class RoadStageServiceImpl implements RoadStageService {
 		if("walk".equals(navType)) {
 			Map<String,Object> meToRoadNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);
 			
-			Map<String,Object> roadToSpMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
+			Map<String,Object> roadToSpNearRSMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
 	
-			List<Map<String,Object>> allNavList = RoadStageUtil.initAllWalkNavRoadLine(allRSList,allRoadMap,meToRoadNearRSMap,roadToSpMap,meX,meY,scenicPlaceX,scenicPlaceY);
+			List<Map<String,Object>> allNavList = RoadStageUtil.initAllWalkNavRoadLine(allRSList,allRoadMap,meToRoadNearRSMap,roadToSpNearRSMap,meX,meY,scenicPlaceX,scenicPlaceY);
 			
 			for (int i = 0; i < allNavList.size(); i++) {
 				Map<String, Object> allNav = allNavList.get(i);

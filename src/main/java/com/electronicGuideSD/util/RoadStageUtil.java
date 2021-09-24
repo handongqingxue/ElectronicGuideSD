@@ -45,58 +45,59 @@ public class RoadStageUtil {
 	
 	/**
 	 * 初始化所有步行导航路线
-	 * @param roadStageMap
-	 * @param meToRoadMap
-	 * @param spToRoadMap
-	 * @param meX
-	 * @param meY
-	 * @param scenicPlaceX
-	 * @param scenicPlaceY
+	 * @param allRSList
+	 * @param allRoadMap
+	 * @param startToRoadNearRSMap
+	 * @param roadToEndMap
+	 * @param startX
+	 * @param startY
+	 * @param endX
+	 * @param endY
 	 * @return
 	 */
-	public static List<Map<String,Object>> initAllWalkNavRoadLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap,Map<String,Object> meToRoadNearRSMap,Map<String,Object> roadToSpMap, 
-			Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
+	public static List<Map<String,Object>> initAllWalkNavRoadLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap,Map<String,Object> startToRoadNearRSMap,Map<String,Object> roadToEndMap, 
+			Float startX, Float startY, Float endX, Float endY) {
 		List<Map<String,Object>> allNavList=new ArrayList<>();
 		List<RoadStage> childNavList=new ArrayList<>();
 		List<Integer> childCheckedRSIdList=new ArrayList<>();
 		List<RoadStage> startRSList=null;
 		float distance=0;
-		Integer startRoadId = Integer.valueOf(meToRoadNearRSMap.get("roadId").toString());//游客到最近路段的路线所在道路id
+		Integer startRoadId = Integer.valueOf(startToRoadNearRSMap.get("roadId").toString());//游客到最近路段的路线所在道路id
 		
-		RoadStage meToRoadStage=initMeToRoadNavLine(meX, meY, meToRoadNearRSMap);
+		RoadStage startToRoadStage=initStartToRoadNavLine(startX, startY, startToRoadNearRSMap);
 		//将游客到最近路线点的路段加到遍历的集合里
-		childNavList.add(meToRoadStage);
+		childNavList.add(startToRoadStage);
 
-		RoadStage roadToSpRoadStage = initRoadToSPNavLine(roadToSpMap,scenicPlaceX,scenicPlaceY);
-		Float roadToSpBackX = roadToSpRoadStage.getBackX();
-		Float roadToSpBackY = roadToSpRoadStage.getBackY();
+		RoadStage roadToEndRoadStage = initRoadToEndNavLine(roadToEndMap,endX,endY);
+		Float roadToEndBackX = roadToEndRoadStage.getBackX();
+		Float roadToEndBackY = roadToEndRoadStage.getBackY();
 		
-		if(meToRoadStage.getFrontX().equals(roadToSpBackX)&&meToRoadStage.getFrontY().equals(roadToSpBackY))//若离游客最近的点是离景点最近的点，那么不用计算其他路段了，直接导航过去就行
-			initNavLineDirect(meToRoadStage,roadToSpRoadStage,allNavList);
+		if(startToRoadStage.getFrontX().equals(roadToEndBackX)&&startToRoadStage.getFrontY().equals(roadToEndBackY))//若离游客最近的点是离景点最近的点，那么不用计算其他路段了，直接导航过去就行
+			initNavLineDirect(startToRoadStage,roadToEndRoadStage,allNavList);
 		else {//根据开始路段序号开始导航
-			Integer sort = Integer.valueOf(meToRoadNearRSMap.get("sort").toString());
+			Integer sort = Integer.valueOf(startToRoadNearRSMap.get("sort").toString());
 			startRSList=(List<RoadStage>)allRoadMap.get("road"+startRoadId);//获取离游客最近的路段所在道路
 			int itemIndex = RoadStageUtil.getListItemIndexBySort(startRSList,sort);//获取离游客最近的路段在所在道路里的序号
 			
-			initNavLineFromItemIndex(allRSList,allRoadMap,childNavList,childCheckedRSIdList,meToRoadStage,startRSList,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,distance);
+			initNavLineFromItemIndex(allRSList,allRoadMap,childNavList,childCheckedRSIdList,startToRoadStage,startRSList,roadToEndRoadStage,itemIndex,roadToEndBackX,roadToEndBackY,allNavList,distance);
 		}
 		
 		return allNavList;
 	}
 	
-	public static void initBusNavRoadLine(BusStopMapper busStopDao,Map<String,Object> meNearBsMap,Map<String,Object> bsNearSpNearMap,List<RoadStage> shortNavLine) {
+	public static void initBusNavRoadLine(BusStopMapper busStopDao,Map<String,Object> startNearBsMap,Map<String,Object> bsNearEndNearMap,List<RoadStage> shortNavLine) {
 		int startSort=0;
 		int endSort=0;
-		int meNearBsSort = Integer.valueOf(meNearBsMap.get("sort").toString());
-		int bsNearSpNearSort = Integer.valueOf(bsNearSpNearMap.get("sort").toString());
+		int startNearBsSort = Integer.valueOf(startNearBsMap.get("sort").toString());
+		int bsNearEndNearSort = Integer.valueOf(bsNearEndNearMap.get("sort").toString());
 		List<BusStop> busStopList = null;
-		if(meNearBsSort<bsNearSpNearSort) {
-			startSort=meNearBsSort;
-			endSort=bsNearSpNearSort;
+		if(startNearBsSort<bsNearEndNearSort) {
+			startSort=startNearBsSort;
+			endSort=bsNearEndNearSort;
 		}
-		else if(meNearBsSort>bsNearSpNearSort) {
-			startSort=bsNearSpNearSort;
-			endSort=meNearBsSort;
+		else if(startNearBsSort>bsNearEndNearSort) {
+			startSort=bsNearEndNearSort;
+			endSort=startNearBsSort;
 		}
 		
 		if(startSort!=endSort)
@@ -188,88 +189,81 @@ public class RoadStageUtil {
 		}
 	}
 	
-	public static void initNavLineFromItemIndex(List<RoadStage> allRSList,Map<String, Object> allRoadMap,List<RoadStage> childNavList,List<Integer> childCheckedRSIdList,RoadStage preRS,List<RoadStage> currentRoad,RoadStage roadToSpRoadStage,int itemIndex,Float roadToSpBackX,Float roadToSpBackY,List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initNavLineFromItemIndex(List<RoadStage> allRSList,Map<String, Object> allRoadMap,List<RoadStage> childNavList,List<Integer> childCheckedRSIdList,RoadStage preRS,List<RoadStage> currentRoad,RoadStage roadToEndRoadStage,int itemIndex,Float roadToEndBackX,Float roadToEndBackY,List<Map<String,Object>> allNavList,float preDistance) {
 		//if(rs.getBackThrough()) {//上面的查询条件里已经规定后方有路，这里就没必要判断了
-		
 		RoadStage itemIndexRS = currentRoad.get(itemIndex);//获取游客进入导航线的第一个路段
-		
-		initFrontNavLine(allRSList,allRoadMap,childNavList,childCheckedRSIdList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
-
-		initBackNavLine(allRSList,allRoadMap,childNavList,childCheckedRSIdList,preRS,currentRoad,itemIndexRS,roadToSpRoadStage,itemIndex,roadToSpBackX,roadToSpBackY,allNavList,preDistance);
-		
-		//allNavList.add(frontNavLineMap);
-		//allNavList.add(backNavLineMap);
+		initFrontNavLine(allRSList,allRoadMap,childNavList,childCheckedRSIdList,preRS,currentRoad,itemIndexRS,roadToEndRoadStage,itemIndex,roadToEndBackX,roadToEndBackY,allNavList,preDistance);
+		initBackNavLine(allRSList,allRoadMap,childNavList,childCheckedRSIdList,preRS,currentRoad,itemIndexRS,roadToEndRoadStage,itemIndex,roadToEndBackX,roadToEndBackY,allNavList,preDistance);
 		//}
 	}
 	
 	/**
 	 * 若离游客最近的路段点与离景区最近的路段点是同一个点，可以调用此方法直接导航过去
-	 * @param meToRoadStage
-	 * @param rtspRoadStage
+	 * @param startToRoadStage
+	 * @param roadToEndRoadStage
 	 * @param allNavList
 	 */
-	public static void initNavLineDirect(RoadStage meToRoadStage,RoadStage rtspRoadStage,List<Map<String,Object>> allNavList) {
+	public static void initNavLineDirect(RoadStage startToRoadStage,RoadStage roadToEndRoadStage,List<Map<String,Object>> allNavList) {
 		List<RoadStage> childNavList=new ArrayList<>();
-		childNavList.add(meToRoadStage);
-		childNavList.add(rtspRoadStage);
+		childNavList.add(startToRoadStage);
+		childNavList.add(roadToEndRoadStage);
 		
 		Map<String,Object> navLineMap=new HashMap<>();
 		navLineMap.put("navLine", childNavList);
 		navLineMap.put("getSPFlag", true);
-		navLineMap.put("navLong", meToRoadStage.getDistance()+rtspRoadStage.getDistance());
+		navLineMap.put("navLong", startToRoadStage.getDistance()+roadToEndRoadStage.getDistance());
 		allNavList.add(navLineMap);
 	}
 	
-	public static RoadStage initMeToRoadNavLine(Float meX, Float meY, Map<String,Object> meToRoadMap) {
+	public static RoadStage initStartToRoadNavLine(Float startX, Float startY, Map<String,Object> startToRoadMap) {
 		//以下代码是初始化从游客位置到最近路段点的
 		RoadStage roadStage=new RoadStage();
-		roadStage.setBackX(meX);
-		roadStage.setBackY(meY);
+		roadStage.setBackX(startX);
+		roadStage.setBackY(startY);
 		Float meFrontX = null;
 		Float meFrontY = null;
-		String mtrBfFlag = meToRoadMap.get("bfFlag").toString();
+		String mtrBfFlag = startToRoadMap.get("bfFlag").toString();
 		if(RoadStage.BACK_FLAG.equals(mtrBfFlag)) {//判断离你最近的点是前方点还是后方点
-			meFrontX = Float.valueOf(meToRoadMap.get("backX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
-			meFrontY = Float.valueOf(meToRoadMap.get("backY").toString());
+			meFrontX = Float.valueOf(startToRoadMap.get("backX").toString());//这里虽然获得后面的点，但方向相反，相当于游客导航路线里前面的点
+			meFrontY = Float.valueOf(startToRoadMap.get("backY").toString());
 		}
 		else if(RoadStage.FRONT_FLAG.equals(mtrBfFlag)) {
-			meFrontX = Float.valueOf(meToRoadMap.get("frontX").toString());
-			meFrontY = Float.valueOf(meToRoadMap.get("frontY").toString());
+			meFrontX = Float.valueOf(startToRoadMap.get("frontX").toString());
+			meFrontY = Float.valueOf(startToRoadMap.get("frontY").toString());
 		}
 		
 		roadStage.setFrontX(meFrontX);//将位置从你所在地引到离你最近的那个后方点处，这是就设置成路线的前方点了
 		roadStage.setFrontY(meFrontY);
-		roadStage.setDistance(RoadStageUtil.jiSuanDistance(meX,meY,meFrontX,meFrontY));
-		System.out.println("游客到最近的导航点的路线="+meX+","+meY+","+meFrontX+","+meFrontY);
+		roadStage.setDistance(RoadStageUtil.jiSuanDistance(startX,startY,meFrontX,meFrontY));
+		System.out.println("游客到最近的导航点的路线="+startX+","+startY+","+meFrontX+","+meFrontY);
 		return roadStage;
 	}
 	
-	public static RoadStage initRoadToSPNavLine(Map<String,Object> spToRoadMap, Float scenicPlaceX, Float scenicPlaceY) {
+	public static RoadStage initRoadToEndNavLine(Map<String,Object> roadToEndMap, Float endX, Float endY) {
 		//以下代码是初始化从最近路段点到景点的路段
 		RoadStage rtspRoadStage=new RoadStage();
 		Float sptrBackX = null;
 		Float sptrBackY = null;
-		String sptrBfFlag = spToRoadMap.get("bfFlag").toString();
+		String sptrBfFlag = roadToEndMap.get("bfFlag").toString();
 		if(RoadStage.BACK_FLAG.equals(sptrBfFlag)) {//判断离你最近的点是前方点还是后方点
-			sptrBackX = Float.valueOf(spToRoadMap.get("backX").toString());
-			sptrBackY = Float.valueOf(spToRoadMap.get("backY").toString());
+			sptrBackX = Float.valueOf(roadToEndMap.get("backX").toString());
+			sptrBackY = Float.valueOf(roadToEndMap.get("backY").toString());
 		}
 		else if(RoadStage.FRONT_FLAG.equals(sptrBfFlag)) {
-			sptrBackX = Float.valueOf(spToRoadMap.get("frontX").toString());
-			sptrBackY = Float.valueOf(spToRoadMap.get("frontY").toString());
+			sptrBackX = Float.valueOf(roadToEndMap.get("frontX").toString());
+			sptrBackY = Float.valueOf(roadToEndMap.get("frontY").toString());
 		}
 		System.out.println("sptrBackX==="+sptrBackX);
 		System.out.println("sptrBackY==="+sptrBackY);
 		rtspRoadStage.setBackX(sptrBackX);
 		rtspRoadStage.setBackY(sptrBackY);
-		rtspRoadStage.setFrontX(scenicPlaceX);
-		rtspRoadStage.setFrontY(scenicPlaceY);
-		rtspRoadStage.setDistance(RoadStageUtil.jiSuanDistance(sptrBackX,sptrBackY,scenicPlaceX,scenicPlaceY));
+		rtspRoadStage.setFrontX(endX);
+		rtspRoadStage.setFrontY(endY);
+		rtspRoadStage.setDistance(RoadStageUtil.jiSuanDistance(sptrBackX,sptrBackY,endX,endY));
 		return rtspRoadStage;
-		////
 	}
 	
-	public static void initFrontNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, List<Integer> childCheckedRSIdList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initFrontNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, List<Integer> childCheckedRSIdList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToEndRoadStage, int itemIndex, Float roadToEndBackX, Float roadToEndBackY, List<Map<String,Object>> allNavList,float preDistance) {
 		boolean getSPFlag=false;
 		boolean addNavFlag=true;
 		float distance=preDistance;
@@ -281,9 +275,9 @@ public class RoadStageUtil {
 		Map<String, String> bfFlagMap = RoadStageUtil.checkConnectBackOrFront(preRS,currentRS);
 		String cwpBfFlag = bfFlagMap.get("cwpBfFlag").toString();
 		if(RoadStage.BACK_FLAG.equals(cwpBfFlag)) {//若当前路段与上一路段后方相交
-			if(roadToSpBackX.equals(preRS.getBackX())&&roadToSpBackY.equals(preRS.getBackY())) {//若上一路段后方的坐标等于到景点的路段的坐标，则直接把到景点的路段添加进导航线上就行，不用加当前路段到导航线上了
+			if(roadToEndBackX.equals(preRS.getBackX())&&roadToEndBackY.equals(preRS.getBackY())) {//若上一路段后方的坐标等于到景点的路段的坐标，则直接把到景点的路段添加进导航线上就行，不用加当前路段到导航线上了
 				getSPFlag=true;
-				frontChildNavList.add(roadToSpRoadStage);
+				frontChildNavList.add(roadToEndRoadStage);
 			}
 			else {
 				//顺着入口段的路段往后遍历，先把本路段加进去，为了方便下面的遍历
@@ -291,9 +285,9 @@ public class RoadStageUtil {
 			}
 		}
 		else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {//若当前路段与上一路段前方相交
-			if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {//若上一路段前方的坐标等于到景点的路段的坐标，则直接把到景点的路段添加进导航线上就行，不用加当前路段到导航线上了
+			if(roadToEndBackX.equals(preRS.getFrontX())&&roadToEndBackY.equals(preRS.getFrontY())) {//若上一路段前方的坐标等于到景点的路段的坐标，则直接把到景点的路段添加进导航线上就行，不用加当前路段到导航线上了
 				getSPFlag=true;
-				frontChildNavList.add(roadToSpRoadStage);
+				frontChildNavList.add(roadToEndRoadStage);
 			}
 			else {
 				String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
@@ -307,7 +301,7 @@ public class RoadStageUtil {
 							crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 							System.out.println("crossRSIds1="+crossRSIds);
 							if(!StringUtils.isEmpty(crossRSIds)) 
-								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 						}
 					}
 				}
@@ -324,9 +318,9 @@ public class RoadStageUtil {
 				
 				cwpBfFlag = bfFlagMap.get("cwpBfFlag").toString();
 				if(RoadStage.BACK_FLAG.equals(cwpBfFlag)) {
-					if(roadToSpBackX.equals(preRS.getBackX())&&roadToSpBackY.equals(preRS.getBackY())) {
+					if(roadToEndBackX.equals(preRS.getBackX())&&roadToEndBackY.equals(preRS.getBackY())) {
 						getSPFlag=true;
-						frontChildNavList.add(roadToSpRoadStage);
+						frontChildNavList.add(roadToEndRoadStage);
 						break;
 					}
 					else {
@@ -341,7 +335,7 @@ public class RoadStageUtil {
 									String crossRSIds = currentRS.getBackCrossRSIds();
 									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 								}
 							}
 						}
@@ -355,7 +349,7 @@ public class RoadStageUtil {
 									String crossRSIds = currentRS.getFrontCrossRSIds();
 									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 								}
 							}
 						}
@@ -363,9 +357,9 @@ public class RoadStageUtil {
 
 						if(i==currentRoad.size()-1) {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
-								if(roadToSpBackX.equals(currentRS.getFrontX())&&roadToSpBackY.equals(currentRS.getFrontY())) {
+								if(roadToEndBackX.equals(currentRS.getFrontX())&&roadToEndBackY.equals(currentRS.getFrontY())) {
 									getSPFlag=true;
-									frontChildNavList.add(roadToSpRoadStage);
+									frontChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -378,15 +372,15 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getFrontCrossRSIds();
 											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 										}
 									}
 								}
 							}
 							else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
-								if(roadToSpBackX.equals(currentRS.getBackX())&&roadToSpBackY.equals(currentRS.getBackY())) {
+								if(roadToEndBackX.equals(currentRS.getBackX())&&roadToEndBackY.equals(currentRS.getBackY())) {
 									getSPFlag=true;
-									frontChildNavList.add(roadToSpRoadStage);
+									frontChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -399,7 +393,7 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getBackCrossRSIds();
 											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 										}
 									}
 								}
@@ -408,9 +402,9 @@ public class RoadStageUtil {
 					}
 				}
 				else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {
-					if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {
+					if(roadToEndBackX.equals(preRS.getFrontX())&&roadToEndBackY.equals(preRS.getFrontY())) {
 						getSPFlag=true;
-						frontChildNavList.add(roadToSpRoadStage);
+						frontChildNavList.add(roadToEndRoadStage);
 						break;
 					}
 					else {
@@ -426,7 +420,7 @@ public class RoadStageUtil {
 									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 									System.out.println("crossRSIds="+crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 								}
 							}
 						}
@@ -440,7 +434,7 @@ public class RoadStageUtil {
 									String crossRSIds = currentRS.getFrontCrossRSIds();
 									crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 								}
 							}
 						}
@@ -448,9 +442,9 @@ public class RoadStageUtil {
 
 						if(i==currentRoad.size()-1) {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
-								if(roadToSpBackX.equals(currentRS.getFrontX())&&roadToSpBackY.equals(currentRS.getFrontY())) {
+								if(roadToEndBackX.equals(currentRS.getFrontX())&&roadToEndBackY.equals(currentRS.getFrontY())) {
 									getSPFlag=true;
-									frontChildNavList.add(roadToSpRoadStage);
+									frontChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -463,15 +457,15 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getFrontCrossRSIds();
 											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 										}
 									}
 								}
 							}
 							else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
-								if(roadToSpBackX.equals(currentRS.getBackX())&&roadToSpBackY.equals(currentRS.getBackY())) {
+								if(roadToEndBackX.equals(currentRS.getBackX())&&roadToEndBackY.equals(currentRS.getBackY())) {
 									getSPFlag=true;
-									frontChildNavList.add(roadToSpRoadStage);
+									frontChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -484,7 +478,7 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getBackCrossRSIds();
 											crossRSIds = crossRSExistInNavList(frontChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,frontChildNavList,frontChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToEndBackX,roadToEndBackY,allNavList,distance);
 										}
 									}
 								}
@@ -520,7 +514,7 @@ public class RoadStageUtil {
 	 * @param allNavList
 	 * @param preDistance
 	 */
-	public static void initBackNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, List<Integer> childCheckedRSIdList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToSpRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
+	public static void initBackNavLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap, List<RoadStage> childNavList, List<Integer> childCheckedRSIdList, RoadStage preRS,List<RoadStage> currentRoad, RoadStage currentRS, RoadStage roadToEndRoadStage, int itemIndex, Float roadToSpBackX, Float roadToSpBackY, List<Map<String,Object>> allNavList,float preDistance) {
 		boolean getSPFlag=false;
 		boolean addNavFlag=true;
 		float distance=preDistance;
@@ -534,7 +528,7 @@ public class RoadStageUtil {
 		if(RoadStage.BACK_FLAG.equals(cwpBfFlag)) {//若当前路段与上一路段后方相交
 			if(roadToSpBackX.equals(preRS.getBackX())&&roadToSpBackY.equals(preRS.getBackY())) {//若上一路段后方的坐标等于到景点的路段的坐标，则直接把到景点的路段添加进导航线上就行，不用加当前路段到导航线上了
 				getSPFlag=true;
-				backChildNavList.add(roadToSpRoadStage);
+				backChildNavList.add(roadToEndRoadStage);
 			}
 			else {
 				//顺着入口段的路段往后遍历，先把本路段加进去，为了方便下面的遍历
@@ -544,7 +538,7 @@ public class RoadStageUtil {
 		else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {//若当前路段与上一路段前方相交
 			if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {//若上一路段前方的坐标等于到景点的路段的坐标，则直接把到景点的路段添加进导航线上就行，不用加当前路段到导航线上了
 				getSPFlag=true;
-				backChildNavList.add(roadToSpRoadStage);
+				backChildNavList.add(roadToEndRoadStage);
 			}
 			else {
 				String pwcBfFlag = bfFlagMap.get("pwcBfFlag").toString();
@@ -557,7 +551,7 @@ public class RoadStageUtil {
 							String crossRSIds = currentRS.getBackCrossRSIds();
 							crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 							if(!StringUtils.isEmpty(crossRSIds))
-								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+								initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 						}
 					}
 				}
@@ -576,7 +570,7 @@ public class RoadStageUtil {
 				if(RoadStage.BACK_FLAG.equals(cwpBfFlag)) {
 					if(roadToSpBackX.equals(preRS.getBackX())&&roadToSpBackY.equals(preRS.getBackY())) {
 						getSPFlag=true;
-						backChildNavList.add(roadToSpRoadStage);
+						backChildNavList.add(roadToEndRoadStage);
 						break;
 					}
 					else {
@@ -591,7 +585,7 @@ public class RoadStageUtil {
 									String crossRSIds = currentRS.getBackCrossRSIds();
 									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 								}
 							}
 						}
@@ -605,7 +599,7 @@ public class RoadStageUtil {
 									String crossRSIds = currentRS.getFrontCrossRSIds();
 									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 								}
 							}
 						}
@@ -615,7 +609,7 @@ public class RoadStageUtil {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 								if(roadToSpBackX.equals(currentRS.getFrontX())&&roadToSpBackY.equals(currentRS.getFrontY())) {
 									getSPFlag=true;
-									backChildNavList.add(roadToSpRoadStage);
+									backChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -628,7 +622,7 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getFrontCrossRSIds();
 											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 										}
 									}
 								}
@@ -636,7 +630,7 @@ public class RoadStageUtil {
 							else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
 								if(roadToSpBackX.equals(currentRS.getBackX())&&roadToSpBackY.equals(currentRS.getBackY())) {
 									getSPFlag=true;
-									backChildNavList.add(roadToSpRoadStage);
+									backChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -649,7 +643,7 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getBackCrossRSIds();
 											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 										}
 									}
 								}
@@ -660,7 +654,7 @@ public class RoadStageUtil {
 				else if(RoadStage.FRONT_FLAG.equals(cwpBfFlag)) {
 					if(roadToSpBackX.equals(preRS.getFrontX())&&roadToSpBackY.equals(preRS.getFrontY())) {
 						getSPFlag=true;
-						backChildNavList.add(roadToSpRoadStage);
+						backChildNavList.add(roadToEndRoadStage);
 						break;
 					}
 					else {
@@ -675,7 +669,7 @@ public class RoadStageUtil {
 									String crossRSIds = currentRS.getBackCrossRSIds();
 									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 								}
 							}
 						}
@@ -689,7 +683,7 @@ public class RoadStageUtil {
 									String crossRSIds = currentRS.getFrontCrossRSIds();
 									crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 									if(!StringUtils.isEmpty(crossRSIds))
-										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+										initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,preRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 								}
 							}
 						}
@@ -699,7 +693,7 @@ public class RoadStageUtil {
 							if(RoadStage.BACK_FLAG.equals(pwcBfFlag)) {
 								if(roadToSpBackX.equals(currentRS.getFrontX())&&roadToSpBackY.equals(currentRS.getFrontY())) {
 									getSPFlag=true;
-									backChildNavList.add(roadToSpRoadStage);
+									backChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -712,7 +706,7 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getFrontCrossRSIds();
 											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 										}
 									}
 								}
@@ -720,7 +714,7 @@ public class RoadStageUtil {
 							else if(RoadStage.FRONT_FLAG.equals(pwcBfFlag)) {
 								if(roadToSpBackX.equals(currentRS.getBackX())&&roadToSpBackY.equals(currentRS.getBackY())) {
 									getSPFlag=true;
-									backChildNavList.add(roadToSpRoadStage);
+									backChildNavList.add(roadToEndRoadStage);
 									break;
 								}
 								else {
@@ -733,7 +727,7 @@ public class RoadStageUtil {
 											String crossRSIds = currentRS.getBackCrossRSIds();
 											crossRSIds = crossRSExistInNavList(backChildNavList,crossRSIds);
 											if(!StringUtils.isEmpty(crossRSIds))
-												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToSpRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
+												initNavLineFromCrossRSIds(crossRSIds,allRSList,allRoadMap,backChildNavList,backChildCheckedRSIdList,currentRS,roadToEndRoadStage,roadToSpBackX,roadToSpBackY,allNavList,distance);
 										}
 									}
 								}
