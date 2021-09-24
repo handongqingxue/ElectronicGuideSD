@@ -81,12 +81,13 @@ public class WechatAppletController {
 
 	@RequestMapping(value="/navToDestination")
 	@ResponseBody
-	public Map<String, Object> navToDestination(Float meX,Float meY,Float scenicPlaceX,Float scenicPlaceY) {
+	public Map<String, Object> navToDestination(Float meX,Float meY,Float scenicPlaceX,Float scenicPlaceY,String navType) {
 
 		System.out.println("meX="+meX);
 		System.out.println("meY="+meY);
 		System.out.println("scenicPlaceX="+scenicPlaceX);
 		System.out.println("scenicPlaceY="+scenicPlaceY);
+		System.out.println("navType="+navType);
 		
 		/*
 		meX=(float) 1166.0;
@@ -96,8 +97,7 @@ public class WechatAppletController {
 		*/
 		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		List<RoadStage> destRoadStageList = new ArrayList<>();
-		List<RoadStage> roadStageList = roadStageService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY);
+		List<RoadStage> roadStageList = roadStageService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY,navType);
 		
 		jsonMap.put("roadStageList", roadStageList);
 		return jsonMap;

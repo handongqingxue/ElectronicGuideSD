@@ -42,7 +42,7 @@ public class RoadStageUtil {
 	}
 	
 	/**
-	 * 初始化所有导航路线
+	 * 初始化所有步行导航路线
 	 * @param roadStageMap
 	 * @param meToRoadMap
 	 * @param spToRoadMap
@@ -52,7 +52,7 @@ public class RoadStageUtil {
 	 * @param scenicPlaceY
 	 * @return
 	 */
-	public static List<Map<String,Object>> initAllNavRoadLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap,Map<String,Object> meToRoadNearRSMap,Map<String,Object> roadToSpMap, 
+	public static List<Map<String,Object>> initAllWalkNavRoadLine(List<RoadStage> allRSList,Map<String, Object> allRoadMap,Map<String,Object> meToRoadNearRSMap,Map<String,Object> roadToSpMap, 
 			Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
 		List<Map<String,Object>> allNavList=new ArrayList<>();
 		List<RoadStage> childNavList=new ArrayList<>();

@@ -21,50 +21,69 @@ public class RoadStageServiceImpl implements RoadStageService {
 
 	@Autowired
 	private RoadStageMapper roadStageDao;
+	@Autowired
+	private BusStopMapper busStopDao;
 
 	@Override
-	public List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY) {
+	public List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY, String navType) {
 		// TODO Auto-generated method stub
-		System.out.println("scenicPlaceX==="+scenicPlaceX);
-		System.out.println("scenicPlaceY==="+scenicPlaceY);
-		Map<String,Object> meToRoadNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);
-		/*
-		System.out.println("meRoadId="+Integer.valueOf(mtrNearRSMap.get("roadId").toString()));
-		System.out.println("meFrontThrough="+Boolean.valueOf(mtrNearRSMap.get("frontThrough").toString()));
-		System.out.println("meBackThrough="+Boolean.valueOf(mtrNearRSMap.get("backThrough").toString()));
-		System.out.println("meBfFlag="+mtrNearRSMap.get("bfFlag").toString());
-		*/
-		
-		Map<String,Object> roadToSpMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
-		/*
-		System.out.println("spRoadId="+Integer.valueOf(spToRoadMap.get("roadId").toString()));
-		System.out.println("spFrontThrough="+Boolean.valueOf(spToRoadMap.get("frontThrough").toString()));
-		System.out.println("spBackThrough="+Boolean.valueOf(spToRoadMap.get("backThrough").toString()));
-		*/
-
+		List<RoadStage> shortNavLine = null;
 		List<RoadStage> allRSList = roadStageDao.select();
 		Map<String, Object> allRoadMap = RoadStageUtil.initAllRoadMap(allRSList);
-		List<Map<String,Object>> allNavList = RoadStageUtil.initAllNavRoadLine(allRSList,allRoadMap,meToRoadNearRSMap,roadToSpMap,meX,meY,scenicPlaceX,scenicPlaceY);
-		
-		for (int i = 0; i < allNavList.size(); i++) {
-			Map<String, Object> allNav = allNavList.get(i);
-			String navLong = allNav.get("navLong").toString();
-			System.out.println("navLong"+i+"="+navLong);
-			List<RoadStage> navRoad = (List<RoadStage>)allNav.get("navLine");
-			for (int j = 0; j < navRoad.size(); j++) {
-				RoadStage roadStage = navRoad.get(j);
-				float backX = roadStage.getBackX();
-				float backY = roadStage.getBackY();
-				float frontX = roadStage.getFrontX();
-				float frontY = roadStage.getFrontY();
-				System.out.println("backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
+		if("walk".equals(navType)) {
+			Map<String,Object> meToRoadNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);
+			
+			Map<String,Object> roadToSpMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);
+	
+			List<Map<String,Object>> allNavList = RoadStageUtil.initAllWalkNavRoadLine(allRSList,allRoadMap,meToRoadNearRSMap,roadToSpMap,meX,meY,scenicPlaceX,scenicPlaceY);
+			
+			for (int i = 0; i < allNavList.size(); i++) {
+				Map<String, Object> allNav = allNavList.get(i);
+				String navLong = allNav.get("navLong").toString();
+				System.out.println("navLong"+i+"="+navLong);
+				List<RoadStage> navRoad = (List<RoadStage>)allNav.get("navLine");
+				for (int j = 0; j < navRoad.size(); j++) {
+					RoadStage roadStage = navRoad.get(j);
+					float backX = roadStage.getBackX();
+					float backY = roadStage.getBackY();
+					float frontX = roadStage.getFrontX();
+					float frontY = roadStage.getFrontY();
+					System.out.println("backX="+backX+",backY="+backY+",frontX="+frontX+",frontY="+frontY);
+				}
+				System.out.println("");
 			}
-			System.out.println("");
+			
+			shortNavLine=RoadStageUtil.initGetSPShortNavLine(allNavList);
+			if(shortNavLine!=null)
+				System.out.println("size1==="+shortNavLine.size());
 		}
-		
-		List<RoadStage> shortNavLine=RoadStageUtil.initGetSPShortNavLine(allNavList);
-		if(shortNavLine!=null)
-			System.out.println("size1==="+shortNavLine.size());
+		else if("bus".equals(navType)) {
+			Map<String,Object> bsNearSpNearMap = busStopDao.selectMinDistanceStop(scenicPlaceX,scenicPlaceY);//获得离景点最近的站点
+			System.out.println("bsNearSpNearMap="+bsNearSpNearMap);
+			float bsNearSpNearX = Float.valueOf(bsNearSpNearMap.get("x").toString());//获得离景点最近的站点的x坐标
+			float bsNearSpNearY = Float.valueOf(bsNearSpNearMap.get("y").toString());//获得离景点最近的站点的y坐标
+			String[] busNoIdArr = bsNearSpNearMap.get("busNoIds").toString().split(",");
+			List<String> busNoIdList = Arrays.asList(busNoIdArr);
+			
+			Map<String,Object> meNearBsMap = busStopDao.selectMinDistanceStopByNoIds(meX,meY,busNoIdList);//获得离游客最近的能到达景点的最近站点
+			System.out.println("meNearBsMap="+meNearBsMap);
+			float meNearBsX = Float.valueOf(meNearBsMap.get("x").toString());//获得离游客最近的能到达景点的最近站点的x坐标
+			float meNearBsY = Float.valueOf(meNearBsMap.get("y").toString());//获得离游客最近的能到达景点的最近站点的y坐标
+			
+			//以下代码是从游客位置到附近站点的导航
+			Map<String,Object> meToRoadNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);//获得离游客最近的路段
+			Map<String,Object> roadToBsNearBsMap = roadStageDao.selectMinDistanceStage(meNearBsX,meNearBsY);//获得离游客最近的站点最近的路段
+			List<Map<String,Object>> meToBsAllNavList = RoadStageUtil.initAllWalkNavRoadLine(allRSList,allRoadMap,meToRoadNearRSMap,roadToBsNearBsMap,meX,meY,meNearBsX,meNearBsY);
+			List<RoadStage> meToBsShortNavLine = RoadStageUtil.initGetSPShortNavLine(meToBsAllNavList);
+			shortNavLine=meToBsShortNavLine;
+			
+			//以下代码是从附近站点到景点位置的导航
+			Map<String, Object> bsToRoadNearBs = roadStageDao.selectMinDistanceStage(bsNearSpNearX,bsNearSpNearY);//获得离景点最近的站点最近的路段
+			Map<String,Object> roadToSpMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);//获得离景点最近的路段
+			List<Map<String,Object>> bsToSpAllNavList = RoadStageUtil.initAllWalkNavRoadLine(allRSList,allRoadMap,bsToRoadNearBs,roadToSpMap,bsNearSpNearX,bsNearSpNearY,scenicPlaceX,scenicPlaceY);
+			List<RoadStage> bsToSpShortNavLine = RoadStageUtil.initGetSPShortNavLine(bsToSpAllNavList);
+			shortNavLine.addAll(bsToSpShortNavLine);
+		}
 		return shortNavLine;
 	}
 

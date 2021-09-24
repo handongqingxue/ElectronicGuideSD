@@ -7,7 +7,7 @@ import com.electronicGuideSD.entity.*;
 
 public interface RoadStageService {
 
-	List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY);
+	List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY, String navType);
 
 	int selectForInt(String roadName, String name);
 
