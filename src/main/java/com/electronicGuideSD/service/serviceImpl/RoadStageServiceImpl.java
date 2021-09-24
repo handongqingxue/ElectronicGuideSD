@@ -77,6 +77,8 @@ public class RoadStageServiceImpl implements RoadStageService {
 			List<RoadStage> meToBsShortNavLine = RoadStageUtil.initGetSPShortNavLine(meToBsAllNavList);
 			shortNavLine=meToBsShortNavLine;
 			
+			RoadStageUtil.initBusNavRoadLine(busStopDao,meNearBsMap,bsNearSpNearMap,shortNavLine);
+			
 			//以下代码是从附近站点到景点位置的导航
 			Map<String, Object> bsToRoadNearBs = roadStageDao.selectMinDistanceStage(bsNearSpNearX,bsNearSpNearY);//获得离景点最近的站点最近的路段
 			Map<String,Object> roadToSpMap = roadStageDao.selectMinDistanceStage(scenicPlaceX,scenicPlaceY);//获得离景点最近的路段

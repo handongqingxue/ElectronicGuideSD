@@ -29,6 +29,9 @@
  	<select id="selectWAList" resultType="com.electronicGuideSD.entity.BusStop">
  		select * from bus_stop
  	</select>
+ 	<select id="selectBySortStartToEnd" resultType="com.electronicGuideSD.entity.BusStop">
+ 		select * from bus_stop where sort between #{startSort} and #{endSort} order by sort
+ 	</select>
  	<select id="selectById" resultType="com.electronicGuideSD.entity.BusStop">
  		select * from bus_stop where id=#{id}
  	</select>

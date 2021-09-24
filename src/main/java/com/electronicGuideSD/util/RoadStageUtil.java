@@ -11,6 +11,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.electronicGuideSD.dao.BusStopMapper;
+import com.electronicGuideSD.entity.BusStop;
 import com.electronicGuideSD.entity.RoadStage;
 import com.electronicGuideSD.service.RoadStageService;
 
@@ -80,6 +82,44 @@ public class RoadStageUtil {
 		}
 		
 		return allNavList;
+	}
+	
+	public static void initBusNavRoadLine(BusStopMapper busStopDao,Map<String,Object> meNearBsMap,Map<String,Object> bsNearSpNearMap,List<RoadStage> shortNavLine) {
+		int startSort=0;
+		int endSort=0;
+		int meNearBsSort = Integer.valueOf(meNearBsMap.get("sort").toString());
+		int bsNearSpNearSort = Integer.valueOf(bsNearSpNearMap.get("sort").toString());
+		List<BusStop> busStopList = null;
+		if(meNearBsSort<bsNearSpNearSort) {
+			startSort=meNearBsSort;
+			endSort=bsNearSpNearSort;
+		}
+		else if(meNearBsSort>bsNearSpNearSort) {
+			startSort=bsNearSpNearSort;
+			endSort=meNearBsSort;
+		}
+		
+		if(startSort!=endSort)
+			busStopList = busStopDao.selectBySortStartToEnd(startSort,endSort);
+		if(busStopList!=null) {
+			List<RoadStage> busRsList=new ArrayList<>();
+			for (int i = 1; i < busStopList.size(); i++) {
+				BusStop preBS = busStopList.get(i-1);
+				BusStop currBS = busStopList.get(i);
+				float backX = preBS.getX();
+				float backY = preBS.getY();
+				float frontX = currBS.getX();
+				float frontY = currBS.getY();
+				
+				RoadStage busRs=new RoadStage();
+				busRs.setBackX(backX);
+				busRs.setBackY(backY);
+				busRs.setFrontX(frontX);
+				busRs.setFrontY(frontY);
+				busRsList.add(busRs);
+			}
+			shortNavLine.addAll(busRsList);
+		}
 	}
 	
 	public static List<RoadStage> initGetSPShortNavLine(List<Map<String,Object>> allNavList) {
