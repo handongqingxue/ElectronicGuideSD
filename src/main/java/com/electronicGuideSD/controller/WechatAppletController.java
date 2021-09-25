@@ -96,10 +96,8 @@ public class WechatAppletController {
 		scenicPlaceY=(float) 439.0;
 		*/
 		
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		List<RoadStage> roadStageList = roadStageService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY,navType);
+		Map<String, Object> jsonMap = roadStageService.getShortRoadLine(meX,meY,scenicPlaceX,scenicPlaceY,navType);
 		
-		jsonMap.put("roadStageList", roadStageList);
 		return jsonMap;
 	}
 }

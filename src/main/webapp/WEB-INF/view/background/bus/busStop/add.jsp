@@ -60,7 +60,7 @@
 	margin-left: 20px;
 	font-size: 18px;
 }
-.name_inp{
+.name_inp,.arroundScope_inp{
 	width: 150px;
 	height:30px;
 }
@@ -524,7 +524,9 @@ function checkAdd(){
 			if(checkX()){
 				if(checkY()){
 					if(checkBusNoIds()){
-						addBusStop();
+						if(checkArroundScope()){
+							addBusStop();
+						}
 					}
 				}
 			}
@@ -612,6 +614,17 @@ function checkBusNoIds(){
 	var busNoIds=busNoIdsCBB.combobox("getValue");
 	if(busNoIds==null||busNoIds==""){
 	  	alert("请选择站点车辆");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+//验证站点范围
+function checkArroundScope(){
+	var arroundScope = $("#arroundScope").val();
+	if(arroundScope==null||arroundScope==""){
+	  	alert("请输入站点范围");
 	  	return false;
 	}
 	else
@@ -730,6 +743,18 @@ function setFitWidthInParent(parent,self){
 			<td class="td2">
 				<select id="busNoIds_cbb"></select>
 				<input type="hidden" id="busNoIds" name="busNoIds"/>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="td1" align="right">
+				站点范围
+			</td>
+			<td class="td2">
+				<input type="number" class="arroundScope_inp" id="arroundScope" name="arroundScope" placeholder="请输入站点范围"/>
+			</td>
+			<td class="td1" align="right">
+			</td>
+			<td class="td2">
 			</td>
 		  </tr>
 		</table>

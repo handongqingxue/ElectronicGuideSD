@@ -27,6 +27,12 @@ public class BusStop {
 	public void setY(Float y) {
 		this.y = y;
 	}
+	public Float getArroundScope() {
+		return arroundScope;
+	}
+	public void setArroundScope(Float arroundScope) {
+		this.arroundScope = arroundScope;
+	}
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -60,6 +66,7 @@ public class BusStop {
 	private String name;
 	private Float x;
 	private Float y;
+	private Float arroundScope;
 	private String createTime;
 	private String modifyTime;
 	private Integer sort;

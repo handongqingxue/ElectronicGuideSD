@@ -54,6 +54,9 @@
  			<if test="y!=null">
  				y,
  			</if>
+ 			<if test="arroundScope!=null">
+ 				arroundScope,
+ 			</if>
  				createTime,
  			<if test="sort!=null">
  				sort,
@@ -72,6 +75,9 @@
  			</if>
  			<if test="y!=null">
  				#{y},
+ 			</if>
+ 			<if test="arroundScope!=null">
+ 				#{arroundScope},
  			</if>
  				now(),
  			<if test="sort!=null">
@@ -93,6 +99,9 @@
 			</if>
 			<if test="y!=null">
 				y=#{y},
+			</if>
+			<if test="arroundScope!=null">
+				arroundScope=#{arroundScope},
 			</if>
 				modifyTime=now(),
 			<if test="sort!=null">

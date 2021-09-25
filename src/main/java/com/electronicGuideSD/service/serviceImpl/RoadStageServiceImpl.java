@@ -25,8 +25,9 @@ public class RoadStageServiceImpl implements RoadStageService {
 	private BusStopMapper busStopDao;
 
 	@Override
-	public List<RoadStage> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY, String navType) {
+	public Map<String, Object> getShortRoadLine(Float meX, Float meY, Float scenicPlaceX, Float scenicPlaceY, String navType) {
 		// TODO Auto-generated method stub
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		List<RoadStage> shortNavLine = null;
 		List<RoadStage> allRSList = roadStageDao.select();
 		Map<String, Object> allRoadMap = RoadStageUtil.initAllRoadMap(allRSList);
@@ -69,6 +70,8 @@ public class RoadStageServiceImpl implements RoadStageService {
 			System.out.println("meNearBsMap="+meNearBsMap);
 			float meNearBsX = Float.valueOf(meNearBsMap.get("x").toString());//获得离游客最近的能到达景点的最近站点的x坐标
 			float meNearBsY = Float.valueOf(meNearBsMap.get("y").toString());//获得离游客最近的能到达景点的最近站点的y坐标
+			float arroundScope = Float.valueOf(meNearBsMap.get("arroundScope").toString());
+			jsonMap.put("endPlace", meNearBsMap);
 			
 			//以下代码是从游客位置到附近站点的导航
 			Map<String,Object> meToRoadNearRSMap = roadStageDao.selectMinDistanceStage(meX,meY);//获得离游客最近的路段
@@ -86,7 +89,8 @@ public class RoadStageServiceImpl implements RoadStageService {
 			List<RoadStage> bsToSpShortNavLine = RoadStageUtil.initGetSPShortNavLine(bsToSpAllNavList);
 			shortNavLine.addAll(bsToSpShortNavLine);
 		}
-		return shortNavLine;
+		jsonMap.put("roadStageList", shortNavLine);
+		return jsonMap;
 	}
 
 	@Override
