@@ -113,6 +113,7 @@ var frontY;
 var arcR=10;
 var lineWidth=10;
 var fontMarginLeft=45;
+var nameMarginTop=30;
 var atSpace=10;
 var scenicPlaceJA;
 var otherRSJA;
@@ -346,6 +347,12 @@ function initScenicPlaceLocation(scenicPlaceJO){
 		//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
 		sceDisCanvasContext.drawImage(entityImg, scenicPlaceJO.x/widthScale-scenicPlaceJO.picWidth/2, scenicPlaceJO.y/heightScale-scenicPlaceJO.picHeight/2, scenicPlaceJO.picWidth, scenicPlaceJO.picHeight);
 	}
+
+	var rectWidth=20*scenicPlaceJO.name.length+20;
+	sceDisCanvasContext.font="25px bold 黑体";
+	sceDisCanvasContext.fillStyle = "#000";
+	sceDisCanvasContext.fillText(scenicPlaceJO.name,scenicPlaceJO.x/widthScale-rectWidth/2,scenicPlaceJO.y/heightScale+scenicPlaceJO.picHeight/2+nameMarginTop);
+	sceDisCanvasContext.stroke();
 }
 
 function initRoadStageLocation(){
@@ -436,6 +443,12 @@ function initBusStopLocation(busStopJO){
 		//不管画布怎么放大、缩小，生成坐标的点位置还是原来的。只是上面鼠标点击后获取的坐标是从坐上为原点计算的，这里画图也是和上面一样的原理，从左上为原点计算位置。只是插入数据库的位置是转换后以左下为原点计算的
 		sceDisCanvasContext.drawImage(entityImg, busStopJO.x/widthScale-busStopWidth/2, busStopJO.y/heightScale-busStopHeight/2, busStopWidth, busStopHeight);
 	}
+
+	var rectWidth=20*busStopJO.name.length+20;
+	sceDisCanvasContext.font="25px bold 黑体";
+	sceDisCanvasContext.fillStyle = "#000";
+	sceDisCanvasContext.fillText(busStopJO.name,busStopJO.x/widthScale-rectWidth/2,busStopJO.y/heightScale+busStopHeight/2+nameMarginTop);
+	sceDisCanvasContext.stroke();
 }
 
 function initDialogPosition(){
