@@ -151,7 +151,9 @@ function initBusNoIdsCBB(){
 					valueField:"id",
 					textField:"name",
 					onLoadSuccess:function(){
-						$(this).combobox("setValues",'${requestScope.busStop.busNoIds }'.split(","));
+						var busNoIds='${requestScope.busStop.busNoIds }';
+						$("#busNoIds").val(busNoIds);
+						$(this).combobox("setValues",busNoIds.split(","));
 					},
 					onSelect:function(){
 						var busNoIds=busNoIdsCBB.combobox("getValues").toString();

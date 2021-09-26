@@ -70,7 +70,6 @@ public class RoadStageServiceImpl implements RoadStageService {
 			System.out.println("meNearBsMap="+meNearBsMap);
 			float meNearBsX = Float.valueOf(meNearBsMap.get("x").toString());//获得离游客最近的能到达景点的最近站点的x坐标
 			float meNearBsY = Float.valueOf(meNearBsMap.get("y").toString());//获得离游客最近的能到达景点的最近站点的y坐标
-			float arroundScope = Float.valueOf(meNearBsMap.get("arroundScope").toString());
 			jsonMap.put("endPlace", meNearBsMap);
 			
 			//以下代码是从游客位置到附近站点的导航
