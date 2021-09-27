@@ -17,6 +17,10 @@ public interface RoadStageMapper {
 
 	List<RoadStage> selectList(@Param("roadName")String roadName, @Param("name")String name, @Param("start")int start, @Param("rows")int rows, String sort, String order);
 
+	List<RoadStage> getBackTwoInRoad(@Param("roadId")int roadId);
+
+	List<RoadStage> getFrontTwoInRoad(@Param("roadId")int roadId);
+
 	List<RoadStage> selectCBBData();
 
 	int add(RoadStage roadStage);

@@ -521,4 +521,24 @@ public class RoadController {
 		return json;
 	}
 
+	
+	@RequestMapping(value="/checkRSIfConnectInRoad",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String checkRSIfConnectInRoad(float backX,float backY,float frontX,float frontY,int roadId) {
+		String json=null;
+		PlanResult plan=new PlanResult();
+		boolean bool=roadStageService.checkIfConnectInRoad(backX,backY,frontX,frontY,roadId);
+		if(bool) {
+			plan.setStatus(1);
+			plan.setMsg("验证成功！");
+			json=JsonUtil.getJsonFromObject(plan);
+		}
+		else {
+			plan.setStatus(0);
+			plan.setMsg("路段必须与道路内其他路段相连！");
+			json=JsonUtil.getJsonFromObject(plan);
+		}
+		return json;
+	}
+
 }

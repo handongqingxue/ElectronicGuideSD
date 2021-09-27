@@ -27,4 +27,6 @@ public interface RoadStageService {
 
 	int updateAttrInRoad(List<RoadStage> road);
 
+	boolean checkIfConnectInRoad(float backX, float backY, float frontX, float frontY, int roadId);
+
 }

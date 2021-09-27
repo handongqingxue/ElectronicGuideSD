@@ -165,4 +165,63 @@ public class RoadStageServiceImpl implements RoadStageService {
 		}
 		return count;
 	}
+
+	@Override
+	public boolean checkIfConnectInRoad(float backX, float backY, float frontX, float frontY, int roadId) {
+		// TODO Auto-generated method stub
+		boolean bool=false;
+		List<RoadStage> backRSList=roadStageDao.getBackTwoInRoad(roadId);
+		RoadStage backFirstRS = backRSList.get(0);
+		float bfBackX = backFirstRS.getBackX();
+		float bfBackY = backFirstRS.getBackY();
+		float bfFrontX = backFirstRS.getFrontX();
+		float bfFrontY = backFirstRS.getFrontY();
+		RoadStage backSecondRS = backRSList.get(1);
+		float bsBackX = backSecondRS.getBackX();
+		float bsBackY = backSecondRS.getBackY();
+		float bsFrontX = backSecondRS.getFrontX();
+		float bsFrontY = backSecondRS.getFrontY();
+
+		List<RoadStage> frontRSList=roadStageDao.getFrontTwoInRoad(roadId);
+		RoadStage frontFirstRS = frontRSList.get(0);
+		float ffBackX = frontFirstRS.getBackX();
+		float ffBackY = frontFirstRS.getBackY();
+		float ffFrontX = frontFirstRS.getFrontX();
+		float ffFrontY = frontFirstRS.getFrontY();
+		RoadStage frontSecondRS = frontRSList.get(1);
+		float fsBackX = frontSecondRS.getBackX();
+		float fsBackY = frontSecondRS.getBackY();
+		float fsFrontX = frontSecondRS.getFrontX();
+		float fsFrontY = frontSecondRS.getFrontY();
+		
+		if(bfBackX==bsBackX&&bfBackY==bsBackY||bfBackX==bsFrontX&&bfBackY==bsFrontY) {
+			if(backX==bfFrontX&&backY==bfFrontY)
+				bool=true;
+			else if(frontX==bfFrontX&&frontY==bfFrontY)
+				bool=true;
+		}
+		else if(bfFrontX==bsBackX&&bfFrontY==bsBackY||bfFrontX==bsFrontX&&bfFrontY==bsFrontY) {
+			if(backX==bfBackX&&backY==bfBackY)
+				bool=true;
+			else if(frontX==bfBackX&&frontY==bfBackY)
+				bool=true;
+		}
+		
+		if(!bool) {
+			if(ffBackX==fsBackX&&ffBackY==fsBackY||ffBackX==fsFrontX&&ffBackY==fsFrontY) {
+				if(backX==ffFrontX&&backY==ffFrontY)
+					bool=true;
+				else if(frontX==ffFrontX&&frontY==ffFrontY)
+					bool=true;
+			}
+			else if(ffFrontX==fsBackX&&ffFrontY==fsBackY||ffFrontX==fsFrontX&&ffFrontY==fsFrontY) {
+				if(backX==ffBackX&&backY==ffBackY)
+					bool=true;
+				else if(frontX==ffBackX&&frontY==ffBackY)
+					bool=true;
+			}
+		}
+		
+		return bool;
+	}
 }

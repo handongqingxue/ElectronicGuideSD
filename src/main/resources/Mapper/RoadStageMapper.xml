@@ -42,6 +42,12 @@
 		</if>
 		 order by rs.roadId,rs.sort
  	</select>
+	<select id="getBackTwoInRoad" resultType="com.electronicGuideSD.entity.RoadStage">
+		select * from road_stage where roadId=#{roadId} order by sort limit 0,2
+	</select>
+	<select id="getFrontTwoInRoad" resultType="com.electronicGuideSD.entity.RoadStage">
+		select * from road_stage where roadId=#{roadId} order by sort desc limit 0,2
+	</select>
  	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.RoadStage">
  		select id,name from road_stage order by sort
  	</select>
