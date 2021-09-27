@@ -673,7 +673,9 @@ function checkEdit(){
 			if(checkBackY()){
 				if(checkFrontX()){
 					if(checkFrontY()){
-						editRoadStage();
+						if(checkIfConnectInRoad()){
+							editRoadStage();
+						}
 					}
 				}
 			}
@@ -767,6 +769,27 @@ function checkFrontY(){
 	}
 	else
 		return true;
+}
+
+function checkIfConnectInRoad(){
+	var bool=false;
+	var backX = $("#backX").val();
+	var backY = $("#backY").val();
+	var frontX = $("#frontX").val();
+	var frontY = $("#frontY").val();
+	var roadId=roadCBB.combobox("getValue");
+	$.ajaxSetup({async:false});
+	$.post(roadPath+"checkRSIfConnectInRoad",
+		{backX:backX,backY:backY,frontX:frontX,frontY:frontY,roadId:roadId},
+		function(data){
+			if(data.status==1)
+				bool=true;
+			else{
+				alert(data.msg);
+			}
+		}
+	,"json");
+	return bool;
 }
 
 function convertStringToBoolean(str){
