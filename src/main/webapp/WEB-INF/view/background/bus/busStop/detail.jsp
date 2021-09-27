@@ -48,6 +48,15 @@
 .detail_bs_canvas_div .title_span{
 	margin-left: 30px;
 }
+.detail_bs_sd_map_dialog_div .toolbar{
+	height:32px;
+}
+.detail_bs_sd_map_dialog_div .toolbar .row_div{
+	margin-top: 5px;
+}
+.detail_bs_sd_map_dialog_div .toolbar .xsbq_span{
+	margin-left: 13px;
+}
 
 .center_con_div{
 	height: 90vh;
@@ -78,6 +87,7 @@
 </style>
 <script type="text/javascript">
 var path='<%=basePath %>';
+var sceDisPath='<%=basePath%>'+"background/scenicDistrict/";
 var busPath='<%=basePath%>'+"background/bus/";
 var wechatAppletPath='<%=basePath%>'+"wechatApplet/";
 var dialogTop=10;
@@ -118,6 +128,7 @@ $(function(){
 	initTextLabelJA();
 	initOtherBSJA();
 	initBusStop();
+	initEntityTypesCBB();
 	initDetailDialog();
 	initDetailBsSDMapDialogDiv();
 
@@ -175,7 +186,41 @@ function initOtherBSJA(){
 }
 
 function initBusStop(){
-	busStop={x:'${requestScope.busStop.x }',y:sceDisCanvasMinHeight-'${requestScope.busStop.y }'};
+	busStop={name:'${requestScope.busStop.name }',x:'${requestScope.busStop.x }',y:sceDisCanvasMinHeight-'${requestScope.busStop.y }'};
+}
+
+function initEntityTypesCBB(){
+	var data=[];
+	data.push({type:"",name:"请选择"});
+	$.post(sceDisPath+"selectEntityTypeCBBData",
+		function(result){
+			if(result.status=="ok"){
+				var entityTypeList=result.entityTypeList;
+				for(var i=0;i<entityTypeList.length;i++){
+					var entityType=entityTypeList[i];
+					data.push({type:entityType.type,name:entityType.name});
+				}
+				entityTypesCBB=$("#entityTypes_cbb").combobox({
+					width:120,
+					data:data,
+	                multiple:true,
+					valueField:"type",
+					textField:"name",
+					onLoadSuccess:function(){
+						var types=""
+						for (var i = 1; i < data.length; i++){
+							types+=","+data[i].type;
+						}
+						$(this).combobox("setValues",types.substring(1).split(","));
+					},
+					onChange:function(){
+						initSceDisCanvas(0);
+					}
+				});
+			}
+			initSceDisCanvas();
+		}
+	,"json");
 }
 
 function changeCanvasSize(bigFlag,resetFlag){
@@ -226,15 +271,23 @@ function initSceDisCanvas(reSizeFlag){
 	sceDisCanvasContext = sceDisCanvas.getContext("2d");
 	sceDisCanvasImg.onload=function(){
 		sceDisCanvasContext.drawImage(sceDisCanvasImg, 0, 0, sceDisCanvasWidth, sceDisCanvasHeight);
-		
-		for(var i=0;i<scenicPlaceJA.length;i++){
-			initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+
+		var entityTypes=entityTypesCBB.combobox("getValues").toString();
+		if(entityTypes.indexOf("scenicPlace")!=-1){
+			for(var i=0;i<scenicPlaceJA.length;i++){
+				initScenicPlaceLocation(scenicPlaceJA[i]);//这里的循环必须放在外面，要是在方法里面循环，会默认为一张图片，加载到最后只显示最后一张图片
+			}
 		}
-		initRoadStageLocation();
-		initXYLabelLocation();
-		initTextLabelLocation();
-		for(var i=0;i<otherBSJA.length;i++){
-			initBusStopLocation(otherBSJA[i]);
+		if(entityTypes.indexOf("road")!=-1)
+			initRoadStageLocation();
+		if(entityTypes.indexOf("xy")!=-1)
+			initXYLabelLocation();
+		if(entityTypes.indexOf("textLabel")!=-1)
+			initTextLabelLocation();
+		if(entityTypes.indexOf("busStop")!=-1){
+			for(var i=0;i<otherBSJA.length;i++){
+				initBusStopLocation(otherBSJA[i]);
+			}
 		}
 		if(busStop!=undefined)
 			initBusStopLocation(busStop);
@@ -353,6 +406,7 @@ function initDialogPosition(){
 function initDetailBsSDMapDialogDiv(){
 	detailBsSdMDialog=$("#detail_bs_sd_map_dialog_div").dialog({
 		title:"景区地图",
+		toolbar:"#detail_bs_sd_map_dialog_div #toolbar",
 		width:setFitWidthInParent("body","detail_bs_sd_map_dialog_div"),
 		height:730,
 		top:10,
@@ -514,7 +568,13 @@ function setFitWidthInParent(parent,self){
 					<span class="title_span">车辆管理-站点查询-详情</span>
 				</div>
 				<input type="hidden" id="id"/>
-				<div id="detail_bs_sd_map_dialog_div">
+				<div class="detail_bs_sd_map_dialog_div" id="detail_bs_sd_map_dialog_div">
+					<div class="toolbar" id="toolbar">
+						<div class="row_div">
+							<span class="xsbq_span">显示标签</span>&nbsp;&nbsp;&nbsp;
+							<select id="entityTypes_cbb"></select>
+						</div>
+					</div>
 					<div id="sceDisCanvas_div">
 						<canvas id="sceDisCanvas">
 						</canvas>
