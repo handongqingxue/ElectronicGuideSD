@@ -20,4 +20,6 @@ public interface BusStopService {
 
 	List<BusStop> selectOtherList(String id);
 
+	List<BusStop> selectBusNosStopCBBData();
+
 }

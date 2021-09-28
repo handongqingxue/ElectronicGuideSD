@@ -69,7 +69,7 @@ function initTab2AddLB(){
 	$("#tab2_add_but").linkbutton({
 		iconCls:"icon-add",
 		onClick:function(){
-			location.href=busPath+"busNo/add";
+			location.href=busPath+"busNo/addStop";
 		}
 	});
 }

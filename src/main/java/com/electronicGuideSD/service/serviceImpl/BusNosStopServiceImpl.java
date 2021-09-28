@@ -20,4 +20,10 @@ public class BusNosStopServiceImpl implements BusNosStopService {
 		// TODO Auto-generated method stub
 		return busNosStopDao.selectList(name, busNoId);
 	}
+
+	@Override
+	public List<BusNosStop> selectPreBnsCBBData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

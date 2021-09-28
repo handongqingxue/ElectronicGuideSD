@@ -69,4 +69,10 @@ public class BusStopServiceImpl implements BusStopService {
 		// TODO Auto-generated method stub
 		return busStopDao.selectOtherList(id);
 	}
+
+	@Override
+	public List<BusStop> selectBusNosStopCBBData() {
+		// TODO Auto-generated method stub
+		return busStopDao.selectBusNosStopCBBData();
+	}
 }

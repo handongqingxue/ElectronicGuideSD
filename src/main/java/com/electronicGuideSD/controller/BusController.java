@@ -69,6 +69,12 @@ public class BusController {
 		return MODULE_NAME+"/busNo/detail";
 	}
 	
+	@RequestMapping(value="/busNo/addStop")
+	public String goBusNoAddStop(HttpServletRequest request) {
+
+		return MODULE_NAME+"/busNo/addStop";
+	}
+	
 	@RequestMapping(value="/busStop/add")
 	public String goBusStopAdd(HttpServletRequest request) {
 		
@@ -271,6 +277,42 @@ public class BusController {
 		else {
 			jsonMap.put("status", "ok");
 			jsonMap.put("busNoList", busNoList);
+		}
+		return jsonMap;
+	}
+
+	@RequestMapping(value="/selectBusNosStopCBBData")
+	@ResponseBody
+	public Map<String, Object> selectBusNosStopCBBData() {
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<BusStop> busStopList = busStopService.selectBusNosStopCBBData();
+
+		if(busStopList.size()==0) {
+			jsonMap.put("status", "no");
+			jsonMap.put("message", "暂无车辆站点");
+		}
+		else {
+			jsonMap.put("status", "ok");
+			jsonMap.put("busStopList", busStopList);
+		}
+		return jsonMap;
+	}
+
+	@RequestMapping(value="/selectPreBnsCBBData")
+	@ResponseBody
+	public Map<String, Object> selectPreBnsCBBData() {
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<BusNosStop> busNosStopList = busNosStopService.selectPreBnsCBBData();
+		
+		if(busNosStopList.size()==0) {
+			jsonMap.put("status", "no");
+			jsonMap.put("message", "暂无车辆站点");
+		}
+		else {
+			jsonMap.put("status", "ok");
+			jsonMap.put("busNosStopList", busNosStopList);
 		}
 		return jsonMap;
 	}

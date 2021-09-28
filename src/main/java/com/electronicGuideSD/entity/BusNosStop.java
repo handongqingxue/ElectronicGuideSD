@@ -9,11 +9,11 @@ public class BusNosStop {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getBsId() {
-		return bsId;
+	public Integer getBusStopId() {
+		return busStopId;
 	}
-	public void setBsId(Integer bsId) {
-		this.bsId = bsId;
+	public void setBusStopId(Integer busStopId) {
+		this.busStopId = busStopId;
 	}
 	public Integer getBusNoId() {
 		return busNoId;
@@ -63,7 +63,7 @@ public class BusNosStop {
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
-	private Integer bsId;
+	private Integer busStopId;
 	private Integer busNoId;
 	private Boolean isStart;
 	private Boolean isEnd;
