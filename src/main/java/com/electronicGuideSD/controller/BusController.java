@@ -28,6 +28,8 @@ public class BusController {
 	@Autowired
 	private BusStopService busStopService;
 	@Autowired
+	private BusNosStopService busNosStopService;
+	@Autowired
 	private RoadStageService roadStageService;
 	@Autowired
 	private ScenicPlaceService scenicPlaceService;
@@ -241,6 +243,18 @@ public class BusController {
 			e.printStackTrace();
 		}
 		return json;
+	}
+	
+	@RequestMapping(value="/selectBusNosStopList")
+	@ResponseBody
+	public Map<String, Object> selectBusNosStopList(String name,int busNoId) {
+		
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		List<BusNosStop> busNosStopList=busNosStopService.selectList(name, busNoId);
+
+		jsonMap.put("data", busNosStopList);
+			
+		return jsonMap;
 	}
 
 	@RequestMapping(value="/selectBusNoCBBData")
