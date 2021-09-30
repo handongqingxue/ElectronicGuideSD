@@ -8,6 +8,4 @@ public interface BusNosStopService {
 
 	List<BusNosStop> selectList(String name, int busNoId);
 
-	List<BusNosStop> selectPreBnsCBBData();
-
 }

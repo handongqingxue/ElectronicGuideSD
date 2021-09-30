@@ -42,8 +42,14 @@
 		</if>
 		 order by sort
  	</select>
- 	<select id="selectBusNosStopCBBData" resultType="com.electronicGuideSD.entity.BusStop">
- 		select * from bus_stop
+ 	<select id="selectCBBData" resultType="com.electronicGuideSD.entity.BusStop">
+ 		select CONCAT(id,'-',busNoIds) cbbValue,name from bus_stop where busNoIds in(#{busNoId})
+ 	</select>
+ 	<select id="selectOtherCBBData" resultType="com.electronicGuideSD.entity.BusStop">
+ 		select * from bus_stop where id!=#{busStopId}
+		<foreach collection="busNoIdList" item="busNoId" open=" and cast(busNoIds as char) in (" separator="," close=")">
+		#{busNoId}
+		</foreach>
  	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.BusStop">
  		insert into bus_stop

@@ -281,12 +281,12 @@ public class BusController {
 		return jsonMap;
 	}
 
-	@RequestMapping(value="/selectBusNosStopCBBData")
+	@RequestMapping(value="/selectBusStopCBBData")
 	@ResponseBody
-	public Map<String, Object> selectBusNosStopCBBData() {
+	public Map<String, Object> selectBusStopCBBData(int busNoId) {
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		List<BusStop> busStopList = busStopService.selectBusNosStopCBBData();
+		List<BusStop> busStopList = busStopService.selectCBBData(busNoId);
 
 		if(busStopList.size()==0) {
 			jsonMap.put("status", "no");
@@ -299,20 +299,20 @@ public class BusController {
 		return jsonMap;
 	}
 
-	@RequestMapping(value="/selectPreBnsCBBData")
+	@RequestMapping(value="/selectOtherBsCBBData")
 	@ResponseBody
-	public Map<String, Object> selectPreBnsCBBData() {
+	public Map<String, Object> selectOtherBsCBBData(int busStopId,String busNoIds) {
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		List<BusNosStop> busNosStopList = busNosStopService.selectPreBnsCBBData();
+		List<BusStop> busStopList = busStopService.selectOtherCBBData(busStopId,busNoIds);
 		
-		if(busNosStopList.size()==0) {
+		if(busStopList.size()==0) {
 			jsonMap.put("status", "no");
 			jsonMap.put("message", "ÔÝÎÞ³µÁ¾Õ¾µã");
 		}
 		else {
 			jsonMap.put("status", "ok");
-			jsonMap.put("busNosStopList", busNosStopList);
+			jsonMap.put("busStopList", busStopList);
 		}
 		return jsonMap;
 	}

@@ -27,7 +27,7 @@ var dialogLeft=20;
 var ndNum=0;
 $(function(){
 	initBusNoIdCBB();
-	initBusNoStopCBB();
+	initBusStopCBB();
 	initPreBsCBB();
 	initNewDialog();
 
@@ -53,7 +53,7 @@ function initBusNoIdCBB(){
 					onSelect:function(){
 						var busNoId=busNoIdCBB.combobox("getValue");
 						$("#busNoId").val(busNoId);
-						selectBusNosStopCBBData();
+						selectBusStopCBBData();
 					}
 				});
 			}
@@ -61,24 +61,29 @@ function initBusNoIdCBB(){
 	,"json");
 }
 
-function initBusNoStopCBB(){
+function initBusStopCBB(){
 	var data=[];
 	data.push({id:"",name:"请选择"});
 	busStopCBB=$("#busStop_cbb").combobox({
 		width:150,
 		data:data,
-		valueField:"id",
+		valueField:"cbbValue",
 		textField:"name",
 		onSelect:function(){
-			var busStopId=busStopIdCBB.combobox("getValue");
+			var cbbValue=busStopCBB.combobox("getValue");
+			var cbbValueArr=cbbValue.split("-");
+			var busStopId=cbbValueArr[0];
+			var busNoIds=cbbValueArr[1];
 			$("#busStopId").val(busStopId);
+			$("#busNoIds").val(busNoIds);
+			selectPreBsCBBData();
 		}
 	});
 }
 
-function selectBusNosStopCBBData(){
+function selectBusStopCBBData(){
 	var busNoId=busNoIdCBB.combobox("getValue");
-	$.post(busPath+"selectBusNosStopCBBData",
+	$.post(busPath+"selectBusStopCBBData",
 		{busNoId:busNoId},
 		function(result){
 			var data=[];
@@ -97,24 +102,33 @@ function selectBusNosStopCBBData(){
 function initPreBsCBB(){
 	var data=[];
 	data.push({id:"",name:"请选择"});
-	$.post(busPath+"selectPreBnsCBBData",
+	preBsCBB=$("#preBs_cbb").combobox({
+		width:150,
+		data:data,
+		valueField:"id",
+		textField:"name",
+		onSelect:function(){
+			var preBsId=preBsCBB.combobox("getValue");
+			$("#preBsId").val(preBsId);
+		}
+	});
+}
+
+function selectPreBsCBBData(){
+	var busStopId=$("#busStopId").val();
+	var busNoIds=$("#busNoIds").val();
+	$.post(busPath+"selectOtherBsCBBData",
+		{busStopId:busStopId,busNoIds:busNoIds},
 		function(result){
+			var data=[];
+			data.push({id:"",name:"请选择"});
 			if(result.status=="ok"){
-				var busNosStopList=result.busNosStopList;
-				for(var i=0;i<busNoList.length;i++){
-					var busNo=busNoList[i];
-					data.push({id:busNo.id,name:busNo.name});
+				var busStopList=result.busStopList;
+				for(var i=0;i<busStopList.length;i++){
+					var busStop=busStopList[i];
+					data.push({id:busStop.id,name:busStop.name});
 				}
-				preBsCBB=$("#preBs_cbb").combobox({
-					width:150,
-					data:data,
-					valueField:"id",
-					textField:"name",
-					onSelect:function(){
-						var preBsId=preBsCBB.combobox("getValue");
-						$("#preBsId").val(preBsId);
-					}
-				});
+				preBsCBB.combobox("loadData",data);
 			}
 		}
 	,"json");
@@ -216,6 +230,7 @@ function setFitWidthInParent(parent,self){
 				<td class="td2">
 					<select id="busStop_cbb"></select>
 					<input type="hidden" id="busStopId" name="busStopId"/>
+					<input type="hidden" id="busNoIds" name="busNoIds"/>
 				</td>
 			  </tr>
 			  <tr>

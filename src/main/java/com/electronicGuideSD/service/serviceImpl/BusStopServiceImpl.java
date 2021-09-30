@@ -1,5 +1,6 @@
 package com.electronicGuideSD.service.serviceImpl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -71,8 +72,16 @@ public class BusStopServiceImpl implements BusStopService {
 	}
 
 	@Override
-	public List<BusStop> selectBusNosStopCBBData() {
+	public List<BusStop> selectCBBData(int busNoId) {
 		// TODO Auto-generated method stub
-		return busStopDao.selectBusNosStopCBBData();
+		return busStopDao.selectCBBData(busNoId);
+	}
+
+	@Override
+	public List<BusStop> selectOtherCBBData(int busStopId, String busNoIds) {
+		// TODO Auto-generated method stub
+		String[] busNoIdArr = busNoIds.split(",");
+		List<String> busNoIdList = Arrays.asList(busNoIdArr);
+		return busStopDao.selectOtherCBBData(busStopId,busNoIdList);
 	}
 }
