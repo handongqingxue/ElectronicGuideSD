@@ -10,4 +10,69 @@
 		</if>
  		 order by sort
  	</select>
+ 	<select id="selectByBusNoId" resultType="com.electronicGuideSD.entity.BusNosStop">
+ 		select * from bus_nos_stop where busNoId=#{busNoId} order by sort
+ 	</select>
+ 	<insert id="add" parameterType="com.electronicGuideSD.entity.BusNosStop">
+ 		insert into bus_nos_stop
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="busStopId!=null">
+ 				busStopId,
+ 			</if>
+ 			<if test="busNoId!=null">
+ 				busNoId,
+ 			</if>
+ 			<if test="preBsId!=null">
+ 				preBsId,
+ 			</if>
+ 			<if test="nextBsId!=null">
+ 				nextBsId,
+ 			</if>
+ 				createTime
+ 		</trim>
+ 		values
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="busStopId!=null">
+ 				#{busStopId},
+ 			</if>
+ 			<if test="busNoId!=null">
+ 				#{busNoId},
+ 			</if>
+ 			<if test="preBsId!=null">
+ 				#{preBsId},
+ 			</if>
+ 			<if test="nextBsId!=null">
+ 				#{nextBsId},
+ 			</if>
+ 				now()
+ 		</trim>
+ 	</insert>
+ 	<update id="edit">
+ 		update bus_nos_stop set
+		<trim suffixOverrides=",">
+			<if test="busStopId!=null">
+				busStopId=#{busStopId},
+			</if>
+			<if test="busNoId!=null">
+				busNoId=#{busNoId},
+			</if>
+			<if test="isStart!=null">
+				isStart=#{isStart},
+			</if>
+			<if test="isEnd!=null">
+				isEnd=#{isEnd},
+			</if>
+			<if test="preBsId!=null">
+				preBsId=#{preBsId},
+			</if>
+ 			<if test="nextBsId!=null">
+ 				nextBsId=#{nextBsId},
+ 			</if>
+				modifyTime=now(),
+			<if test="sort!=null">
+				sort=#{sort},
+			</if>
+		</trim>
+		where id=#{id}
+ 	</update>
 </mapper>

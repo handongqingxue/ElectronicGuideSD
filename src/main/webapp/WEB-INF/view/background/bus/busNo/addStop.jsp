@@ -26,15 +26,16 @@ var dialogTop=10;
 var dialogLeft=20;
 var ndNum=0;
 $(function(){
-	initBusNoIdCBB();
+	initBusNoCBB();
 	initBusStopCBB();
 	initPreBsCBB();
+	initNextBsCBB();
 	initNewDialog();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
 });
 
-function initBusNoIdCBB(){
+function initBusNoCBB(){
 	var data=[];
 	data.push({id:"",name:"请选择"});
 	$.post(busPath+"selectBusNoCBBData",
@@ -45,13 +46,13 @@ function initBusNoIdCBB(){
 					var busNo=busNoList[i];
 					data.push({id:busNo.id,name:busNo.name});
 				}
-				busNoIdCBB=$("#busNoId_cbb").combobox({
+				busNoCBB=$("#busNo_cbb").combobox({
 					width:150,
 					data:data,
 					valueField:"id",
 					textField:"name",
 					onSelect:function(){
-						var busNoId=busNoIdCBB.combobox("getValue");
+						var busNoId=busNoCBB.combobox("getValue");
 						$("#busNoId").val(busNoId);
 						selectBusStopCBBData();
 					}
@@ -82,7 +83,7 @@ function initBusStopCBB(){
 }
 
 function selectBusStopCBBData(){
-	var busNoId=busNoIdCBB.combobox("getValue");
+	var busNoId=busNoCBB.combobox("getValue");
 	$.post(busPath+"selectBusStopCBBData",
 		{busNoId:busNoId},
 		function(result){
@@ -129,6 +130,41 @@ function selectPreBsCBBData(){
 					data.push({id:busStop.id,name:busStop.name});
 				}
 				preBsCBB.combobox("loadData",data);
+			}
+		}
+	,"json");
+}
+
+function initNextBsCBB(){
+	var data=[];
+	data.push({id:"",name:"请选择"});
+	nextBsCBB=$("#nextBs_cbb").combobox({
+		width:150,
+		data:data,
+		valueField:"id",
+		textField:"name",
+		onSelect:function(){
+			var nextBsId=nextBsCBB.combobox("getValue");
+			$("#nextBsId").val(nextBsId);
+		}
+	});
+}
+
+function selectNextBsCBBData(){
+	var busStopId=$("#busStopId").val();
+	var busNoIds=$("#busNoIds").val();
+	$.post(busPath+"selectOtherBsCBBData",
+		{busStopId:busStopId,busNoIds:busNoIds},
+		function(result){
+			var data=[];
+			data.push({id:"",name:"请选择"});
+			if(result.status=="ok"){
+				var busStopList=result.busStopList;
+				for(var i=0;i<busStopList.length;i++){
+					var busStop=busStopList[i];
+					data.push({id:busStop.id,name:busStop.name});
+				}
+				nextBsCBB.combobox("loadData",data);
 			}
 		}
 	,"json");
@@ -188,6 +224,57 @@ function initNewDialog(){
 	$(".dialog-button .l-btn-text").css("font-size","20px");
 }
 
+function checkAdd(){
+	if(checkBusNoId()){
+		if(checkBusStopId()){
+			addBusNosStop();
+		}
+	}
+}
+
+function addBusNosStop(){
+	var formData = new FormData($("#form1")[0]);
+	$.ajax({
+		type:"post",
+		url:busPath+"addBusNosStop",
+		dataType: "json",
+		data:formData,
+		cache: false,
+		processData: false,
+		contentType: false,
+		success: function (data){
+			if(data.status==1){
+				alert(data.msg);
+				location.href=busPath+"busNo/list";
+			}
+			else{
+				alert(data.msg);
+			}
+		}
+	});
+}
+
+//验证车辆
+function checkBusNoId(){
+	var busNoId=busNoCBB.combobox("getValue");
+	if(busNoId==null||busNoId==""){
+	  	alert("请选择车辆");
+	  	return false;
+	}
+	else
+		return true;
+}
+
+function checkBusStopId(){
+	var busStopId=busStopCBB.combobox("getValue");
+	if(busStopId==null||busStopId==""){
+	  	alert("请选择车辆站点");
+	  	return false;
+	}
+	else
+		return true;
+}
+
 function setFitWidthInParent(parent,self){
 	var space=0;
 	switch (self) {
@@ -221,7 +308,7 @@ function setFitWidthInParent(parent,self){
 					车辆
 				</td>
 				<td class="td2">
-					<select id="busNoId_cbb"></select>
+					<select id="busNo_cbb"></select>
 					<input type="hidden" id="busNoId" name="busNoId"/>
 				</td>
 				<td class="td1" align="right">
@@ -247,30 +334,6 @@ function setFitWidthInParent(parent,self){
 				<td class="td2">
 					<select id="nextBs_cbb"></select>
 					<input type="hidden" id="nextBsId" name="nextBsId"/>
-				</td>
-			  </tr>
-			  <tr>
-				<td class="td1" align="right">
-					景区地图
-				</td>
-				<td class="td2">
-				</td>
-				<td class="td1" align="right">
-					站点车辆
-				</td>
-				<td class="td2">
-				</td>
-			  </tr>
-			  <tr>
-				<td class="td1" align="right">
-					站点范围
-				</td>
-				<td class="td2">
-					<input type="number" class="arroundScope_inp" id="arroundScope" name="arroundScope" placeholder="请输入站点范围"/>
-				</td>
-				<td class="td1" align="right">
-				</td>
-				<td class="td2">
 				</td>
 			  </tr>
 			</table>

@@ -251,6 +251,32 @@ public class BusController {
 		return json;
 	}
 	
+	@RequestMapping(value="/addBusNosStop",produces="plain/text; charset=UTF-8")
+	@ResponseBody
+	public String addBusNosStop(BusNosStop busNosStop,
+			HttpServletRequest request) {
+
+		String json=null;;
+		try {
+			PlanResult plan=new PlanResult();
+			int count=busNosStopService.add(busNosStop);
+			if(count==0) {
+				plan.setStatus(0);
+				plan.setMsg("添加站点失败！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+			else {
+				plan.setStatus(1);
+				plan.setMsg("添加站点成功！");
+				json=JsonUtil.getJsonFromObject(plan);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
 	@RequestMapping(value="/selectBusNosStopList")
 	@ResponseBody
 	public Map<String, Object> selectBusNosStopList(String name,int busNoId) {

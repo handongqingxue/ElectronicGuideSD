@@ -10,4 +10,10 @@ public interface BusNosStopMapper {
 
 	List<BusNosStop> selectList(@Param("name")String name, @Param("busNoId")int busNoId);
 
+	List<BusNosStop> selectByBusNoId(@Param("busNoId")int busNoId);
+
+	int add(BusNosStop busNosStop);
+
+	int edit(BusNosStop busNosStop);
+
 }

@@ -8,4 +8,6 @@ public interface BusNosStopService {
 
 	List<BusNosStop> selectList(String name, int busNoId);
 
+	int add(BusNosStop busNosStop);
+
 }
