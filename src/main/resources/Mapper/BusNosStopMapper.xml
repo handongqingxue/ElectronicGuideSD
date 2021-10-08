@@ -13,6 +13,9 @@
  	<select id="selectByBusNoId" resultType="com.electronicGuideSD.entity.BusNosStop">
  		select * from bus_nos_stop where busNoId=#{busNoId} order by sort
  	</select>
+ 	<select id="selectById" resultType="com.electronicGuideSD.entity.BusNosStop">
+ 		select bns.*,bs.busNoIds from bus_nos_stop bns,bus_stop bs where bns.busStopId=bs.id and bns.id=#{id}
+ 	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.BusNosStop">
  		insert into bus_nos_stop
  		<trim prefix="(" suffix=")" suffixOverrides=",">

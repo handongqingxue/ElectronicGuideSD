@@ -130,7 +130,7 @@ function initTab2(){
             {field:"modifyTime",title:"修改时间",width:150},
             {field:"sort",title:"排序",width:80},
             {field:"id",title:"操作",width:110,formatter:function(value,row){
-            	var str="<a href=\"edit?id="+value+"\">编辑</a>&nbsp;&nbsp;"
+            	var str="<a href=\"editStop?id="+value+"\">编辑</a>&nbsp;&nbsp;"
             		+"<a href=\"detail?id="+value+"\">详情</a>";
             	return str;
             }}

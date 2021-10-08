@@ -16,4 +16,6 @@ public interface BusNosStopMapper {
 
 	int edit(BusNosStop busNosStop);
 
+	BusNosStop selectById(@Param("id")String id);
+
 }
