@@ -130,7 +130,7 @@ function initTab2(){
             {field:"sort",title:"排序",width:80},
             {field:"id",title:"操作",width:110,formatter:function(value,row){
             	var str="<a href=\"editStop?id="+value+"\">编辑</a>&nbsp;&nbsp;"
-            		+"<a href=\"detail?id="+value+"\">详情</a>";
+            		+"<a href=\"detailStop?id="+value+"\">详情</a>";
             	return str;
             }}
 	    ]],
@@ -153,8 +153,9 @@ function initTab2(){
 }
 
 function loadTab2Data(busNoId){
+	var bsName=$("#tab2_div #name").val();
 	$.post(busPath+"selectBusNosStopList",
-		{busNoId:busNoId},
+		{busNoId:busNoId,name:bsName},
 		function(result){
 			tab2.datagrid('loadData',result.data);
 		}

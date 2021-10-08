@@ -7,7 +7,7 @@
  		select bns.*,preBs.name preBsName,nextBs.name nextBsName from (
  		select bns.*,bs.name bsName from bus_nos_stop bns,bus_stop bs where bns.busStopId=bs.id and bns.busNoId=#{busNoId}
 		<if test="name!=null&amp;name!=''">
-			and name like'%${name}%'
+			and bs.name like'%${name}%'
 		</if>
  		)bns left join bus_stop preBs on bns.preBsId=preBs.id
  		 left join bus_stop nextBs on bns.nextBsId=nextBs.id
@@ -17,7 +17,11 @@
  		select * from bus_nos_stop where busNoId=#{busNoId} order by sort
  	</select>
  	<select id="selectById" resultType="com.electronicGuideSD.entity.BusNosStop">
- 		select bns.*,bs.busNoIds from bus_nos_stop bns,bus_stop bs where bns.busStopId=bs.id and bns.id=#{id}
+ 		select bns.*,preBs.name preBsName,nextBs.name nextBsName,bn.name bnName from(
+ 		select bns.*,bs.busNoIds,bs.name bsName from bus_nos_stop bns,bus_stop bs where bns.busStopId=bs.id and bns.id=#{id}
+ 		) bns left join bus_stop preBs on bns.preBsId=preBs.id
+ 		 left join bus_stop nextBs on bns.nextBsId=nextBs.id
+ 		 left join bus_no bn on bns.busNoId=bn.id
  	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.BusNosStop">
  		insert into bus_nos_stop

@@ -85,6 +85,16 @@ public class BusController {
 		return MODULE_NAME+"/busNo/editStop";
 	}
 	
+	@RequestMapping(value="/busNo/detailStop")
+	public String goBusNoDetailStop(HttpServletRequest request) {
+			
+		String id = request.getParameter("id");
+		BusNosStop busNosStop = busNosStopService.selectById(id);
+		request.setAttribute("busNosStop", busNosStop);
+			
+		return MODULE_NAME+"/busNo/detailStop";
+	}
+	
 	@RequestMapping(value="/busStop/add")
 	public String goBusStopAdd(HttpServletRequest request) {
 		
