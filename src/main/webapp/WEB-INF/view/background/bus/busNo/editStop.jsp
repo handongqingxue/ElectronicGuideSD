@@ -129,6 +129,11 @@ function initPreBsCBB(){
 		data:data,
 		valueField:"id",
 		textField:"name",
+		onLoadSuccess:function(){
+			var preBsId='${requestScope.busNosStop.preBsId }';
+			$("#preBsId").val(preBsId);
+			$(this).combobox("setValue",preBsId);
+		},
 		onSelect:function(){
 			var preBsId=preBsCBB.combobox("getValue");
 			$("#preBsId").val(preBsId);
@@ -164,6 +169,11 @@ function initNextBsCBB(){
 		data:data,
 		valueField:"id",
 		textField:"name",
+		onLoadSuccess:function(){
+			var nextBsId='${requestScope.busNosStop.nextBsId }';
+			$("#nextBsId").val(nextBsId);
+			$(this).combobox("setValue",nextBsId);
+		},
 		onSelect:function(){
 			var nextBsId=nextBsCBB.combobox("getValue");
 			$("#nextBsId").val(nextBsId);

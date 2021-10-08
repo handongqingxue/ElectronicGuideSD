@@ -15,6 +15,12 @@ public class BusNosStop {
 	public void setBusStopId(Integer busStopId) {
 		this.busStopId = busStopId;
 	}
+	public String getBsName() {
+		return bsName;
+	}
+	public void setBsName(String bsName) {
+		this.bsName = bsName;
+	}
 	public Integer getBusNoId() {
 		return busNoId;
 	}
@@ -45,11 +51,23 @@ public class BusNosStop {
 	public void setPreBsId(Integer preBsId) {
 		this.preBsId = preBsId;
 	}
+	public String getPreBsName() {
+		return preBsName;
+	}
+	public void setPreBsName(String preBsName) {
+		this.preBsName = preBsName;
+	}
 	public Integer getNextBsId() {
 		return nextBsId;
 	}
 	public void setNextBsId(Integer nextBsId) {
 		this.nextBsId = nextBsId;
+	}
+	public String getNextBsName() {
+		return nextBsName;
+	}
+	public void setNextBsName(String nextBsName) {
+		this.nextBsName = nextBsName;
 	}
 	public String getCreateTime() {
 		return createTime;
@@ -70,12 +88,15 @@ public class BusNosStop {
 		this.sort = sort;
 	}
 	private Integer busStopId;
+	private String bsName;
 	private Integer busNoId;
 	private String busNoIds;
 	private Boolean isStart;
 	private Boolean isEnd;
 	private Integer preBsId;
+	private String preBsName;
 	private Integer nextBsId;
+	private String nextBsName;
 	private String createTime;
 	private String modifyTime;
 	private Integer sort;

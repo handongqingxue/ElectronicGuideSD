@@ -4,11 +4,14 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.electronicGuideSD.dao.BusNosStopMapper">
  	<select id="selectList" resultType="com.electronicGuideSD.entity.BusNosStop">
- 		select * from bus_nos_stop where busNoId=#{busNoId}
+ 		select bns.*,preBs.name preBsName,nextBs.name nextBsName from (
+ 		select bns.*,bs.name bsName from bus_nos_stop bns,bus_stop bs where bns.busStopId=bs.id and bns.busNoId=#{busNoId}
 		<if test="name!=null&amp;name!=''">
 			and name like'%${name}%'
 		</if>
- 		 order by sort
+ 		)bns left join bus_stop preBs on bns.preBsId=preBs.id
+ 		 left join bus_stop nextBs on bns.nextBsId=nextBs.id
+ 		  order by bns.sort
  	</select>
  	<select id="selectByBusNoId" resultType="com.electronicGuideSD.entity.BusNosStop">
  		select * from bus_nos_stop where busNoId=#{busNoId} order by sort

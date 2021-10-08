@@ -122,10 +122,9 @@ function initTab2(){
 		pagination:true,
 		pageSize:10,
 		columns:[[
-			{field:"name",title:"名称",width:150},
-			{field:"x",title:"x轴坐标",width:100},
-			{field:"y",title:"y轴坐标",width:100},
-			{field:"busNoNames",title:"站点车辆",width:200},
+			{field:"bsName",title:"名称",width:150},
+			{field:"preBsName",title:"上一站点",width:100},
+			{field:"nextBsName",title:"下一站点",width:100},
             {field:"createTime",title:"创建时间",width:150},
             {field:"modifyTime",title:"修改时间",width:150},
             {field:"sort",title:"排序",width:80},
@@ -137,8 +136,8 @@ function initTab2(){
 	    ]],
         onLoadSuccess:function(data){
 			if(data.total==0){
-				$(this).datagrid("appendRow",{name:"<div style=\"text-align:center;\">暂无信息<div>"});
-				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:8});
+				$(this).datagrid("appendRow",{bsName:"<div style=\"text-align:center;\">暂无信息<div>"});
+				$(this).datagrid("mergeCells",{index:0,field:"bsName",colspan:7});
 				data.total=0;
 			}
 			
@@ -149,8 +148,8 @@ function initTab2(){
 			$(".panel-header, .panel-body").css("border-color","#ddd");
 		}
 	});
-	tab2.datagrid("appendRow",{name:"<div style=\"text-align:center;\">暂无信息<div>"});
-	tab2.datagrid("mergeCells",{index:0,field:"name",colspan:8});
+	tab2.datagrid("appendRow",{bsName:"<div style=\"text-align:center;\">暂无信息<div>"});
+	tab2.datagrid("mergeCells",{index:0,field:"bsName",colspan:7});
 }
 
 function loadTab2Data(busNoId){
