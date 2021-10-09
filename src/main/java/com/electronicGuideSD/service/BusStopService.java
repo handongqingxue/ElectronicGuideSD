@@ -22,6 +22,6 @@ public interface BusStopService {
 
 	List<BusStop> selectCBBData(int busNoId);
 
-	List<BusStop> selectOtherCBBData(int busStopId, String busNoIds);
+	List<BusStop> selectOtherCBBData(int busStopId, int busNoId);
 
 }

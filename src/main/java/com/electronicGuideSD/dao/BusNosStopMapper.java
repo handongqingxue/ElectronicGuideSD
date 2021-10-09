@@ -18,4 +18,6 @@ public interface BusNosStopMapper {
 
 	BusNosStop selectById(@Param("id")String id);
 
+	List<BusNosStop> selectStartAndEndList();
+
 }

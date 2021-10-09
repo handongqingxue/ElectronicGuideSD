@@ -23,6 +23,9 @@
  		 left join bus_stop nextBs on bns.nextBsId=nextBs.id
  		 left join bus_no bn on bns.busNoId=bn.id
  	</select>
+ 	<select id="selectStartAndEndList" resultType="com.electronicGuideSD.entity.BusNosStop">
+ 		select bs.name bsName,bns.busNoId,bns.isStart,bns.isEnd from bus_nos_stop bns left join bus_stop bs on bns.busStopId=bs.id where bns.isStart=1 or bns.isEnd=1
+ 	</select>
  	<insert id="add" parameterType="com.electronicGuideSD.entity.BusNosStop">
  		insert into bus_nos_stop
  		<trim prefix="(" suffix=")" suffixOverrides=",">

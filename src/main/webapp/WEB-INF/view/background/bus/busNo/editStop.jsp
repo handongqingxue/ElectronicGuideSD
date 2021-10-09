@@ -77,26 +77,18 @@ function initBusStopCBB(){
 	busStopCBB=$("#busStop_cbb").combobox({
 		width:150,
 		data:data,
-		valueField:"cbbValue",
+		valueField:"id",
 		textField:"name",
 		onLoadSuccess:function(){
 			var busStopId='${requestScope.busNosStop.busStopId }';
+			$(this).combobox("setValue",busStopId);
 			$("#busStopId").val(busStopId);
-			var busNoIds='${requestScope.busNosStop.busNoIds }';
-			$(this).combobox("setValue",busStopId+"-"+busNoIds);
-			
-			$("#busStopId").val(busStopId);
-			$("#busNoIds").val(busNoIds);
 			selectPreBsCBBData();
 			selectNextBsCBBData();
 		},
 		onSelect:function(){
-			var cbbValue=busStopCBB.combobox("getValue");
-			var cbbValueArr=cbbValue.split("-");
-			var busStopId=cbbValueArr[0];
-			var busNoIds=cbbValueArr[1];
+			var busStopId=busStopCBB.combobox("getValue");
 			$("#busStopId").val(busStopId);
-			$("#busNoIds").val(busNoIds);
 			selectPreBsCBBData();
 			selectNextBsCBBData();
 		}
@@ -143,9 +135,9 @@ function initPreBsCBB(){
 
 function selectPreBsCBBData(){
 	var busStopId=$("#busStopId").val();
-	var busNoIds=$("#busNoIds").val();
+	var busNoId=$("#busNoId").val();
 	$.post(busPath+"selectOtherBsCBBData",
-		{busStopId:busStopId,busNoIds:busNoIds},
+		{busStopId:busStopId,busNoId:busNoId},
 		function(result){
 			var data=[];
 			data.push({id:"",name:"请选择"});
@@ -183,9 +175,9 @@ function initNextBsCBB(){
 
 function selectNextBsCBBData(){
 	var busStopId=$("#busStopId").val();
-	var busNoIds=$("#busNoIds").val();
+	var busNoId=$("#busNoId").val();
 	$.post(busPath+"selectOtherBsCBBData",
-		{busStopId:busStopId,busNoIds:busNoIds},
+		{busStopId:busStopId,busNoId:busNoId},
 		function(result){
 			var data=[];
 			data.push({id:"",name:"请选择"});
@@ -349,7 +341,6 @@ function setFitWidthInParent(parent,self){
 				<td class="td2">
 					<select id="busStop_cbb"></select>
 					<input type="hidden" id="busStopId" name="busStopId"/>
-					<input type="hidden" id="busNoIds" name="busNoIds"/>
 				</td>
 			  </tr>
 			  <tr>

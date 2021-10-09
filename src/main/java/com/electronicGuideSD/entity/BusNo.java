@@ -15,6 +15,18 @@ public class BusNo {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getStartBsName() {
+		return startBsName;
+	}
+	public void setStartBsName(String startBsName) {
+		this.startBsName = startBsName;
+	}
+	public String getEndBsName() {
+		return endBsName;
+	}
+	public void setEndBsName(String endBsName) {
+		this.endBsName = endBsName;
+	}
 	public String getStartTime() {
 		return startTime;
 	}
@@ -46,6 +58,8 @@ public class BusNo {
 		this.sort = sort;
 	}
 	private String name;
+	private String startBsName;
+	private String endBsName;
 	private String startTime;
 	private String endTime;
 	private String createTime;

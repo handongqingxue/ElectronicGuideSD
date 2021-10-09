@@ -31,6 +31,6 @@ public interface BusStopMapper {
 
 	List<BusStop> selectCBBData(@Param("busNoId")int busNoId);
 
-	List<BusStop> selectOtherCBBData(@Param("busStopId")int busStopId, @Param("busNoIdList")List<String> busNoIdList);
+	List<BusStop> selectOtherCBBData(@Param("busStopId")int busStopId, @Param("busNoId")int busNoId);
 
 }

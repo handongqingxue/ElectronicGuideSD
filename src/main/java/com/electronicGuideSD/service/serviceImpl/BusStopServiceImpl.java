@@ -78,10 +78,8 @@ public class BusStopServiceImpl implements BusStopService {
 	}
 
 	@Override
-	public List<BusStop> selectOtherCBBData(int busStopId, String busNoIds) {
+	public List<BusStop> selectOtherCBBData(int busStopId, int busNoId) {
 		// TODO Auto-generated method stub
-		String[] busNoIdArr = busNoIds.split(",");
-		List<String> busNoIdList = Arrays.asList(busNoIdArr);
-		return busStopDao.selectOtherCBBData(busStopId,busNoIdList);
+		return busStopDao.selectOtherCBBData(busStopId,busNoId);
 	}
 }

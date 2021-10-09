@@ -141,8 +141,6 @@ $(function(){
 	initAddBsSDMapDialogDiv();
 
 	initDialogPosition();//将不同窗体移动到主要内容区域
-	
-	initSceDisCanvas();
 });
 
 function initBusNoIdsCBB(){
@@ -349,7 +347,8 @@ function initSceDisCanvas(reSizeFlag){
 	           busStopX=x;
 	           busStopY=sceDisCanvasMinHeight-y;//将y轴坐标从最初的左上角计算转换为从左下角计算
 	           
-		       busStop={x:x,y:y};
+	           var name=$("#new_div #name").val();
+		       busStop={x:x,y:y,name:name};
 	           initSceDisCanvas(0);
 	    }
 	}

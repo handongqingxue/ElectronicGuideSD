@@ -63,12 +63,6 @@ public class BusStop {
 	public void setBusNoNames(String busNoNames) {
 		this.busNoNames = busNoNames;
 	}
-	public String getCbbValue() {
-		return cbbValue;
-	}
-	public void setCbbValue(String cbbValue) {
-		this.cbbValue = cbbValue;
-	}
 	private String name;
 	private Float x;
 	private Float y;
@@ -78,5 +72,4 @@ public class BusStop {
 	private Integer sort;
 	private String busNoIds;
 	private String busNoNames;
-	private String cbbValue;
 }

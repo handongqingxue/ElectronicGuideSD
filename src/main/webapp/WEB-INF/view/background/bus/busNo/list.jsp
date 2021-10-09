@@ -84,6 +84,8 @@ function initTab1(){
 		pageSize:10,
 		columns:[[
 			{field:"name",title:"几路车",width:150},
+			{field:"startBsName",title:"始发站",width:150},
+			{field:"endBsName",title:"终点站",width:150},
 			{field:"startTime",title:"首班时间",width:150},
 			{field:"endTime",title:"末班时间",width:150},
             {field:"createTime",title:"创建时间",width:150},
@@ -101,7 +103,7 @@ function initTab1(){
         onLoadSuccess:function(data){
 			if(data.total==0){
 				$(this).datagrid("appendRow",{name:"<div style=\"text-align:center;\">暂无信息<div>"});
-				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:7});
+				$(this).datagrid("mergeCells",{index:0,field:"name",colspan:9});
 				data.total=0;
 			}
 			

@@ -74,18 +74,17 @@ public class BusNosStopServiceImpl implements BusNosStopService {
 		List<BusNosStop> bnsList=busNosStopDao.selectByBusNoId(busNoId);
 		BusNosStop bns=bnsList.get(0);
 		newBnsList.add(bns);
-		bnsList.remove(bns);
-		for (int i = 0; i < bnsList.size(); i++) {
-			bns=bnsList.get(i);
-			BusNosStop firstBns = newBnsList.get(0);
-			if(firstBns.getPreBsId()==bns.getBusStopId()) {
-				newBnsList.add(0, bns);
-				bnsList.remove(bns);
-			}
-			BusNosStop lastBns = newBnsList.get(newBnsList.size()-1);
-			if(lastBns.getNextBsId()==bns.getBusStopId()) {
-				newBnsList.add(bns);
-				bnsList.remove(bns);
+		for(int i=0;i<newBnsList.size();i++) {
+			for (int j = 1; j <bnsList.size() ; j++) {
+				bns=bnsList.get(j);
+				BusNosStop firstBns = newBnsList.get(0);
+				if(firstBns.getPreBsId()==bns.getBusStopId()) {
+					newBnsList.add(0, bns);
+				}
+				BusNosStop lastBns = newBnsList.get(newBnsList.size()-1);
+				if(lastBns.getNextBsId()==bns.getBusStopId()) {
+					newBnsList.add(bns);
+				}
 			}
 		}
 		for (int i = 0; i < newBnsList.size(); i++) {

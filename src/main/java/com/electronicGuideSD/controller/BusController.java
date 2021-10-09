@@ -374,10 +374,10 @@ public class BusController {
 
 	@RequestMapping(value="/selectOtherBsCBBData")
 	@ResponseBody
-	public Map<String, Object> selectOtherBsCBBData(int busStopId,String busNoIds) {
+	public Map<String, Object> selectOtherBsCBBData(int busStopId,int busNoId) {
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		List<BusStop> busStopList = busStopService.selectOtherCBBData(busStopId,busNoIds);
+		List<BusStop> busStopList = busStopService.selectOtherCBBData(busStopId,busNoId);
 		
 		if(busStopList.size()==0) {
 			jsonMap.put("status", "no");

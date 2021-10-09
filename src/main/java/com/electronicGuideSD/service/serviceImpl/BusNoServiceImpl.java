@@ -14,6 +14,8 @@ public class BusNoServiceImpl implements BusNoService {
 
 	@Autowired
 	private BusNoMapper busNoDao;
+	@Autowired
+	private BusNosStopMapper busNosStopDao;
 
 	@Override
 	public int selectForInt(String name) {
@@ -24,7 +26,23 @@ public class BusNoServiceImpl implements BusNoService {
 	@Override
 	public List<BusNo> selectList(String name, int page, int rows, String sort, String order) {
 		// TODO Auto-generated method stub
-		return busNoDao.selectList(name, (page-1)*rows, rows, sort, order);
+		List<BusNo> busNoList = busNoDao.selectList(name, (page-1)*rows, rows, sort, order);
+		List<BusNosStop> busNosStopList = busNosStopDao.selectStartAndEndList();
+		for (int i = 0; i < busNoList.size(); i++) {
+			BusNo busNo = busNoList.get(i);
+			for (int j = 0; j < busNosStopList.size(); j++) {
+				BusNosStop busNosStop = busNosStopList.get(j);
+				if(busNo.getId()==busNosStop.getBusNoId()) {
+					if(busNosStop.getIsStart()) {
+						busNo.setStartBsName(busNosStop.getBsName());
+					}
+					else if(busNosStop.getIsEnd()) {
+						busNo.setEndBsName(busNosStop.getBsName());
+					}
+				}
+			}
+		}
+		return busNoList;
 	}
 
 	@Override

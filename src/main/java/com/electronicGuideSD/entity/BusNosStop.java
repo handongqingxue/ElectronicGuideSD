@@ -33,12 +33,6 @@ public class BusNosStop {
 	public void setBnName(String bnName) {
 		this.bnName = bnName;
 	}
-	public String getBusNoIds() {
-		return busNoIds;
-	}
-	public void setBusNoIds(String busNoIds) {
-		this.busNoIds = busNoIds;
-	}
 	public Boolean getIsStart() {
 		return isStart;
 	}
@@ -97,7 +91,6 @@ public class BusNosStop {
 	private String bsName;
 	private Integer busNoId;
 	private String bnName;
-	private String busNoIds;
 	private Boolean isStart;
 	private Boolean isEnd;
 	private Integer preBsId;
