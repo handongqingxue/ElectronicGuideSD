@@ -63,7 +63,7 @@ public class RoadStageServiceImpl implements RoadStageService {
 			System.out.println("bsNearSpNearMap="+bsNearSpNearMap);
 			float bsNearSpNearX = Float.valueOf(bsNearSpNearMap.get("x").toString());//获得离景点最近的站点的x坐标
 			float bsNearSpNearY = Float.valueOf(bsNearSpNearMap.get("y").toString());//获得离景点最近的站点的y坐标
-			String[] busNoIdArr = bsNearSpNearMap.get("busNoIds").toString().split(",");
+			String[] busNoIdArr = bsNearSpNearMap.get("busNoId").toString().split(",");
 			List<String> busNoIdList = Arrays.asList(busNoIdArr);
 			
 			Map<String,Object> meNearBsMap = busStopDao.selectMinDistanceStopByNoIds(meX,meY,busNoIdList);//获得离游客最近的能到达景点的最近站点

@@ -90,6 +90,7 @@ public class RoadStageUtil {
 		int endSort=0;
 		int startNearBsSort = Integer.valueOf(startNearBsMap.get("sort").toString());
 		int bsNearEndNearSort = Integer.valueOf(bsNearEndNearMap.get("sort").toString());
+		int busNoId = Integer.valueOf(startNearBsMap.get("busNoId").toString());
 		List<BusStop> busStopList = null;
 		if(startNearBsSort<bsNearEndNearSort) {
 			startSort=startNearBsSort;
@@ -101,7 +102,7 @@ public class RoadStageUtil {
 		}
 		
 		if(startSort!=endSort)
-			busStopList = busStopDao.selectBySortStartToEnd(startSort,endSort);
+			busStopList = busStopDao.selectBySortStartToEnd(startSort,endSort,busNoId);
 		if(busStopList!=null) {
 			List<RoadStage> busRsList=new ArrayList<>();
 			for (int i = 1; i < busStopList.size(); i++) {

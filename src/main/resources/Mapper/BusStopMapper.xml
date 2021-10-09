@@ -4,12 +4,13 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.electronicGuideSD.dao.BusStopMapper">
 	<select id="selectMinDistanceStop" resultType="java.util.Map">
-		select *,round(SQRT(ABS(#{x}-x)*ABS(#{x}-x)+ABS(#{y}-y)*ABS(#{y}-y)),2) distance from bus_stop order by distance limit 0,1
+		select bs.id,bs.name,bs.x,bs.y,bs.arroundScope,bns.sort,bns.busNoId,round(SQRT(ABS(#{x}-x)*ABS(#{x}-x)+ABS(#{y}-y)*ABS(#{y}-y)),2) distance from bus_stop bs,bus_nos_stop bns where bs.id=bns.busStopId
+		 order by distance limit 0,1
 	</select>
 	<select id="selectMinDistanceStopByNoIds" resultType="java.util.Map">
-		select *,round(SQRT(ABS(#{x}-x)*ABS(#{x}-x)+ABS(#{y}-y)*ABS(#{y}-y)),2) distance from bus_stop where 1=1
-		<foreach collection="busNoIdList" item="busNoIds" open=" and cast(busNoIds as char) in (" separator="," close=")">
-		#{busNoIds}
+		select bs.id,bs.name,bs.x,bs.y,bs.arroundScope,bns.sort,bns.busNoId,round(SQRT(ABS(#{x}-x)*ABS(#{x}-x)+ABS(#{y}-y)*ABS(#{y}-y)),2) distance from bus_stop bs,bus_nos_stop bns where bs.id=bns.busStopId
+		<foreach collection="busNoIdList" item="busNoId" open=" and cast(bns.busNoId as char) in (" separator="," close=")">
+		#{busNoId}
 		</foreach>
 		order by distance limit 0,1
 	</select>
@@ -30,7 +31,7 @@
  		select * from bus_stop
  	</select>
  	<select id="selectBySortStartToEnd" resultType="com.electronicGuideSD.entity.BusStop">
- 		select * from bus_stop where sort between #{startSort} and #{endSort} order by sort
+ 		select bs.id,bs.name,bs.x,bs.y,bs.arroundScope,bns.sort from bus_stop bs ,bus_nos_stop bns where bs.id=bns.busStopId and bns.busNoId=#{busNoId} and bns.sort between #{startSort} and #{endSort} order by bns.sort
  	</select>
  	<select id="selectById" resultType="com.electronicGuideSD.entity.BusStop">
  		select * from bus_stop where id=#{id}
