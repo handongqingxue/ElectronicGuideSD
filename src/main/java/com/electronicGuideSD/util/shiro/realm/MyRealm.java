@@ -35,7 +35,7 @@ public class MyRealm  extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 		// TODO Auto-generated method stub
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-		User msg=new User(token.getUsername(),String.valueOf(token.getPassword()));
+		//User msg=new User(token.getUsername(),String.valueOf(token.getPassword()));
 		//User resultMsg=userMapper.get(msg);
 		Map<String, Object> userMap = (Map<String, Object>)APICQUtil.getUser(token.getUsername(),String.valueOf(token.getPassword()));
 		JSONObject userJO = (JSONObject)userMap.get("user");

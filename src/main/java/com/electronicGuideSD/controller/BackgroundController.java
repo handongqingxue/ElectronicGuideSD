@@ -29,10 +29,10 @@ public class BackgroundController {
 	@Autowired
 	private ScenicDistrictService scenicDistrictService;
 	public static final String MODULE_NAME="/background";
-	//public static final String SERVER_PATH_CQ="https://www.qrcodesy.com/ElectronicGuideCQ";
-	public static final String SERVER_PATH_CQ="https://localhost/ElectronicGuideCQ";
-	//public static final String SERVER_PATH_SD="https://www.qrcodesy.com/ElectronicGuideSD";
-	public static final String SERVER_PATH_SD="https://localhost/ElectronicGuideSD";
+	public static final String SERVER_PATH_CQ="https://www.qrcodesy.com/ElectronicGuideCQ";
+	//public static final String SERVER_PATH_CQ="https://localhost/ElectronicGuideCQ";
+	public static final String SERVER_PATH_SD="https://www.qrcodesy.com/ElectronicGuideSD";
+	//public static final String SERVER_PATH_SD="https://localhost/ElectronicGuideSD";
 	
 	/**
 	 * 跳转至登录页面
@@ -40,7 +40,7 @@ public class BackgroundController {
 	 */
 	@RequestMapping(value="/goLogin",method=RequestMethod.GET)
 	public String goLogin() {
-		return "redirect:"+SERVER_PATH_CQ+MODULE_NAME+"/goLogin";
+		return "redirect:"+SERVER_PATH_CQ+MODULE_NAME+"/goLogin";//跳转至辰麒总服务器的登录页
 	}
 
 	/**

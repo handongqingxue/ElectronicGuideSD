@@ -26,8 +26,8 @@ import com.alibaba.fastjson.JSON;
  * */
 public class APICQUtil {
 	
-	//public static final String SERVER_PATH="http://www.qrcodesy.com:8080/ElectronicGuideCQ";
-	public static final String SERVER_PATH="http://localhost:8080/ElectronicGuideCQ";
+	public static final String SERVER_PATH="https://www.qrcodesy.com/ElectronicGuideCQ";
+	//public static final String SERVER_PATH="http://192.168.2.166:8080/ElectronicGuideCQ";
 
 	/**
 	 * 根据用户名、密码获取用户信息
